@@ -1,0 +1,18 @@
+PLATAFORMA DORADA — CONEXIÓN DEL CONTADOR DE ADHESIONES
+
+1. Google Form de adhesión → Respuestas → Ver respuestas en Hojas de cálculo.
+2. Extensiones → Apps Script.
+3. Pegar adhesiones.gs.
+4. Implementar → Nueva implementación → Aplicación web.
+5. Ejecutar como: tú.
+6. Quién tiene acceso: cualquiera.
+7. Copiar la URL /exec.
+8. En el proyecto crear .env.local con:
+
+VITE_ADHESION_COUNT_URL=https://script.google.com/macros/s/TU_ID/exec
+
+9. Reiniciar:
+
+npm.cmd run dev
+
+La web solo recibe el número total de adhesiones. No expone la hoja ni datos personales.

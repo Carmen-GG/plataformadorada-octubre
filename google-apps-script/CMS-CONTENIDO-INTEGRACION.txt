@@ -1,0 +1,52 @@
+CAMBIO NECESARIO EN Código.gs
+
+Para que la web pueda leer Noticias y Recursos desde otro dominio, el doGet debe soportar JSONP.
+
+Sustituye SOLO tu función doGet(e) actual por esta versión:
+
+function doGet(e) {
+  e = e || {};
+  var params = e.parameter || {};
+
+  if (params.admin === "1") {
+    return HtmlService
+      .createHtmlOutputFromFile("admin")
+      .setTitle("Plataforma Dorada · Administración")
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
+
+  if (params.action === "content") {
+    var payload = JSON.stringify(obtenerContenidoPublico());
+    var callback = params.callback;
+
+    if (callback) {
+      // El callback es generado por nuestra propia web y solo se admite
+      // con un nombre JavaScript sencillo para evitar inyección.
+      if (!/^[A-Za-z_$][0-9A-Za-z_$]*$/.test(callback)) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ error: "callback inválido" }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+
+      return ContentService
+        .createTextOutput(callback + "(" + payload + ");")
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+
+    return ContentService
+      .createTextOutput(payload)
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({
+      adhesiones: contarAdhesiones(),
+      actualizado: new Date().toISOString()
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+IMPORTANTE:
+- Mantén contarAdhesiones(), obtenerContenidoPublico(), CopiarAdhesiones() y el resto del Código.gs.
+- Después de guardar, crea una NUEVA VERSIÓN de la implementación Web App.
+- La URL /exec puede mantenerse si editas la implementación existente y publicas una nueva versión.

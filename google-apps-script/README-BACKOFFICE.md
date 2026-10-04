@@ -79,10 +79,3 @@ Cuando publiques una noticia o recurso desde el backoffice, la web lo recogerá 
 - el bloque de novedades de la portada
 
 La actualización pública se comprueba aproximadamente cada 60 segundos mientras la página está abierta.
-
-
-## Eventos
-
-El backoffice incluye una pestaña **Eventos** para publicar actos de la Plataforma Dorada. Los registros se guardan en la hoja `EventosWeb` con título, fecha, hora, lugar, ciudad, descripción y enlace. La web pública los muestra automáticamente en «Próximos eventos» o «Eventos realizados» según la fecha.
-
-Después de actualizar `adhesiones.gs` y `admin.html`, vuelve a desplegar el Web App creando una **nueva versión**.

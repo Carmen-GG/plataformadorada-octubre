@@ -12,17 +12,6 @@ export type CmsNews = {
   summary?: string;
 };
 
-export type CmsEvent = {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
-  place: string;
-  city: string;
-  description: string;
-  url: string;
-};
-
 export type CmsResource = {
   id: string;
   title: string;
@@ -32,10 +21,14 @@ export type CmsResource = {
   url: string;
 };
 
+export type CmsEvent = { id:string; title:string; date:string; time:string; place:string; city:string; description:string; url:string; documentUrl:string; documentName:string };
+
 export type CmsPayload = {
   noticias: CmsNews[];
-  eventos: CmsEvent[];
   recursos: CmsResource[];
+  eventos: CmsEvent[];
+  canciones?: Array<{x:string;artist:string}>;
+  frases?: Array<{text:string;name:string}>;
   actualizado?: string;
 };
 
@@ -52,23 +45,6 @@ type AppsScriptNews = {
   summary?: string;
 };
 
-type AppsScriptEvent = {
-  id?: string;
-  titulo?: string;
-  fecha?: string;
-  hora?: string;
-  lugar?: string;
-  ciudad?: string;
-  descripcion?: string;
-  url?: string;
-  title?: string;
-  date?: string;
-  time?: string;
-  place?: string;
-  city?: string;
-  description?: string;
-};
-
 type AppsScriptResource = {
   id?: string;
   fecha?: string;
@@ -83,10 +59,14 @@ type AppsScriptResource = {
   filename?: string;
 };
 
+type AppsScriptEvent = { id?:string; titulo?:string; fecha?:string; hora?:string; lugar?:string; ciudad?:string; descripcion?:string; url?:string; documentoUrl?:string; documentoNombre?:string };
+
 type AppsScriptContentResponse = {
   noticias?: AppsScriptNews[];
-  eventos?: AppsScriptEvent[];
   recursos?: AppsScriptResource[];
+  eventos?: AppsScriptEvent[];
+  canciones?: Array<{x?:string;artist?:string}>;
+  frases?: Array<{text?:string;name?:string}>;
   actualizado?: string;
 };
 
@@ -137,15 +117,11 @@ async function refresh() {
         summary: String(item.resumen ?? item.summary ?? ""),
       })),
 
+      canciones: (raw.canciones ?? []).map((item) => ({ x:String(item.x??""), artist:String(item.artist??"") })),
+      frases: (raw.frases ?? []).map((item) => ({ text:String(item.text??""), name:String(item.name??"") })),
+
       eventos: (raw.eventos ?? []).map((item) => ({
-        id: String(item.id ?? ""),
-        title: String(item.titulo ?? item.title ?? ""),
-        date: String(item.fecha ?? item.date ?? ""),
-        time: String(item.hora ?? item.time ?? ""),
-        place: String(item.lugar ?? item.place ?? ""),
-        city: String(item.ciudad ?? item.city ?? ""),
-        description: String(item.descripcion ?? item.description ?? ""),
-        url: String(item.url ?? ""),
+        id: String(item.id ?? ""), title: String(item.titulo ?? ""), date: String(item.fecha ?? ""), time: String(item.hora ?? ""), place: String(item.lugar ?? ""), city: String(item.ciudad ?? ""), description: String(item.descripcion ?? ""), url: String(item.url ?? ""), documentUrl: String(item.documentoUrl ?? ""), documentName: String(item.documentoNombre ?? ""),
       })),
 
       recursos: (raw.recursos ?? []).map((item) => ({

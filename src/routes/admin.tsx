@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CalendarDays, ExternalLink, FileUp, Newspaper, ShieldCheck } from "lucide-react";
+import { ExternalLink, FileUp, Newspaper, ShieldCheck } from "lucide-react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/admin")({
       path: "/admin",
       noindex: true,
       title: "Backoffice",
-      description: "Gestión interna de noticias, eventos y recursos de Plataforma Dorada.",
+      description: "Gestión interna de noticias y recursos de Plataforma Dorada.",
     }),
   component: Page,
 });
@@ -23,7 +23,7 @@ function Page() {
       <PageHeader
         eyebrow="Gestión interna"
         title="Backoffice"
-        lead="Desde aquí puedes abrir el panel para publicar noticias, eventos y materiales de la Plataforma Dorada."
+        lead="Desde aquí puedes abrir el panel para publicar noticias y subir materiales de la Plataforma Dorada."
       />
       <section className="mx-auto w-full max-w-4xl px-4 pb-16 sm:px-6">
         <Panel>
@@ -46,13 +46,6 @@ function Page() {
               <h3 className="mt-3 font-semibold">Noticias</h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 Titular, medio, fecha, enlace y resumen.
-              </p>
-            </div>
-            <div className="glass-soft rounded-2xl p-5">
-              <CalendarDays className="text-primary" aria-hidden="true" />
-              <h3 className="mt-3 font-semibold">Eventos</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Fecha, hora, lugar, descripción y enlace del evento.
               </p>
             </div>
             <div className="glass-soft rounded-2xl p-5">

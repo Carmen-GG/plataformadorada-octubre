@@ -20,6 +20,7 @@ export type PublicStats = {
     ayuntamientos: number | null;
     voluntarios: number | null;
     testimoniosRecibidos: number | null;
+    testimoniosAutorizados: number | null;
     testimoniosPublicados: number | null;
   };
   tiposOrganizacion?: Record<string, number>;
@@ -28,7 +29,9 @@ export type PublicStats = {
   indicadores?: Record<string, { valor: number | string | null; unidad: string; fuente: string; url?: string; fechaDato?: string; actualizado?: string; modo?: string; nota?: string }>;
   ultimasAdhesiones: string[];
   ultimosVoluntarios: string[];
-  entidadesAdheridas?: Array<{ nombre: string; tipo: string; ambito: string; web: string }>;
+  entidadesAdheridas?: Array<{ nombre: string; tipo: string; ambito: string; alcance: string; web: string }>;
+  resumenWeb?: Array<{ comunidad: string; adhesiones: number }>;
+  testimoniosPorComunidad?: Record<string, number>;
   testimonios: Array<{ texto: string; autor: string; contexto: string }>;
 };
 
@@ -106,6 +109,7 @@ function normalize(raw: PublicStats): PublicStats {
       ayuntamientos: toNumber(rawContadores.ayuntamientos) ?? (ayuntamientoTypes || null),
       voluntarios: toNumber(rawContadores.voluntarios),
       testimoniosRecibidos: toNumber(rawContadores.testimoniosRecibidos),
+      testimoniosAutorizados: toNumber(rawContadores.testimoniosAutorizados),
       testimoniosPublicados: toNumber(rawContadores.testimoniosPublicados),
     },
     tiposOrganizacion,
@@ -115,6 +119,8 @@ function normalize(raw: PublicStats): PublicStats {
     ultimasAdhesiones: Array.isArray(raw.ultimasAdhesiones) ? raw.ultimasAdhesiones : [],
     ultimosVoluntarios: Array.isArray(raw.ultimosVoluntarios) ? raw.ultimosVoluntarios : [],
     entidadesAdheridas: Array.isArray(raw.entidadesAdheridas) ? raw.entidadesAdheridas : [],
+    resumenWeb: Array.isArray(raw.resumenWeb) ? raw.resumenWeb.map((r) => ({ comunidad: String(r?.comunidad ?? ""), adhesiones: toNumber(r?.adhesiones) ?? 0 })) : [],
+    testimoniosPorComunidad: raw.testimoniosPorComunidad && typeof raw.testimoniosPorComunidad === "object" ? raw.testimoniosPorComunidad : {},
     testimonios: Array.isArray(raw.testimonios) ? raw.testimonios : [],
   };
 }
@@ -186,7 +192,7 @@ export function LiveCount({ name }: { name: CounterKey }) {
     return (
       <span className="inline-flex items-center gap-2" role="status" aria-live="polite">
         <span
-          className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary/25 border-t-primary"
+          className="h-3.5 w-3.5 rounded-full border-2 border-primary/25 border-t-primary"
           aria-hidden="true"
         />
         <span className="text-sm font-sans font-normal">Cargando…</span>

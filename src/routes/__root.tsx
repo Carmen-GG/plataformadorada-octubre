@@ -36,13 +36,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({
-  error,
-  reset,
-}: {
-  error: Error;
-  reset: () => void;
-}) {
+function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {}, [error]);
@@ -50,9 +44,7 @@ function ErrorComponent({
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight">
-          Esta página no se ha cargado
-        </h1>
+        <h1 className="text-xl font-semibold tracking-tight">Esta página no se ha cargado</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Ha ocurrido un problema. Puedes reintentar o volver al inicio.
         </p>
@@ -78,23 +70,14 @@ function ErrorComponent({
   );
 }
 
-export const Route = createRootRouteWithContext<{
-  queryClient: QueryClient;
-}>()({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => {
     const jsonLd = organizationJsonLd();
-
     return {
       meta: [
         { charSet: "utf-8" },
-        {
-          name: "viewport",
-          content: "width=device-width, initial-scale=1",
-        },
-        {
-          title:
-            "Plataforma Dorada · Por un Pacto de Estado por la Dependencia y los Cuidados",
-        },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title: "Plataforma Dorada · Por un Pacto de Estado por la Dependencia y los Cuidados" },
         {
           name: "description",
           content:
@@ -108,9 +91,7 @@ export const Route = createRootRouteWithContext<{
         { rel: "stylesheet", href: appCss },
         { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       ],
-      scripts: jsonLd
-        ? [{ type: "application/ld+json", children: jsonLd }]
-        : [],
+      scripts: jsonLd ? [{ type: "application/ld+json", children: jsonLd }] : [],
     };
   },
   shellComponent: RootShell,
@@ -148,17 +129,14 @@ function RootComponent() {
             aria-hidden="true"
             className="pointer-events-none absolute top-1/3 -right-24 size-[460px] rounded-full bg-primary/20 blur-3xl"
           />
-
           <a href="#contenido" className="skip-link">
             Saltar al contenido principal
           </a>
-
           <SiteHeader />
-
           <main id="contenido" className="relative z-10">
+            {/* Required: nested routes render here. */}
             <Outlet />
           </main>
-
           <SiteFooter />
           <CookieBanner />
         </div>

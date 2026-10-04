@@ -1,14 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// La URL pública del Web App de Apps Script no es un secreto.
-// Usamos la variable de Cloudflare si está disponible y, si no,
-// una URL de respaldo para que el Worker siga funcionando aunque
-// la variable de build no se inyecte correctamente.
 const DEFAULT_CMS_URL =
   "https://script.google.com/macros/s/AKfycby53cqO5YcEOwgxc5orNADhjFhmXj3_ufXloAXTb573UjVVXzRyvCQyQQJqaJHHio1x/exec";
-
-const CMS_URL =
-  import.meta.env.VITE_ADHESION_COUNT_URL?.trim() || DEFAULT_CMS_URL;
+const CMS_URL = import.meta.env.VITE_ADHESION_COUNT_URL?.trim() || DEFAULT_CMS_URL;
 
 const TIMEOUT_MS = 30_000;
 
@@ -40,9 +34,46 @@ async function fetchCms(url: string) {
   }
 }
 
+
+async function fetchCmsPost(url: string, payload: Record<string, unknown>) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error(`Google Apps Script respondió ${response.status}`);
+  return response.json();
+}
+
 export const Route = createFileRoute("/api/cms")({
   server: {
     handlers: {
+      POST: async ({ request }) => {
+        try {
+          const body = (await request.json()) as Record<string, unknown>;
+          const type = body.type === "cancion" ? "cancion" : body.type === "frase" ? "frase" : "";
+          if (!type) return Response.json({ error: "Tipo de propuesta no válido" }, { status: 400 });
+          const payload = {
+            action: "proposal",
+            type,
+            title: String(body.title ?? "").trim(),
+            artist: String(body.artist ?? "").trim(),
+            text: String(body.text ?? "").trim(),
+            proposer: String(body.proposer ?? "").trim(),
+          };
+          if (type === "cancion" && (!payload.title || !payload.artist)) {
+            return Response.json({ error: "Indica canción y artista" }, { status: 400 });
+          }
+          if (type === "frase" && !payload.text) {
+            return Response.json({ error: "Indica la frase o cita" }, { status: 400 });
+          }
+          const response = await fetchCmsPost(CMS_URL, payload);
+          return Response.json(response, { headers: { "Cache-Control": "no-store" } });
+        } catch (error) {
+          console.error("Error enviando propuesta:", error);
+          return Response.json({ error: "No se ha podido enviar la propuesta" }, { status: 502 });
+        }
+      },
       GET: async ({ request }) => {
         try {
           if (!CMS_URL) {

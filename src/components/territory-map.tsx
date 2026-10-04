@@ -112,7 +112,7 @@ export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
           >
             <span className="inline-flex items-center gap-2">
               <span
-                className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary/25 border-t-primary"
+                className="h-3.5 w-3.5 rounded-full border-2 border-primary/25 border-t-primary"
                 aria-hidden="true"
               />
               Cargando datos…

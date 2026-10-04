@@ -76,7 +76,6 @@ function getPublicContent_() {
   return {
     noticias: readNews_(),
     recursos: readResources_(),
-    eventos: readEvents_(),
     actualizado: new Date().toISOString()
   };
 }
@@ -100,30 +99,6 @@ function readNews_() {
   return values.filter(function(r) { return String(r[6]).toLowerCase() !== 'no'; }).map(function(r) {
     return { id: r[0], title: r[1], media: r[2], date: r[3], url: r[4], summary: r[5] };
   }).reverse();
-}
-
-function readEvents_() {
-  var sheet = getOrCreateSheet_('EventosWeb', [
-    'id', 'titulo', 'fecha', 'hora', 'lugar', 'ciudad', 'descripcion', 'url', 'publicada', 'creada'
-  ]);
-  var lastRow = sheet.getLastRow();
-  if (lastRow < 2) return [];
-  var values = sheet.getRange(2, 1, lastRow - 1, 10).getDisplayValues();
-  return values
-    .filter(function(r) { return String(r[8]).toLowerCase() !== 'no'; })
-    .map(function(r) {
-      return {
-        id: r[0],
-        title: r[1],
-        date: r[2],
-        time: r[3],
-        place: r[4],
-        city: r[5],
-        description: r[6],
-        url: r[7]
-      };
-    })
-    .reverse();
 }
 
 function readResources_() {
@@ -162,7 +137,6 @@ function getPublicContent() {
 function setupBackoffice() {
   getOrCreateSheet_('NoticiasWeb', ['id', 'titulo', 'medio', 'fecha', 'url', 'resumen', 'publicada', 'creada']);
   getOrCreateSheet_('RecursosWeb', ['id', 'titulo', 'categoria', 'descripcion', 'archivo', 'url', 'creado']);
-  getOrCreateSheet_('EventosWeb', ['id', 'titulo', 'fecha', 'hora', 'lugar', 'ciudad', 'descripcion', 'url', 'publicada', 'creada']);
   getDriveFolder_();
   return 'Backoffice preparado';
 }
@@ -210,40 +184,9 @@ function saveResource(data) {
   return { ok: true, id: id, url: 'https://drive.google.com/uc?export=download&id=' + file.getId() };
 }
 
-function saveEvent(data) {
-  assertAdmin_(data && data.password);
-  var title = String(data.title || '').trim();
-  var date = String(data.date || '').trim();
-  if (!title) throw new Error('El título del evento es obligatorio.');
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error('La fecha del evento no es válida.');
-
-  var sheet = getOrCreateSheet_('EventosWeb', [
-    'id', 'titulo', 'fecha', 'hora', 'lugar', 'ciudad', 'descripcion', 'url', 'publicada', 'creada'
-  ]);
-  var id = Utilities.getUuid();
-  sheet.appendRow([
-    id,
-    title,
-    date,
-    String(data.time || '').trim(),
-    String(data.place || '').trim(),
-    String(data.city || '').trim(),
-    String(data.description || '').trim(),
-    String(data.url || '').trim(),
-    data.published === false ? 'No' : 'Sí',
-    new Date().toISOString()
-  ]);
-  return { ok: true, id: id };
-}
-
 function deleteNews(data) {
   assertAdmin_(data && data.password);
   return deleteRowById_('NoticiasWeb', data.id);
-}
-
-function deleteEvent(data) {
-  assertAdmin_(data && data.password);
-  return deleteRowById_('EventosWeb', data.id);
 }
 
 function deleteResource(data) {

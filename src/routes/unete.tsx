@@ -37,6 +37,7 @@ function Unete() {
           Rellenar el formulario de adhesión
         </a>
       </PageHeader>
+      <section className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6"><div className="ml-auto w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-right shadow-sm"><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Adhesiones</p><p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="adhesiones" /></p></div></section>
 
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         <div className="grid gap-6 lg:grid-cols-12">

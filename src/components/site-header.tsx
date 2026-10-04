@@ -40,7 +40,7 @@ export function SiteHeader() {
         </Link>
 
         <ul className="hidden items-center gap-5 text-sm font-medium text-muted-foreground xl:flex">
-          {navItems.slice(0, 7).map((item) => (
+          {navItems.slice(0, 10).map((item) => (
             <li key={item.to}>
               <Link
                 to={item.to}

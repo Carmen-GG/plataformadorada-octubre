@@ -3,7 +3,7 @@ import { useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";
-import { formatCount, listStatus, usePublicStats } from "@/lib/public-stats";
+import { LiveCount, listStatus, usePublicStats } from "@/lib/public-stats";
 
 export const Route = createFileRoute("/entidades")({
   head: () =>
@@ -49,6 +49,12 @@ function Page() {
           Adherir mi entidad
         </a>
       </PageHeader>
+      <section className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6">
+        <div className="ml-auto w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-right shadow-sm">
+          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Entidades adheridas</p>
+          <p className="mt-1 font-display text-4xl font-bold text-primary" aria-live="polite"><LiveCount name="entidades" /></p>
+        </div>
+      </section>
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         {status ? (
           <p className="text-muted-foreground" role="status">
@@ -57,8 +63,7 @@ function Page() {
         ) : (
           <>
             <p className="mb-4 text-sm text-muted-foreground">
-              Entidades adheridas públicamente: <strong>{formatCount(all.length)}</strong>. Todas
-              tienen la misma visibilidad y se muestran por orden alfabético.
+              Las entidades que han autorizado su publicación se muestran por orden alfabético.
             </p>
             <div role="group" aria-label="Filtrar por tipo" className="flex flex-wrap gap-2">
               {types.map((t) => (
@@ -85,7 +90,7 @@ function Page() {
                     <p className="font-display text-lg font-semibold">{e.nombre}</p>
                     <p className="text-sm text-muted-foreground">
                       {e.tipo}
-                      {e.ambito ? ` · ${e.ambito}` : ""}
+                      {e.alcance ? ` · ${e.alcance}` : e.ambito ? ` · ${e.ambito}` : ""}
                     </p>
                     {href && (
                       <p className="mt-2 text-sm">

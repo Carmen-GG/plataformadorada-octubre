@@ -187,16 +187,3 @@
   }
 }
 
-@keyframes floaty {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-@utility floaty {
-  animation: floaty 7s ease-in-out infinite;
-}

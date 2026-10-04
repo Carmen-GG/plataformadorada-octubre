@@ -66,7 +66,7 @@ function Page() {
                 <p className="font-display text-3xl font-semibold text-primary" aria-live="polite">
                   {loading ? (
                     <span className="inline-flex items-center gap-2 text-base font-sans font-normal">
-                      <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary/25 border-t-primary" aria-hidden="true" />
+                      <span className="h-3.5 w-3.5 rounded-full border-2 border-primary/25 border-t-primary" aria-hidden="true" />
                       Cargando…
                     </span>
                   ) : displayValue}
@@ -98,7 +98,7 @@ function Page() {
                 {COUNTER_KEY[c.key]
                   ? stats
                     ? formatCount(counterValue(stats, COUNTER_KEY[c.key]!))
-                    : <span className="inline-flex items-center gap-2 text-base font-sans font-normal" role="status" aria-live="polite"><span className="h-3 w-3 animate-spin rounded-full border-2 border-primary/25 border-t-primary" aria-hidden="true" />Cargando…</span>
+                    : <span className="inline-flex items-center gap-2 text-base font-sans font-normal" role="status" aria-live="polite"><span className="h-3 w-3 rounded-full border-2 border-primary/25 border-t-primary" aria-hidden="true" />Cargando…</span>
                   : c.value}
               </p>
               <p className="mt-2 text-sm text-muted-foreground">{c.label}</p>

@@ -17,12 +17,12 @@ const COUNTER_KEY: Record<string, CounterKey> = {
   ayuntamientos: "ayuntamientos",
 };
 import { useCmsContent } from "@/lib/cms";
+import { LatestInstagramVideo } from "@/components/social-feeds";
 import { pageHead } from "@/lib/seo";
 import {
   counters,
   events,
   indicators,
-  milestones,
   news as fallbackNews,
   regions,
 } from "@/lib/content";
@@ -58,8 +58,8 @@ function Home() {
   );
   const voices = (stats?.testimonios ?? []).slice(0, 3);
   const voicesStatus = listStatus(state, voices.length, "Todavía no hay testimonios publicados.");
-  const liveNews =
-    cms?.noticias ?? fallbackNews.map((n, i) => ({ id: String(i), ...n, summary: "" }));
+  const liveNews = cms?.noticias ?? fallbackNews.map((n, i) => ({ id: String(i), ...n, summary: "" }));
+  const liveEvents = cms?.eventos?.length ? cms.eventos : events;
 
   return (
     <>
@@ -95,7 +95,7 @@ function Home() {
           </div>
 
           <div className="lg:col-span-5">
-            <Panel className="floaty">
+            <Panel>
               <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
                 {t("home.countersTitle")}
               </p>
@@ -147,22 +147,19 @@ function Home() {
         </dl>
       </section>
 
-      {/* Qué está pasando */}
-      <section aria-labelledby="que-pasa" className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
-        <h2 id="que-pasa" className="font-display text-3xl font-semibold">
-          ¿Qué está pasando?
-        </h2>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          Indicadores del sistema de atención a la dependencia. Se ampliarán con nuevas fuentes
-          verificadas desde el backoffice.
-        </p>
+      {/* Situación actual */}
+      <section aria-labelledby="situacion-actual" className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+        <h2 id="situacion-actual" className="font-display text-3xl font-semibold">La situación actual</h2>
+        <div className="mt-4 max-w-3xl space-y-4 leading-relaxed text-muted-foreground">
+          <p>Cuidar no puede seguir siendo una responsabilidad que recaiga principalmente sobre las familias.</p>
+          <p>Miles de personas en situación de dependencia esperan durante meses para acceder a una valoración, una prestación o un recurso. Mientras tanto, familiares y cuidadores sostienen cada día una realidad que afecta a su tiempo, su salud, su economía y su proyecto de vida.</p>
+          <p>El sistema necesita más recursos, mayor coordinación y una respuesta estable que garantice los mismos derechos con independencia del lugar donde vivamos.</p>
+          <p>Ante esta realidad, creemos que ha llegado el momento de alcanzar un <strong className="text-foreground">Pacto de Estado por la Dependencia y los Cuidados.</strong></p>
+          <p className="font-semibold text-foreground">Por eso nace Plataforma Dorada</p>
+          <p>Para unir voces, visibilizar esta realidad y conseguir un compromiso de Estado que coloque los cuidados y la dependencia en el centro de las políticas públicas.</p>
+        </div>
         <dl className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {indicators.map((i) => (
-            <div key={i.label} className="glass-panel rounded-2xl p-5">
-              <dd className="font-display text-2xl font-bold text-primary">{i.value}</dd>
-              <dt className="mt-1 text-sm text-muted-foreground">{i.label}</dt>
-            </div>
-          ))}
+          {indicators.map((i) => { const d=stats?.indicadores?.[i.key]; return <div key={i.label} className="glass-panel rounded-2xl p-5"><dd className="font-display text-2xl font-bold text-primary">{d?.valor != null ? `${d.valor}${d.unidad === "meses" ? " meses" : ""}` : i.value}</dd><dt className="mt-1 text-sm text-muted-foreground">{i.label}</dt></div>; })}
         </dl>
         <p className="mt-4 text-sm">
           <Link to="/datos" className="font-semibold text-primary underline underline-offset-4">
@@ -179,47 +176,16 @@ function Home() {
               <h2 className="font-display text-2xl font-semibold">Mapa de adhesiones</h2>
               <span className="text-xs text-muted-foreground">Datos agregados por territorio</span>
             </div>
-            <ul className="mt-5 grid gap-2 sm:grid-cols-2">
-              {regions.slice(0, 8).map((r) => (
-                <li
-                  key={r.name}
-                  className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm"
-                >
-                  <span className="font-medium">{r.name}</span>
-                  <span className="text-muted-foreground">
-                    {formatCount(stats?.porComunidad[r.name]?.adhesiones ?? (stats ? 0 : null))}{" "}
-                    adhesiones
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-4 text-sm">
-              <Link to="/datos" className="font-semibold text-primary underline underline-offset-4">
-                Ver el mapa completo por comunidad y provincia
-              </Link>
-            </p>
+            <div className="mt-5 overflow-x-auto rounded-2xl border border-border">
+              <table className="w-full min-w-[360px] text-sm"><caption className="sr-only">Resumen de adhesiones por comunidad autónoma</caption><thead><tr className="bg-muted text-left"><th className="px-4 py-3 font-semibold">Comunidad autónoma</th><th className="px-4 py-3 text-right font-semibold">Adhesiones</th></tr></thead><tbody>{(stats?.resumenWeb?.length ? stats.resumenWeb : regions.map(r=>({comunidad:r.name,adhesiones:Number(stats?.porComunidad[r.name]?.adhesiones??0)}))).map((r,i)=><tr key={`${r.comunidad}-${i}`} className="border-t border-border"><td className="px-4 py-2.5">{r.comunidad}</td><td className="px-4 py-2.5 text-right font-semibold">{formatCount(r.adhesiones)}</td></tr>)}</tbody></table>
+            </div>
+            <p className="mt-4 text-sm"><Link to="/datos" className="font-semibold text-primary underline underline-offset-4">Ver el mapa completo por comunidad autónoma</Link></p>
           </Panel>
 
           <Panel as="section" className="lg:col-span-5">
-            <h2 className="font-display text-2xl font-semibold">Hitos</h2>
-            <ol className="mt-5 space-y-5">
-              {milestones.map((m, index) => (
-                <li key={m.title} className="flex gap-4">
-                  <span
-                    aria-hidden="true"
-                    className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-bold text-primary-foreground"
-                  >
-                    {index + 1}
-                  </span>
-                  <div>
-                    <p className="font-semibold">{m.title}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {m.date} · {m.description}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <h2 className="font-display text-2xl font-semibold">Último vídeo de Instagram</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Se actualiza automáticamente con el contenido más reciente de @assumptaserna.</p>
+            <LatestInstagramVideo />
           </Panel>
         </div>
       </section>
@@ -290,16 +256,16 @@ function Home() {
           <Panel as="section">
             <h2 className="font-display text-2xl font-semibold">Próximos eventos</h2>
             <ul className="mt-5 space-y-4">
-              {events
-                .filter((e) => !e.past)
+              {liveEvents
+                .filter((e: any) => e.date ? new Date(`${e.date}T23:59:59`).getTime() >= Date.now() : !e.past)
                 .map((e, i) => (
                   <li key={i} className="glass-soft flex items-center gap-4 rounded-2xl p-4">
                     <span className="shrink-0 text-center">
                       <span className="block font-display text-2xl font-bold text-primary">
-                        {e.day}
+                        {e.date ? new Date(`${e.date}T12:00:00`).getDate() : e.day}
                       </span>
                       <span className="block text-[10px] tracking-widest text-muted-foreground uppercase">
-                        {e.month}
+                        {e.date ? new Date(`${e.date}T12:00:00`).toLocaleDateString("es-ES",{month:"short"}).replace(".","").toUpperCase() : e.month}
                       </span>
                     </span>
                     <span>

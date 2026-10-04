@@ -8,7 +8,7 @@ export const Route = createFileRoute("/prensa")({
   head: () =>
     pageHead({
       path: "/prensa",
-      title: "Prensa y recursos",
+      title: "Recursos",
       description:
         "Dossier de prensa, logotipos, carteles y material para redes de la Plataforma Dorada.",
     }),
@@ -31,9 +31,17 @@ function Page() {
     <>
       <PageHeader
         eyebrow="Para medios y difusión"
-        title="Prensa y recursos"
+        title="Recursos"
         lead={`Contacto de prensa: ${SITE.email}`}
       />
+      <section className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6">
+        <div className="flex justify-end">
+          <Link to="/imagen-perfil" className="rounded-3xl bg-accent px-5 py-3 text-right font-semibold text-accent-foreground shadow-sm">
+            <span className="block text-xs uppercase tracking-[0.16em]">Herramienta</span>
+            <span>Crea tu imagen de perfil solidaria</span>
+          </Link>
+        </div>
+      </section>
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         <div className="grid gap-5 sm:grid-cols-2">
           {resources.map((r) => (
@@ -60,18 +68,6 @@ function Page() {
             </Panel>
           ))}
         </div>
-        <Panel className="mt-6">
-          <h2 className="font-display text-xl font-semibold">Imagen de perfil solidaria</h2>
-          <p className="mt-2 text-muted-foreground">
-            Añade el marco dorado a tu foto y compártela en redes.
-          </p>
-          <Link
-            to="/imagen-perfil"
-            className="mt-4 inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-foreground"
-          >
-            Crear mi imagen
-          </Link>
-        </Panel>
       </section>
     </>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SITE } from "@/lib/content";
 import { saveConsent, useThirdPartyConsent } from "@/lib/consent";
 
@@ -53,6 +53,15 @@ function InstagramEmbed() {
       </blockquote>
     </div>
   );
+}
+
+export function LatestInstagramVideo() {
+  const [permalink, setPermalink] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => { fetch("/api/instagram/latest", { cache: "no-store" }).then(r=>r.json()).then(d=>setPermalink(d.permalink ?? null)).catch(()=>setPermalink(null)).finally(()=>setLoading(false)); }, []);
+  useEffect(() => { if (!permalink) return; loadExternalScript("https://www.instagram.com/embed.js", "pd-instagram-embed", () => { const instagram=(window as Window & {instgrm?:{Embeds?:{process:()=>void}}}).instgrm; instagram?.Embeds?.process(); }); }, [permalink]);
+  const content = loading ? <div className="mt-5 rounded-3xl bg-white p-6 text-sm text-muted-foreground" role="status">Cargando el último vídeo…</div> : !permalink ? <div className="mt-5 rounded-3xl bg-white p-6"><p className="text-sm text-muted-foreground">No se ha podido cargar automáticamente el último vídeo en este momento.</p><a href={SITE.instagram} target="_blank" rel="noreferrer" className="mt-3 inline-block font-semibold text-primary underline">Abrir Instagram</a></div> : <blockquote className="instagram-media mt-5 w-full" data-instgrm-permalink={permalink} data-instgrm-version="14" style={{background:"#FFF",border:0,borderRadius:12,margin:0,maxWidth:658,minWidth:288,width:"100%"}}><a href={permalink} target="_blank" rel="noreferrer">Ver último vídeo en Instagram</a></blockquote>;
+  return <ConsentGate href={SITE.instagram} network="Instagram">{content}</ConsentGate>;
 }
 
 function TikTokEmbed() {

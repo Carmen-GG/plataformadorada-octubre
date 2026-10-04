@@ -1,0 +1,387 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Panel } from "@/components/page-header";
+import { useI18n } from "@/lib/i18n";
+import { AdhesionCount } from "@/lib/adhesions";
+import {
+  LiveCount,
+  formatCount,
+  listStatus,
+  usePublicStats,
+  type CounterKey,
+} from "@/lib/public-stats";
+
+const COUNTER_KEY: Record<string, CounterKey> = {
+  adhesiones: "adhesiones",
+  voluntarios: "voluntarios",
+  entidades: "entidades",
+  ayuntamientos: "ayuntamientos",
+};
+import { useCmsContent } from "@/lib/cms";
+import { pageHead } from "@/lib/seo";
+import {
+  counters,
+  events,
+  indicators,
+  milestones,
+  news as fallbackNews,
+  regions,
+} from "@/lib/content";
+
+export const Route = createFileRoute("/")({
+  head: () =>
+    pageHead({
+      path: "/",
+      title: "Inicio",
+      fullTitle: "Plataforma Dorada · Por un Pacto de Estado por la Dependencia y los Cuidados",
+      description:
+        "Movimiento ciudadano apartidista para exigir un Pacto de Estado por la Dependencia y los Cuidados. Adhiérete, hazte voluntario y comparte tu testimonio.",
+    }),
+  component: Home,
+});
+
+function Home() {
+  const { t } = useI18n();
+  const cms = useCmsContent();
+  const state = usePublicStats();
+  const stats = state.stats;
+  const recentJoins = (stats?.ultimasAdhesiones ?? []).slice(0, 6);
+  const joinsStatus = listStatus(state, recentJoins.length, "Todavía no hay adhesiones públicas.");
+  // Comunidades autónomas con al menos una adhesión o entidad (dato agregado).
+  const regionsWithData = stats
+    ? Object.values(stats.porComunidad).filter((r) => r.adhesiones + r.entidades > 0).length
+    : null;
+  const entitiesList = (stats?.entidadesAdheridas ?? []).slice(0, 8);
+  const entitiesStatus = listStatus(
+    state,
+    entitiesList.length,
+    "Todavía no hay entidades adheridas públicas.",
+  );
+  const voices = (stats?.testimonios ?? []).slice(0, 3);
+  const voicesStatus = listStatus(state, voices.length, "Todavía no hay testimonios publicados.");
+  const liveNews =
+    cms?.noticias ?? fallbackNews.map((n, i) => ({ id: String(i), ...n, summary: "" }));
+
+  return (
+    <>
+      {/* Hero */}
+      <section className="mx-auto w-full max-w-6xl px-4 pt-14 pb-8 sm:px-6">
+        <div className="grid items-center gap-8 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <p className="glass-soft inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold tracking-[0.15em] text-primary uppercase">
+              <span aria-hidden="true" className="size-2 rounded-full bg-accent" />
+              {t("home.badge")}
+            </p>
+            <h1 className="mt-6 font-display text-4xl leading-[1.03] tracking-tight md:text-6xl">
+              Por un Pacto de Estado por la <span className="text-primary italic">dependencia</span>{" "}
+              y los cuidados
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+              {t("home.lead")}
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <Link
+                to="/unete"
+                className="rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                {t("cta.joinNow")}
+              </Link>
+              <Link
+                to="/voluntariado"
+                className="glass-soft rounded-full px-7 py-3.5 text-base font-semibold text-primary"
+              >
+                {t("cta.collaborate")}
+              </Link>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5">
+            <Panel className="floaty">
+              <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
+                {t("home.countersTitle")}
+              </p>
+              <p className="mt-2 font-display text-4xl font-bold tabular-nums text-primary sm:text-5xl">
+                <AdhesionCount />
+              </p>
+              <dl className="mt-5 grid grid-cols-3 gap-3">
+                <div className="glass-soft rounded-2xl p-3">
+                  <dd className="font-display text-xl font-bold tabular-nums">
+                    <LiveCount name="entidades" />
+                  </dd>
+                  <dt className="mt-1 text-[11px] text-muted-foreground">Organizaciones</dt>
+                </div>
+                <div className="glass-soft rounded-2xl p-3">
+                  <dd className="font-display text-xl font-bold tabular-nums">
+                    <LiveCount name="ayuntamientos" />
+                  </dd>
+                  <dt className="mt-1 text-[11px] text-muted-foreground">Ayuntamientos</dt>
+                </div>
+                <div className="glass-soft rounded-2xl p-3">
+                  <dd className="font-display text-xl font-bold tabular-nums">
+                    {formatCount(regionsWithData)}
+                  </dd>
+                  <dt className="mt-1 text-[11px] text-muted-foreground">Comunidades autónomas</dt>
+                </div>
+              </dl>
+              <p className="mt-5 text-xs text-muted-foreground">
+                Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.
+              </p>
+            </Panel>
+          </div>
+        </div>
+      </section>
+
+      {/* Contadores */}
+      <section aria-labelledby="contadores" className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+        <h2 id="contadores" className="sr-only">
+          Cifras del movimiento
+        </h2>
+        <dl className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          {counters.map((c) => (
+            <div key={c.key} className="glass-panel rounded-2xl p-5">
+              <dd className="font-display text-2xl font-bold text-primary sm:text-3xl">
+                {COUNTER_KEY[c.key] ? <LiveCount name={COUNTER_KEY[c.key]!} /> : c.value}
+              </dd>
+              <dt className="mt-1 text-sm text-muted-foreground">{c.label}</dt>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* Qué está pasando */}
+      <section aria-labelledby="que-pasa" className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+        <h2 id="que-pasa" className="font-display text-3xl font-semibold">
+          ¿Qué está pasando?
+        </h2>
+        <p className="mt-3 max-w-2xl text-muted-foreground">
+          Indicadores del sistema de atención a la dependencia. Se ampliarán con nuevas fuentes
+          verificadas desde el backoffice.
+        </p>
+        <dl className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {indicators.map((i) => (
+            <div key={i.label} className="glass-panel rounded-2xl p-5">
+              <dd className="font-display text-2xl font-bold text-primary">{i.value}</dd>
+              <dt className="mt-1 text-sm text-muted-foreground">{i.label}</dt>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-4 text-sm">
+          <Link to="/datos" className="font-semibold text-primary underline underline-offset-4">
+            Ver todos los datos e indicadores
+          </Link>
+        </p>
+      </section>
+
+      {/* Mapa + hitos */}
+      <section className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+        <div className="grid gap-6 lg:grid-cols-12">
+          <Panel as="section" className="lg:col-span-7">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="font-display text-2xl font-semibold">Mapa de adhesiones</h2>
+              <span className="text-xs text-muted-foreground">Datos agregados por territorio</span>
+            </div>
+            <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+              {regions.slice(0, 8).map((r) => (
+                <li
+                  key={r.name}
+                  className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm"
+                >
+                  <span className="font-medium">{r.name}</span>
+                  <span className="text-muted-foreground">
+                    {formatCount(stats?.porComunidad[r.name]?.adhesiones ?? (stats ? 0 : null))}{" "}
+                    adhesiones
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-sm">
+              <Link to="/datos" className="font-semibold text-primary underline underline-offset-4">
+                Ver el mapa completo por comunidad y provincia
+              </Link>
+            </p>
+          </Panel>
+
+          <Panel as="section" className="lg:col-span-5">
+            <h2 className="font-display text-2xl font-semibold">Hitos</h2>
+            <ol className="mt-5 space-y-5">
+              {milestones.map((m, index) => (
+                <li key={m.title} className="flex gap-4">
+                  <span
+                    aria-hidden="true"
+                    className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-bold text-primary-foreground"
+                  >
+                    {index + 1}
+                  </span>
+                  <div>
+                    <p className="font-semibold">{m.title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {m.date} · {m.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Panel>
+        </div>
+      </section>
+
+      {/* Últimas adhesiones */}
+      <section aria-labelledby="adhesiones" className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+        <h2 id="adhesiones" className="font-display text-3xl font-semibold">
+          Últimas adhesiones
+        </h2>
+        <p className="mt-3 max-w-2xl text-muted-foreground">
+          Solo se publican las personas que han autorizado expresamente aparecer, con nombre,
+          inicial del primer apellido y ciudad.
+        </p>
+        {joinsStatus ? (
+          <p className="mt-6 text-muted-foreground" role="status">
+            {joinsStatus}
+          </p>
+        ) : (
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {recentJoins.map((name, i) => (
+              <li key={i} className="glass-panel rounded-2xl px-5 py-4 font-medium">
+                {name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      {/* Testimonios */}
+      <section aria-labelledby="voces" className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+        <h2 id="voces" className="font-display text-3xl font-semibold">
+          Voces del cuidado
+        </h2>
+        {voicesStatus ? (
+          <p className="mt-6 text-muted-foreground" role="status">
+            {voicesStatus}
+          </p>
+        ) : (
+          <div className="mt-6 grid gap-5 md:grid-cols-3">
+            {voices.map((item, i) => (
+              <figure key={i} className="glass-panel rounded-3xl p-6">
+                <blockquote className="font-display text-lg leading-snug italic">
+                  {item.texto.length > 320 ? `${item.texto.slice(0, 320).trimEnd()}…` : item.texto}
+                </blockquote>
+                <figcaption className="mt-4">
+                  <span className="block text-sm font-semibold">{item.autor}</span>
+                  {item.contexto && (
+                    <span className="block text-xs text-muted-foreground">{item.contexto}</span>
+                  )}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
+        <p className="mt-4 text-sm">
+          <Link
+            to="/testimonios"
+            className="font-semibold text-primary underline underline-offset-4"
+          >
+            Leer y compartir testimonios
+          </Link>
+        </p>
+      </section>
+
+      {/* Eventos + entidades */}
+      <section className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Panel as="section">
+            <h2 className="font-display text-2xl font-semibold">Próximos eventos</h2>
+            <ul className="mt-5 space-y-4">
+              {events
+                .filter((e) => !e.past)
+                .map((e, i) => (
+                  <li key={i} className="glass-soft flex items-center gap-4 rounded-2xl p-4">
+                    <span className="shrink-0 text-center">
+                      <span className="block font-display text-2xl font-bold text-primary">
+                        {e.day}
+                      </span>
+                      <span className="block text-[10px] tracking-widest text-muted-foreground uppercase">
+                        {e.month}
+                      </span>
+                    </span>
+                    <span>
+                      <span className="block font-semibold">{e.title}</span>
+                      <span className="block text-sm text-muted-foreground">{e.place}</span>
+                    </span>
+                  </li>
+                ))}
+            </ul>
+          </Panel>
+
+          <Panel as="section">
+            <h2 className="font-display text-2xl font-semibold">Entidades adheridas</h2>
+            {entitiesStatus ? (
+              <p className="mt-5 text-sm text-muted-foreground" role="status">
+                {entitiesStatus}
+              </p>
+            ) : (
+              <ul className="mt-5 flex flex-wrap gap-3">
+                {entitiesList.map((e, i) => (
+                  <li key={i} className="glass-soft rounded-full px-4 py-2 text-sm font-medium">
+                    {e.nombre} · {e.tipo}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="mt-5 text-sm">
+              <Link
+                to="/entidades"
+                className="font-semibold text-primary underline underline-offset-4"
+              >
+                Ver todas las entidades
+              </Link>
+            </p>
+          </Panel>
+        </div>
+      </section>
+
+      {/* Novedades + prensa + contacto */}
+      <section className="mx-auto w-full max-w-6xl px-4 py-8 pb-14 sm:px-6">
+        <div className="grid gap-6 lg:grid-cols-3">
+          <Panel as="section">
+            <h2 className="font-display text-xl font-semibold">Novedades</h2>
+            <ul className="mt-4 space-y-3 text-sm">
+              {liveNews.slice(0, 3).map((n) => (
+                <li key={n.id}>
+                  <a href={n.url} className="font-medium text-primary hover:underline">
+                    {n.title}
+                  </a>
+                  <span className="block text-xs text-muted-foreground">
+                    {n.media} · {n.date}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Panel>
+          <Panel as="section">
+            <h2 className="font-display text-xl font-semibold">Prensa y recursos</h2>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Logotipos, dossier de prensa y materiales para difundir el movimiento.
+            </p>
+            <Link
+              to="/prensa"
+              className="glass-soft mt-4 inline-block rounded-full px-5 py-2.5 text-sm font-semibold text-primary"
+            >
+              Ir a recursos
+            </Link>
+          </Panel>
+          <Panel as="section">
+            <h2 className="font-display text-xl font-semibold">Contacto</h2>
+            <p className="mt-3 text-sm text-muted-foreground">
+              ¿Eres periodista, entidad o ayuntamiento? Escríbenos.
+            </p>
+            <Link
+              to="/contacto"
+              className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground"
+            >
+              Escríbenos
+            </Link>
+          </Panel>
+        </div>
+      </section>
+    </>
+  );
+}

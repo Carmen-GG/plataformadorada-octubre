@@ -21,7 +21,7 @@ var PD = {
   ADHESIONES_SHEET_NAME: "Firmantes",
   // ID de las otras dos hojas (lo que hay entre /d/ y /edit en la URL de la hoja).
   VOLUNTARIOS_SPREADSHEET_ID: "PEGAR_AQUI_EL_ID_DE_LA_HOJA_DE_VOLUNTARIOS",
-  TESTIMONIOS_SPREADSHEET_ID: "PEGAR_AQUI_EL_ID_DE_LA_HOJA_DE_TESTIMONIOS",
+  TESTIMONIOS_SPREADSHEET_ID: "1dg5REsWA6xb0jVcEH5VSkpOI94ih9rbkqWLSYHf4pbU",
   // Registro de mociones presentado por el equipo.
   MOCIONES_SPREADSHEET_ID: "15HvL9Mu5r9iSGq4sJ2vYTlrkDY3SubfEOxYCmGL10Kg",
   MOCIONES_SHEET_NAME: "presentades",
@@ -55,7 +55,7 @@ var PD = {
 
   // Mientras ajustáis la web: añade al JSON un bloque "diagnostico" con recuentos (sin datos
   // personales) para ver cómo se están leyendo las hojas. Ponlo en false cuando todo esté bien.
-  INCLUDE_DIAGNOSTICO: true,
+  INCLUDE_DIAGNOSTICO: false,
 };
 
 // ───────────────────────────── utilidades ─────────────────────────────
@@ -303,6 +303,7 @@ function pdAdhesiones_() {
   var iOrgName = pdIdx_(h, pdHas_("nombre de la entidad"));
   var iWeb = pdIdx_(h, pdHas_("pagina web"));
   var iPublic = pdIdx_(h, pdHas_("hacer publica la adhesion"));
+  var iAlcance = pdIdx_(h, pdHas_("alcance de la entidad"));
   var iHide = pdIdx_(h, pdEq_("ocultar"));
 
   var res = {
@@ -386,6 +387,7 @@ function pdAdhesiones_() {
           nombre: orgName,
           tipo: pdTipoEntidad_(tipo),
           ambito: pdCcaa_(pdCell_(row, iOrgCcaa)),
+          alcance: pdText_(pdCell_(row, iAlcance), 100),
           web: pdUrl_(pdCell_(row, iWeb)),
         });
       }
@@ -465,62 +467,74 @@ function pdRelacion_(raw) {
 }
 
 function pdTestimonios_() {
+  // El formulario real no utiliza la antigua pregunta "como quieres que usemos...".
+  // La columna de consentimiento actual es la 7ª del formulario y se identifica por
+  // "quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos".
   var t = pdReadTable_(
     pdOpen_(PD.TESTIMONIOS_SPREADSHEET_ID),
-    "como quieres que usemos tu testimonio",
+    "quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos",
   );
   if (!t) throw new Error("No encuentro la hoja de testimonios.");
+
   var h = t.headers;
-  var iName = pdIdx_(h, pdEq_("nombre y apellidos"));
-  var iUse = pdIdx_(h, pdHas_("como quieres que usemos tu testimonio"));
-  var iCcaa = pdIdx_(h, pdHas_("comunidad autonoma en la que vives"));
-  var iRel = pdIdx_(h, pdHas_("relacion con la persona dependiente"));
+  var iUse = pdIdx_(
+    h,
+    pdHas_("quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos"),
+  );
+  var iName = pdIdx_(h, pdHas_("nom nombre y dni"));
+  if (iName < 0) iName = pdIdx_(h, pdHas_("nombre y dni"));
   var iPub = pdIdx_(h, pdEq_("publicar en web"));
   var iText = pdIdx_(h, pdEq_("texto web"));
   var iHide = pdIdx_(h, pdEq_("ocultar"));
   var iAuto = pdIdx_(h, pdHas_(PD.TESTIMONIO_TEXTO_AUTO));
+  var iCcaa = pdIdx_(h, pdEq_("autonomia"));
 
-  var res = { recibidos: 0, publicados: 0, lista: [] };
+  // IMPORTANTE: todas las filas de respuestas cuentan como testimonios recibidos,
+  // independientemente del consentimiento para publicar y de si la persona también
+  // participa como voluntaria.
+  var res = { recibidos: t.rows.length, autorizados: 0, publicados: 0, lista: [], porCcaa: {} };
+
   for (var k = t.rows.length - 1; k >= 0; k--) {
     var row = t.rows[k];
-    if (!pdCell_(row, 0)) continue;
-    res.recibidos++;
+    var use = iUse >= 0 ? pdNorm_(pdCell_(row, iUse)) : "";
+    var autorizado = pdYes_(use);
+    if (autorizado) res.autorizados++;
+    var ccaa = iCcaa >= 0 ? pdCcaa_(pdCell_(row, iCcaa)) : "";
+    if (ccaa) res.porCcaa[ccaa] = (res.porCcaa[ccaa] || 0) + 1;
 
+    // Nada de lo que no esté expresamente autorizado se envía al navegador.
+    if (!autorizado) continue;
     if (iHide >= 0 && pdYes_(pdCell_(row, iHide))) continue;
-    var use = pdNorm_(pdCell_(row, iUse));
-    var withName = use.indexOf("con mi nombre") >= 0 || use.indexOf("medios") >= 0;
-    var anonymous = use.indexOf("anonimo") >= 0;
-    if (!(withName || (anonymous && PD.PUBLISH_ANONYMOUS))) continue;
 
-    var text;
-    if (PD.REQUIRE_APPROVAL) {
-      if (iPub < 0 || !pdYes_(pdCell_(row, iPub))) continue;
+    // La publicación efectiva sigue dependiendo de la moderación del equipo cuando
+    // están disponibles las columnas internas Publicar en web / Texto web.
+    var text = "";
+    if (PD.REQUIRE_APPROVAL && iPub >= 0) {
+      if (!pdYes_(pdCell_(row, iPub))) continue;
+      text = iText >= 0 ? pdCell_(row, iText) : "";
+    } else if (iText >= 0) {
       text = pdCell_(row, iText);
-    } else {
-      text = pdCell_(row, iText) || pdCell_(row, iAuto);
     }
+    if (!text && iAuto >= 0) text = pdCell_(row, iAuto);
+
     text = String(text || "")
       .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
       .slice(0, 1500);
     if (!text) continue;
 
-    var ccaa = pdCcaa_(pdCell_(row, iCcaa));
-    var author;
-    if (withName) {
+    var author = "Anónimo";
+    if (iName >= 0) {
       var parts = pdSplitFull_(pdCell_(row, iName));
-      author = pdPublicName_(parts.given, parts.surnames);
-    } else {
-      author = "Anónimo";
+      var publicName = pdPublicName_(parts.given, parts.surnames);
+      if (publicName) author = publicName;
     }
-    if (!author) continue;
 
     res.publicados++;
     if (res.lista.length < PD.LIST_TESTIMONIOS) {
-      var ctx = pdRelacion_(pdCell_(row, iRel));
       res.lista.push({
         texto: text,
-        autor: ccaa ? author + " · " + ccaa : author,
-        contexto: ctx,
+        autor: author,
+        contexto: "",
       });
     }
   }
@@ -712,6 +726,42 @@ function pdIndicadoresPublic_() {
   return out;
 }
 
+// ───────────────────────────── resumen web ─────────────────────────────
+function pdResumenWeb_() {
+  try {
+    var ss = pdOpen_(PD.ADHESIONES_SPREADSHEET_ID);
+    var sh = ss.getSheetByName("Resumen");
+    if (!sh) return [];
+    var range = ss.getRangeByName("web");
+    var values = range ? range.getDisplayValues() : sh.getDataRange().getDisplayValues();
+    if (!values.length) return [];
+    // Preferimos una tabla con cabeceras reconocibles. Si no existen, buscamos dos columnas con CCAA + adhesiones.
+    var header = values[0].map(pdNorm_);
+    var cc = -1, ad = -1;
+    for (var i=0;i<header.length;i++) {
+      if (cc < 0 && (header[i].indexOf("comunidad autonoma") >= 0 || header[i] === "comunidad")) cc=i;
+      if (ad < 0 && header[i].indexOf("adhesion") >= 0) ad=i;
+    }
+    var start = (cc >= 0 && ad >= 0) ? 1 : 0;
+    if (cc < 0 || ad < 0) {
+      // En un rango web de dos columnas, son comunidad + adhesiones.
+      cc = 0; ad = 1;
+    }
+    var out=[];
+    for (var r=start;r<values.length;r++) {
+      var comunidad=String(values[r][cc]||"").trim();
+      var raw=String(values[r][ad]||"").replace(/[^0-9-]/g,"");
+      var adhesiones=Number(raw);
+      if (!comunidad || !Number.isFinite(adhesiones)) continue;
+      out.push({comunidad: comunidad, adhesiones: adhesiones});
+    }
+    return out;
+  } catch (e) {
+    console.error("resumen web: "+e);
+    return [];
+  }
+}
+
 // ───────────────────────────── ensamblado ─────────────────────────────
 
 function pdSafe_(name, fn, errors) {
@@ -741,6 +791,7 @@ function buildPublicStats_() {
       ayuntamientos: a ? a.ayuntamientos : null,
       voluntarios: v ? v.total : null,
       testimoniosRecibidos: t ? t.recibidos : null,
+      testimoniosAutorizados: t ? t.autorizados : null,
       testimoniosPublicados: t ? t.publicados : null,
     },
     tiposOrganizacion: a ? a.tipos : {},
@@ -751,6 +802,8 @@ function buildPublicStats_() {
     entidadesAdheridas: a ? a.entidadesLista : [],
     ultimosVoluntarios: v ? v.ultimos : [],
     testimonios: t ? t.lista : [],
+    testimoniosPorComunidad: t ? t.porCcaa : {},
+    resumenWeb: pdResumenWeb_(),
   };
   if (PD.INCLUDE_DIAGNOSTICO) out.diagnostico = pdDiagnostico_(a, v, t, m);
   return out;
@@ -762,7 +815,7 @@ function pdDiagnostico_(a, v, t, m) {
     adhesiones: a ? a.diag : null,
     entidadesTipoRaw: a ? a.tipos : null,
     voluntarios: v ? v.diag : null,
-    testimonios: t ? { filasTotales: t.recibidos } : null,
+    testimonios: t ? { filasTotales: t.recibidos, autorizados: t.autorizados, publicados: t.publicados } : null,
     mociones: m ? m.diag : null,
   };
 }
@@ -789,7 +842,7 @@ function getPublicStats_() {
  */
 function setupPublico() {
   var ss = pdOpen_(PD.TESTIMONIOS_SPREADSHEET_ID);
-  var t = pdReadTable_(ss, "como quieres que usemos tu testimonio");
+  var t = pdReadTable_(ss, "quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos");
   if (!t) throw new Error("No encuentro la hoja de testimonios.");
   var sheet = t.sheet;
   var wanted = ["Publicar en web", "Texto web", "Ocultar"];

@@ -1,6 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const CMS_URL = import.meta.env.VITE_ADHESION_COUNT_URL?.trim() ?? "";
+// La URL pública del Web App de Apps Script no es un secreto.
+// Usamos la variable de Cloudflare si está disponible y, si no,
+// una URL de respaldo para que el Worker siga funcionando aunque
+// la variable de build no se inyecte correctamente.
+const DEFAULT_CMS_URL =
+  "https://script.google.com/macros/s/AKfycby53cqO5YcEOwgxc5orNADhjFhmXj3_ufXloAXTb573UjVVXzRyvCQyQQJqaJHHio1x/exec";
+
+const CMS_URL =
+  import.meta.env.VITE_ADHESION_COUNT_URL?.trim() || DEFAULT_CMS_URL;
 
 const TIMEOUT_MS = 30_000;
 

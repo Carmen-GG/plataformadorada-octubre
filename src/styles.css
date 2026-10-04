@@ -1,0 +1,202 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+/* Tipografías alojadas en la propia web (sin peticiones a Google Fonts). */
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource-variable/fraunces/wght.css";
+@import "@fontsource-variable/fraunces/wght-italic.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Plataforma Dorada — sistema de diseño "cívico luminoso".
+ * Todos los colores en oklch. Nunca usar colores literales en componentes.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --font-display: "Fraunces Variable", "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-ink: var(--ink);
+  --color-mist: var(--mist);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
+:root {
+  --radius: 1rem;
+
+  /* Paleta oficial: dorados, ocres y marrones. Sin tonos azules. */
+  --ink: oklch(0.27 0.035 65);
+  --brand: oklch(0.43 0.085 68);
+  --brand-soft: oklch(0.7 0.105 76);
+  --accent: oklch(0.76 0.14 78);
+  --accent-foreground: oklch(0.25 0.035 65);
+  --mist: oklch(0.95 0.025 80);
+
+  --background: oklch(0.965 0.018 80);
+  --foreground: oklch(0.27 0.035 65);
+  --card: oklch(1 0 0 / 70%);
+  --card-foreground: oklch(0.27 0.035 65);
+  --popover: oklch(0.99 0.008 80);
+  --popover-foreground: oklch(0.27 0.035 65);
+  --primary: oklch(0.43 0.085 68);
+  --primary-foreground: oklch(0.985 0.01 80);
+  --secondary: oklch(0.91 0.035 78);
+  --secondary-foreground: oklch(0.38 0.06 68);
+  --muted: oklch(0.92 0.03 80);
+  --muted-foreground: oklch(0.48 0.045 68);
+  --destructive: oklch(0.48 0.1 48);
+  --destructive-foreground: oklch(0.985 0.01 80);
+  --border: oklch(0.83 0.045 78);
+  --input: oklch(0.83 0.045 78);
+  --ring: oklch(0.55 0.105 73);
+
+  --glass: oklch(1 0 0 / 68%);
+  --glass-border: oklch(1 0 0 / 75%);
+
+  --chart-1: oklch(0.43 0.085 68);
+  --chart-2: oklch(0.76 0.14 78);
+  --chart-3: oklch(0.58 0.1 72);
+  --chart-4: oklch(0.5 0.075 60);
+  --chart-5: oklch(0.68 0.11 88);
+
+  --map-adhesiones: oklch(0.67 0.12 78);
+  --map-entidades: oklch(0.39 0.08 55);
+  --map-mociones-presentadas: oklch(0.58 0.13 48);
+  --map-mociones-aceptadas: oklch(0.55 0.08 118);
+  --map-land: oklch(0.92 0.055 78);
+  --map-land-stroke: oklch(0.67 0.08 78);
+
+  --gradient-page: linear-gradient(
+    140deg,
+    oklch(0.92 0.055 76) 0%,
+    oklch(0.965 0.018 80) 48%,
+    oklch(0.9 0.07 88) 100%
+  );
+  --shadow-glass: 0 20px 50px oklch(0.27 0.035 65 / 12%);
+  --shadow-soft: 0 8px 30px oklch(0.27 0.035 65 / 8%);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--brand);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@utility page-gradient {
+  background-image: var(--gradient-page);
+}
+
+@utility glass-panel {
+  background-color: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-glass);
+}
+
+@utility glass-soft {
+  background-color: oklch(1 0 0 / 55%);
+  border: 1px solid var(--glass-border);
+}
+
+@utility skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--brand);
+  color: var(--primary-foreground);
+  border-radius: 0 0 0.75rem 0;
+
+  &:focus {
+    left: 0;
+  }
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@utility floaty {
+  animation: floaty 7s ease-in-out infinite;
+}

@@ -38,10 +38,31 @@ function displayName(name: string) {
   return POINTS[name]?.label ?? name;
 }
 
+function normalizeCommunity(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/_/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function findCommunityValue<T>(record: Record<string, T> | undefined, community: string): T | undefined {
+  if (!record) return undefined;
+  const wanted = normalizeCommunity(community);
+  const key = Object.keys(record).find((candidate) => normalizeCommunity(candidate) === wanted);
+  return key ? record[key] : undefined;
+}
+
 function valueFor(stats: PublicStats, community: string, key: MetricKey) {
-  if (key === "testimonios") return Number(stats.testimoniosPorComunidad?.[community] ?? 0);
-  if (key.startsWith("mociones")) return Number(stats.mociones?.[community]?.[key] ?? 0);
-  return Number(stats.porComunidad?.[community]?.[key] ?? 0);
+  if (key === "testimonios") return Number(findCommunityValue(stats.testimoniosPorComunidad, community) ?? 0);
+  if (key.startsWith("mociones")) {
+    const row = findCommunityValue(stats.mociones, community);
+    return Number(row?.[key] ?? 0);
+  }
+  const row = findCommunityValue(stats.porComunidad, community);
+  return Number(row?.[key] ?? 0);
 }
 
 function fill(value: number, max: number) {

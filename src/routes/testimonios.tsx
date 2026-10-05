@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE, regions } from "@/lib/content";
-import { LiveCount, listStatus, usePublicStats } from "@/lib/public-stats";
+import { LiveCount, formatCount, listStatus, usePublicStats } from "@/lib/public-stats";
 import { TestimonyCarousel } from "@/components/testimony-carousel";
 
 export const Route = createFileRoute("/testimonios")({
@@ -27,14 +27,14 @@ function Testimonios() {
         {status ? <p className="text-muted-foreground" role="status">{status}</p> : <TestimonyCarousel items={items} />}
         <Panel className="mt-8">
           <h2 className="font-display text-xl font-semibold">Publicación y consentimiento</h2>
-          <p className="mt-3 text-sm text-muted-foreground">Un testimonio puede incluir información sensible. Solo se muestran testimonios cuyo uso público ha sido autorizado y que han superado la revisión correspondiente.</p>
+          <p className="mt-3 text-sm text-muted-foreground">Un testimonio puede incluir información sensible. Solo se muestran testimonios cuyo uso público ha sido autorizado y que han autorizado expresamente su uso público.</p>
           <p className="mt-3 text-sm text-muted-foreground">Autorizados para publicar: <strong><LiveCount name="testimoniosAutorizados" /></strong></p>
         </Panel>
         <Panel className="mt-8">
           <h2 className="font-display text-xl font-semibold">Testimonios por comunidad autónoma</h2>
           <p className="mt-2 text-sm text-muted-foreground">Mapa y resumen agregado. Nunca se muestran ubicaciones personales.</p>
           <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Testimonios por comunidad autónoma">
-            {regions.map((r) => <div key={r.name} className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm" role="listitem"><span>{r.name}</span><strong>{Number(counts[r.name] ?? 0)}</strong></div>)}
+            {regions.map((r) => <div key={r.name} className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm" role="listitem"><span>{r.name}</span><strong>{formatCount(Number(counts[r.name] ?? 0))}</strong></div>)}
           </div>
           {regionRows.length === 0 && <p className="mt-4 text-sm text-muted-foreground">Aún no hay datos territoriales disponibles.</p>}
         </Panel>

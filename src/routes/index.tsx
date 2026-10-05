@@ -5,6 +5,7 @@ import { AdhesionCount } from "@/lib/adhesions";
 import {
   LiveCount,
   formatCount,
+  formatNumberEs,
   listStatus,
   usePublicStats,
   type CounterKey,
@@ -169,7 +170,7 @@ function Home() {
               municipios_mociones_aprobadas: "—",
             };
             const value = d?.valor != null
-              ? `${d.valor}${d.unidad === "meses" ? " meses" : d.unidad === "días" ? " días" : ""}`
+              ? `${formatNumberEs(d.valor)}${d.unidad === "meses" ? " meses" : d.unidad === "días" ? " días" : d.unidad === "%" ? " %" : ""}`
               : fallback[i.key] ?? "—";
             return (
               <div key={i.key} className="glass-panel rounded-3xl p-6">

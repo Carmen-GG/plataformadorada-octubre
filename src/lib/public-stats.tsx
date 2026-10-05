@@ -183,12 +183,25 @@ export function usePublicStats(): State {
   );
 }
 
-const nf = new Intl.NumberFormat("es-ES");
+const nf = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 });
 
 export type CounterKey = keyof PublicStats["contadores"];
 
 export function formatCount(value: number | null | undefined): string {
-  return typeof value === "number" ? nf.format(value) : NO_DATA;
+  return typeof value === "number" && Number.isFinite(value) ? nf.format(value) : NO_DATA;
+}
+
+/** Formatea también valores que llegan desde Google Sheets como texto local (10,5 / 142887). */
+export function formatNumberEs(value: number | string | null | undefined): string {
+  if (value == null || value === "") return NO_DATA;
+  if (typeof value === "number") return formatCount(value);
+  const raw = String(value).trim();
+  if (!raw) return NO_DATA;
+  const normalized = raw.includes(",")
+    ? raw.replace(/\./g, "").replace(",", ".")
+    : raw.replace(/\s/g, "");
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? formatCount(parsed) : raw;
 }
 
 /** Número en vivo; muestra "—" mientras carga o si no hay dato. */

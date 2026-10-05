@@ -3,7 +3,7 @@ import { PageHeader, Panel } from "@/components/page-header";
 import { TerritoryMap } from "@/components/territory-map";
 import { pageHead } from "@/lib/seo";
 import { counters, indicators } from "@/lib/content";
-import { formatCount, usePublicStats, type CounterKey, type PublicStats } from "@/lib/public-stats";
+import { formatCount, formatNumberEs, usePublicStats, type CounterKey, type PublicStats } from "@/lib/public-stats";
 
 const COUNTER_KEY: Record<string, CounterKey> = {
   adhesiones: "adhesiones",
@@ -59,8 +59,8 @@ function Page() {
           {indicators.map((i) => {
             const data = stats?.indicadores?.[i.key];
             const loading = !stats;
-            const value = data?.valor != null ? String(data.valor) : null;
-            const displayValue = loading ? "Cargando…" : value ? `${value}${data?.unidad === "meses" ? " meses" : data?.unidad === "%" ? " %" : ""}` : "Dato no disponible";
+            const value = data?.valor != null ? formatNumberEs(data.valor) : null;
+            const displayValue = loading ? "Cargando…" : value && value !== "—" ? `${value}${data?.unidad === "meses" ? " meses" : data?.unidad === "%" ? " %" : data?.unidad === "días" ? " días" : ""}` : "Dato no disponible";
             return (
               <Panel key={i.key}>
                 <p className="font-display text-3xl font-semibold text-primary" aria-live="polite">

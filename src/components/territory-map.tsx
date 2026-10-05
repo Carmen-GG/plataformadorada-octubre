@@ -46,17 +46,19 @@ function valueFor(stats: PublicStats, community: string, key: MetricKey) {
 
 function fill(value: number, max: number) {
   if (max <= 0) return "var(--map-land)";
-  const ratio = Math.max(0.08, Math.min(1, value / max));
-  return `color-mix(in oklab, var(--map-deep) ${Math.round(18 + ratio * 78)}%, var(--map-land))`;
+  const ratio = Math.max(0, Math.min(1, value / max));
+  // Use a strong gold-to-brown scale with a defined base color; never fall back to black.
+  const pct = Math.round(28 + ratio * 72);
+  return `color-mix(in oklab, var(--map-deep) ${pct}%, var(--map-light))`;
 }
 
 const LEGEND_STEPS = [
-  { label: "Muy bajo", pct: 18 },
-  { label: "Bajo", pct: 32 },
-  { label: "Medio", pct: 48 },
-  { label: "Alto", pct: 66 },
-  { label: "Muy alto", pct: 84 },
-  { label: "Máximo", pct: 96 },
+  { label: "Muy bajo", pct: 28 },
+  { label: "Bajo", pct: 42 },
+  { label: "Medio", pct: 56 },
+  { label: "Alto", pct: 70 },
+  { label: "Muy alto", pct: 85 },
+  { label: "Máximo", pct: 100 },
 ];
 
 export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
@@ -97,7 +99,7 @@ export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
               <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Mapa territorial</p>
               <h3 className="mt-1 font-display text-2xl font-semibold">{metricLabel}</h3>
             </div>
-            <p className="text-right text-xs text-muted-foreground">Más oscuro = mayor valor</p>
+            <p className="text-right text-xs font-medium text-muted-foreground">Más intenso = mayor valor</p>
           </div>
           {!stats && <div className="px-5 pt-3 text-sm" role="status">Cargando datos territoriales…</div>}
           <div className="flex flex-1 items-center justify-center px-2 py-3 sm:px-5">
@@ -130,8 +132,7 @@ export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
                   <g key={community} tabIndex={0} className="cursor-help">
                     <title>{title}</title>
                     <circle cx={point.x} cy={point.y} r={radius} fill={fillColor} stroke="white" strokeWidth="4" opacity={0.96} />
-                    <circle cx={point.x} cy={point.y} r={Math.max(6, radius * 0.42)} fill="var(--map-deep)" opacity={0.22 + ratio * 0.5} />
-                    <text x={point.x} y={point.y + 5} textAnchor="middle" fontSize={radius > 22 ? 12 : 10} fontWeight="800" fill="var(--ink)">
+                    <text x={point.x} y={point.y + 5} textAnchor="middle" fontSize={radius > 22 ? 13 : 11} fontWeight="900" fill="white" paintOrder="stroke" stroke="var(--map-deep)" strokeWidth="2.5" strokeOpacity="0.45">
                       {stats ? formatCount(value) : "…"}
                     </text>
                     <text x={point.x} y={point.y + radius + 18} textAnchor="middle" fontSize="12" fontWeight="800" fill="var(--ink)" paintOrder="stroke" stroke="white" strokeWidth="4">
@@ -147,7 +148,7 @@ export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
               <span className="mr-2 text-primary">Leyenda</span>
               {LEGEND_STEPS.map((step) => (
                 <span key={step.label} className="inline-flex items-center gap-1.5">
-                  <span className="size-4 rounded-full border border-white shadow-sm" style={{ background: `color-mix(in oklab, var(--map-deep) ${step.pct}%, var(--map-land))` }} aria-hidden="true" />
+                  <span className="size-4 rounded-full border border-white shadow-sm" style={{ background: `color-mix(in oklab, var(--map-deep) ${step.pct}%, var(--map-light))` }} aria-hidden="true" />
                   {step.label}
                 </span>
               ))}

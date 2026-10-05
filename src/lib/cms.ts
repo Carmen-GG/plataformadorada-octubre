@@ -13,20 +13,20 @@ export type CmsNews = {
 };
 
 export type CmsResource = {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  filename: string;
-  url: string;
+  id: string; title: string; category: string; description: string; filename: string; url: string; previewUrl?: string;
 };
 
-export type CmsEvent = { id:string; title:string; date:string; time:string; place:string; city:string; description:string; url:string; documentUrl:string; documentName:string };
+export type CmsEvent = { id:string; title:string; date:string; time:string; place:string; city:string; description:string; url:string; documentUrl:string; documentName:string; previewUrl?:string };
+
+export type CmsMilestone = { id: string; date: string; title: string; description: string; imageUrl?: string };
+export type CmsRoadmap = { id: string; phase: string; title: string; detail: string; date?: string; active?: boolean };
 
 export type CmsPayload = {
   noticias: CmsNews[];
   recursos: CmsResource[];
   eventos: CmsEvent[];
+  trayectoria?: CmsMilestone[];
+  hojaRuta?: CmsRoadmap[];
   canciones?: Array<{x:string;artist:string}>;
   frases?: Array<{text:string;name:string}>;
   actualizado?: string;
@@ -45,6 +45,9 @@ type AppsScriptNews = {
   summary?: string;
 };
 
+type AppsScriptMilestone = { id?:string; fecha?:string; titulo?:string; descripcion?:string; imagenUrl?:string };
+type AppsScriptRoadmap = { id?:string; fase?:string; titulo?:string; detalle?:string; fecha?:string; activa?:boolean };
+
 type AppsScriptResource = {
   id?: string;
   fecha?: string;
@@ -52,6 +55,7 @@ type AppsScriptResource = {
   categoria?: string;
   descripcion?: string;
   url?: string;
+  vistaPreviaUrl?: string;
   nombreArchivo?: string;
   title?: string;
   category?: string;
@@ -59,12 +63,14 @@ type AppsScriptResource = {
   filename?: string;
 };
 
-type AppsScriptEvent = { id?:string; titulo?:string; fecha?:string; hora?:string; lugar?:string; ciudad?:string; descripcion?:string; url?:string; documentoUrl?:string; documentoNombre?:string };
+type AppsScriptEvent = { id?:string; titulo?:string; fecha?:string; hora?:string; lugar?:string; ciudad?:string; descripcion?:string; url?:string; documentoUrl?:string; documentoNombre?:string; previewUrl?:string };
 
 type AppsScriptContentResponse = {
   noticias?: AppsScriptNews[];
   recursos?: AppsScriptResource[];
   eventos?: AppsScriptEvent[];
+  trayectoria?: AppsScriptMilestone[];
+  hojaRuta?: AppsScriptRoadmap[];
   canciones?: Array<{x?:string;artist?:string}>;
   frases?: Array<{text?:string;name?:string}>;
   actualizado?: string;
@@ -121,7 +127,7 @@ async function refresh() {
       frases: (raw.frases ?? []).map((item) => ({ text:String(item.text??""), name:String(item.name??"") })),
 
       eventos: (raw.eventos ?? []).map((item) => ({
-        id: String(item.id ?? ""), title: String(item.titulo ?? ""), date: String(item.fecha ?? ""), time: String(item.hora ?? ""), place: String(item.lugar ?? ""), city: String(item.ciudad ?? ""), description: String(item.descripcion ?? ""), url: String(item.url ?? ""), documentUrl: String(item.documentoUrl ?? ""), documentName: String(item.documentoNombre ?? ""),
+        id: String(item.id ?? ""), title: String(item.titulo ?? ""), date: String(item.fecha ?? ""), time: String(item.hora ?? ""), place: String(item.lugar ?? ""), city: String(item.ciudad ?? ""), description: String(item.descripcion ?? ""), url: String(item.url ?? ""), documentUrl: String(item.documentoUrl ?? ""), documentName: String(item.documentoNombre ?? ""), previewUrl: String(item.previewUrl ?? ""),
       })),
 
       recursos: (raw.recursos ?? []).map((item) => ({
@@ -131,8 +137,11 @@ async function refresh() {
         description: String(item.descripcion ?? item.description ?? ""),
         filename: String(item.nombreArchivo ?? item.filename ?? ""),
         url: String(item.url ?? ""),
+        previewUrl: String(item.vistaPreviaUrl ?? ""),
       })),
 
+      trayectoria: (raw.trayectoria ?? []).map((x) => ({ id:String(x.id??""), date:String(x.fecha??""), title:String(x.titulo??""), description:String(x.descripcion??""), imageUrl:String(x.imagenUrl??"") })),
+      hojaRuta: (raw.hojaRuta ?? []).map((x) => ({ id:String(x.id??""), phase:String(x.fase??""), title:String(x.titulo??""), detail:String(x.detalle??""), date:String(x.fecha??""), active:x.activa !== false })),
       ...(raw.actualizado ? { actualizado: raw.actualizado } : {}),
     };
 

@@ -49,22 +49,18 @@ function Testimonios() {
   const regionRows = regions.map((r) => ({ name: r.name, count: Number(counts[r.name] ?? 0) })).filter((r) => r.count > 0);
   return (
     <>
-      <PageHeader eyebrow="Voces reales" title="Testimonios" lead="Detrás de cada expediente hay una familia. Estos son los relatos de quienes esperan una valoración, una ayuda o un respiro.">
-        <a href={SITE.testimonyFormUrl} target="_blank" rel="noreferrer" className="inline-block rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground">Comparte tu testimonio</a>
+      <PageHeader eyebrow="Voces reales" title="Testimonios" lead="Detrás de cada expediente hay una familia. Estos son los relatos de quienes esperan una valoración, una ayuda o un respiro."
+        titleAside={<div className="rounded-2xl border border-border bg-card px-5 py-3 text-right shadow-sm"><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Testimonios recibidos</p><p className="font-display text-3xl font-bold text-primary"><LiveCount name="testimoniosRecibidos" /></p></div>}
+      >
+        <a href={SITE.testimonyFormUrl} target="_blank" rel="noreferrer" className="rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground">Comparte tu testimonio</a>
       </PageHeader>
-      <section className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6">
-        <div className="ml-auto w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-right shadow-sm">
-          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Testimonios recibidos</p>
-          <p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="testimoniosRecibidos" /></p>
-        </div>
-      </section>
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
-        <Panel className="mb-6">
+        {status ? <p className="text-muted-foreground" role="status">{status}</p> : <TestimonyCarousel items={items} />}
+        <Panel className="mt-8">
           <h2 className="font-display text-xl font-semibold">Publicación y consentimiento</h2>
           <p className="mt-3 text-sm text-muted-foreground">Un testimonio puede incluir información sensible. Solo se muestran testimonios cuyo uso público ha sido autorizado y que han superado la revisión correspondiente.</p>
           <p className="mt-3 text-sm text-muted-foreground">Autorizados para publicar: <strong><LiveCount name="testimoniosAutorizados" /></strong></p>
         </Panel>
-        {status ? <p className="text-muted-foreground" role="status">{status}</p> : <TestimonyCarousel items={items} />}
         <Panel className="mt-8">
           <h2 className="font-display text-xl font-semibold">Testimonios por comunidad autónoma</h2>
           <p className="mt-2 text-sm text-muted-foreground">Mapa y resumen agregado. Nunca se muestran ubicaciones personales.</p>

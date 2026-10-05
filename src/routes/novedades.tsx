@@ -39,7 +39,7 @@ function Page() {
             {items.map((n) => (
               <li key={n.id} className="glass-panel rounded-3xl p-6">
                 <p className="text-xs font-semibold tracking-widest text-primary uppercase">
-                  {n.media} · {n.date}
+                  <span className="not-italic">{n.media}</span><span aria-hidden="true"> · </span>{n.date}
                 </p>
                 <p className="mt-3 font-display text-lg font-semibold">{n.title}</p>
                 {n.summary && <p className="mt-2 text-sm text-muted-foreground">{n.summary}</p>}

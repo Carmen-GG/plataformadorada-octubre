@@ -105,14 +105,15 @@ function Page() {
             </Panel>
           ))}
         </div>
+        <div className="mt-5 grid gap-5 sm:grid-cols-2">
+          <Panel><p className="font-display text-3xl font-semibold">{stats ? formatCount(stats.contadores?.testimoniosRecibidos ?? 0) : "…"}</p><p className="mt-2 text-sm text-muted-foreground">Testimonios recibidos</p></Panel>
+          <Panel><p className="font-display text-3xl font-semibold">{stats ? formatCount(stats.contadores?.testimoniosPublicados ?? 0) : "…"}</p><p className="mt-2 text-sm text-muted-foreground">Testimonios publicados</p></Panel>
+        </div>
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         <h2 className="font-display text-3xl">Por territorio</h2>
-        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
-          Adhesiones, entidades y mociones por comunidad autónoma. Pasa el cursor sobre un círculo
-          para consultar el indicador completo.
-        </p>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">Selecciona un indicador para ver cómo se distribuye por comunidad autónoma. También incluimos testimonios, además de adhesiones, entidades y mociones.</p>
         <div className="mt-6">
           <TerritoryMap stats={stats} />
         </div>

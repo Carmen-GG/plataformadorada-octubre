@@ -35,26 +35,11 @@ function Page() {
   const status = listStatus(state, all.length, "Todavía no hay entidades adheridas públicas.");
   return (
     <>
-      <PageHeader
-        eyebrow="Red de apoyo"
-        title="Entidades adheridas"
-        lead="Organizaciones que se suman a la petición de un Pacto de Estado."
+      <PageHeader eyebrow="Red de apoyo" title="Entidades adheridas" lead="Organizaciones que se suman a la petición de un Pacto de Estado."
+        titleAside={<div className="rounded-2xl border border-border bg-card px-5 py-3 text-right shadow-sm"><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Entidades adheridas</p><p className="font-display text-3xl font-bold text-primary" aria-live="polite"><LiveCount name="entidades" /></p></div>}
       >
-        <a
-          href={SITE.entityFormUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-block rounded-full bg-primary px-7 py-3.5 font-semibold text-primary-foreground"
-        >
-          Adherir mi entidad
-        </a>
+        <a href={SITE.entityFormUrl} target="_blank" rel="noreferrer" className="rounded-full bg-primary px-7 py-3.5 font-semibold text-primary-foreground">Adherir mi entidad</a>
       </PageHeader>
-      <section className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6">
-        <div className="ml-auto w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-right shadow-sm">
-          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Entidades adheridas</p>
-          <p className="mt-1 font-display text-4xl font-bold text-primary" aria-live="polite"><LiveCount name="entidades" /></p>
-        </div>
-      </section>
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         {status ? (
           <p className="text-muted-foreground" role="status">

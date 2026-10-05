@@ -4,7 +4,7 @@ import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";
 import { ShareButtons } from "@/components/share-buttons";
 import { AdhesionCount } from "@/lib/adhesions";
-import { listStatus, usePublicStats } from "@/lib/public-stats";
+import { listStatus, usePublicStats, LiveCount } from "@/lib/public-stats";
 
 export const Route = createFileRoute("/unete")({
   head: () =>
@@ -83,7 +83,8 @@ function Unete() {
                 <ul className="mt-4 space-y-2 text-sm">
                   {recent.map((n, i) => (
                     <li key={i} className="border-b border-border pb-2 last:border-0">
-                      {n}
+                      <span className="font-medium">{n.nombre}</span>
+                      {n.municipio && <span className="block text-muted-foreground">{n.municipio}</span>}
                     </li>
                   ))}
                 </ul>

@@ -27,7 +27,7 @@ export type PublicStats = {
   porComunidad: Record<string, { adhesiones: number; entidades: number }>;
   mociones?: Record<string, { mocionesPresentadas: number; mocionesAceptadas: number }>;
   indicadores?: Record<string, { valor: number | string | null; unidad: string; fuente: string; url?: string; fechaDato?: string; actualizado?: string; modo?: string; nota?: string }>;
-  ultimasAdhesiones: string[];
+  ultimasAdhesiones: Array<{ nombre: string; municipio: string }>;
   ultimosVoluntarios: string[];
   entidadesAdheridas?: Array<{ nombre: string; tipo: string; ambito: string; alcance: string; web: string }>;
   resumenWeb?: Array<{ comunidad: string; adhesiones: number }>;
@@ -116,7 +116,13 @@ function normalize(raw: PublicStats): PublicStats {
     porComunidad,
     mociones: raw.mociones && typeof raw.mociones === "object" ? raw.mociones : {},
     indicadores: raw.indicadores && typeof raw.indicadores === "object" ? raw.indicadores : {},
-    ultimasAdhesiones: Array.isArray(raw.ultimasAdhesiones) ? raw.ultimasAdhesiones : [],
+    ultimasAdhesiones: Array.isArray(raw.ultimasAdhesiones)
+      ? raw.ultimasAdhesiones.map((x: any) =>
+          typeof x === "string"
+            ? (() => { const [nombre, ...rest] = x.split(" · "); return { nombre: nombre || x, municipio: rest.join(" · ") }; })()
+            : { nombre: String(x?.nombre ?? ""), municipio: String(x?.municipio ?? x?.ciudad ?? "") },
+        )
+      : [],
     ultimosVoluntarios: Array.isArray(raw.ultimosVoluntarios) ? raw.ultimosVoluntarios : [],
     entidadesAdheridas: Array.isArray(raw.entidadesAdheridas) ? raw.entidadesAdheridas : [],
     resumenWeb: Array.isArray(raw.resumenWeb) ? raw.resumenWeb.map((r) => ({ comunidad: String(r?.comunidad ?? ""), adhesiones: toNumber(r?.adhesiones) ?? 0 })) : [],

@@ -18,6 +18,7 @@ const COUNTER_KEY: Record<string, CounterKey> = {
 };
 import { useCmsContent } from "@/lib/cms";
 import { LatestInstagramVideo } from "@/components/social-feeds";
+import { TestimonyCarousel } from "@/components/testimony-carousel";
 import { pageHead } from "@/lib/seo";
 import {
   counters,
@@ -44,7 +45,7 @@ function Home() {
   const cms = useCmsContent();
   const state = usePublicStats();
   const stats = state.stats;
-  const recentJoins = (stats?.ultimasAdhesiones ?? []).slice(0, 6);
+  const recentJoins = (stats?.ultimasAdhesiones ?? []).slice(0, 8);
   const joinsStatus = listStatus(state, recentJoins.length, "Todavía no hay adhesiones públicas.");
   // Comunidades autónomas con al menos una adhesión o entidad (dato agregado).
   const regionsWithData = stats
@@ -56,7 +57,7 @@ function Home() {
     entitiesList.length,
     "Todavía no hay entidades adheridas públicas.",
   );
-  const voices = (stats?.testimonios ?? []).slice(0, 3);
+  const voices = (stats?.testimonios ?? []).slice(0, 8);
   const voicesStatus = listStatus(state, voices.length, "Todavía no hay testimonios publicados.");
   const liveNews = cms?.noticias ?? fallbackNews.map((n, i) => ({ id: String(i), ...n, summary: "" }));
   const liveEvents = cms?.eventos?.length ? cms.eventos : events;
@@ -158,8 +159,25 @@ function Home() {
           <p className="font-semibold text-foreground">Por eso nace Plataforma Dorada</p>
           <p>Para unir voces, visibilizar esta realidad y conseguir un compromiso de Estado que coloque los cuidados y la dependencia en el centro de las políticas públicas.</p>
         </div>
-        <dl className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {indicators.map((i) => { const d=stats?.indicadores?.[i.key]; return <div key={i.label} className="glass-panel rounded-2xl p-5"><dd className="font-display text-2xl font-bold text-primary">{d?.valor != null ? `${d.valor}${d.unidad === "meses" ? " meses" : ""}` : i.value}</dd><dt className="mt-1 text-sm text-muted-foreground">{i.label}</dt></div>; })}
+        <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {indicators.map((i) => {
+            const d = stats?.indicadores?.[i.key];
+            const fallback: Record<string, string> = {
+              lista_espera: "142.887",
+              tiempo_tramitacion: "10,5 meses",
+              cuidadores_convenio: "101.702",
+              municipios_mociones_aprobadas: "—",
+            };
+            const value = d?.valor != null
+              ? `${d.valor}${d.unidad === "meses" ? " meses" : d.unidad === "días" ? " días" : ""}`
+              : fallback[i.key] ?? "—";
+            return (
+              <div key={i.key} className="glass-panel rounded-3xl p-6">
+                <dd className="font-display text-4xl font-bold leading-none tabular-nums text-primary sm:text-5xl" aria-label={`${value}. ${i.label}`}>{value}</dd>
+                <dt className="mt-4 text-sm leading-snug text-muted-foreground">{i.label}</dt>
+              </div>
+            );
+          })}
         </dl>
         <p className="mt-4 text-sm">
           <Link to="/datos" className="font-semibold text-primary underline underline-offset-4">
@@ -177,7 +195,9 @@ function Home() {
               <span className="text-xs text-muted-foreground">Datos agregados por territorio</span>
             </div>
             <div className="mt-5 overflow-x-auto rounded-2xl border border-border">
-              <table className="w-full min-w-[360px] text-sm"><caption className="sr-only">Resumen de adhesiones por comunidad autónoma</caption><thead><tr className="bg-muted text-left"><th className="px-4 py-3 font-semibold">Comunidad autónoma</th><th className="px-4 py-3 text-right font-semibold">Adhesiones</th></tr></thead><tbody>{(stats?.resumenWeb?.length ? stats.resumenWeb : regions.map(r=>({comunidad:r.name,adhesiones:Number(stats?.porComunidad[r.name]?.adhesiones??0)}))).map((r,i)=><tr key={`${r.comunidad}-${i}`} className="border-t border-border"><td className="px-4 py-2.5">{r.comunidad}</td><td className="px-4 py-2.5 text-right font-semibold">{formatCount(r.adhesiones)}</td></tr>)}</tbody></table>
+              <table className="w-full min-w-[360px] text-sm"><caption className="sr-only">Resumen de adhesiones por comunidad autónoma</caption><thead><tr className="bg-muted text-left"><th className="px-4 py-3 font-semibold">Comunidad autónoma</th><th className="px-4 py-3 text-right font-semibold">Adhesiones</th></tr></thead><tbody>{[...(stats?.resumenWeb?.length ? stats.resumenWeb : regions.map(r=>({comunidad:r.name,adhesiones:Number(stats?.porComunidad[r.name]?.adhesiones??0)})))]
+              .sort((a,b)=>b.adhesiones-a.adhesiones || a.comunidad.localeCompare(b.comunidad,"es"))
+              .map((r,i)=><tr key={`${r.comunidad}-${i}`} className="border-t border-border"><td className="px-4 py-2.5">{r.comunidad}</td><td className="px-4 py-2.5 text-right font-semibold">{formatCount(r.adhesiones)}</td></tr>)}</tbody></table>
             </div>
             <p className="mt-4 text-sm"><Link to="/datos" className="font-semibold text-primary underline underline-offset-4">Ver el mapa completo por comunidad autónoma</Link></p>
           </Panel>
@@ -205,9 +225,10 @@ function Home() {
           </p>
         ) : (
           <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {recentJoins.map((name, i) => (
-              <li key={i} className="glass-panel rounded-2xl px-5 py-4 font-medium">
-                {name}
+            {recentJoins.map((item, i) => (
+              <li key={`${item.nombre}-${item.municipio}-${i}`} className="glass-panel rounded-2xl px-5 py-4 font-medium">
+                <span className="block">{item.nombre}</span>
+                {item.municipio && <span className="mt-1 block text-sm font-normal text-muted-foreground">{item.municipio}</span>}
               </li>
             ))}
           </ul>
@@ -224,21 +245,7 @@ function Home() {
             {voicesStatus}
           </p>
         ) : (
-          <div className="mt-6 grid gap-5 md:grid-cols-3">
-            {voices.map((item, i) => (
-              <figure key={i} className="glass-panel rounded-3xl p-6">
-                <blockquote className="font-display text-lg leading-snug italic">
-                  {item.texto.length > 320 ? `${item.texto.slice(0, 320).trimEnd()}…` : item.texto}
-                </blockquote>
-                <figcaption className="mt-4">
-                  <span className="block text-sm font-semibold">{item.autor}</span>
-                  {item.contexto && (
-                    <span className="block text-xs text-muted-foreground">{item.contexto}</span>
-                  )}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <TestimonyCarousel items={voices} />
         )}
         <p className="mt-4 text-sm">
           <Link

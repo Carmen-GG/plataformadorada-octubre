@@ -1,45 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE, regions } from "@/lib/content";
 import { LiveCount, listStatus, usePublicStats } from "@/lib/public-stats";
+import { TestimonyCarousel } from "@/components/testimony-carousel";
 
 export const Route = createFileRoute("/testimonios")({
   head: () => pageHead({ path: "/testimonios", title: "Testimonios", description: "Testimonios de personas dependientes, familias y cuidadores sobre los retrasos y dificultades del sistema de dependencia." }),
   component: Testimonios,
 });
-
-function TestimonyCarousel({ items }: { items: Array<{ texto: string; autor: string; contexto: string }> }) {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const timer = useRef<number | undefined>(undefined);
-  useEffect(() => {
-    if (paused || items.length < 2) return;
-    timer.current = window.setInterval(() => setIndex((i) => (i + 1) % items.length), 7000);
-    return () => { if (timer.current) window.clearInterval(timer.current); };
-  }, [paused, items.length]);
-  useEffect(() => { setIndex((i) => Math.min(i, Math.max(0, items.length - 1))); }, [items.length]);
-  if (!items.length) return null;
-  const item = items[index];
-  return (
-    <div className="mt-6" aria-roledescription="carrusel" aria-label="Testimonios autorizados">
-      <div className="glass-panel rounded-3xl p-7 sm:p-10" tabIndex={0}>
-        <p className="text-sm font-semibold text-primary">Testimonio {index + 1} de {items.length}</p>
-        <blockquote className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl">“{item.texto}”</blockquote>
-        <figcaption className="mt-6 text-sm font-semibold">{item.autor}{item.contexto && <span className="block font-normal text-muted-foreground">{item.contexto}</span>}</figcaption>
-      </div>
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-        <button type="button" className="rounded-full border border-border px-4 py-2 text-sm font-semibold" onClick={() => setIndex((i) => (i - 1 + items.length) % items.length)} aria-label="Testimonio anterior">Anterior</button>
-        <button type="button" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" onClick={() => setPaused((v) => !v)} aria-pressed={paused}>{paused ? "Reanudar" : "Pausar"}</button>
-        <button type="button" className="rounded-full border border-border px-4 py-2 text-sm font-semibold" onClick={() => setIndex((i) => (i + 1) % items.length)} aria-label="Siguiente testimonio">Siguiente</button>
-      </div>
-      <div className="mt-3 flex justify-center gap-1.5" aria-label="Seleccionar testimonio">
-        {items.map((_, i) => <button key={i} type="button" onClick={() => setIndex(i)} aria-label={`Ir al testimonio ${i + 1}`} aria-current={i === index} className={`h-2.5 w-2.5 rounded-full border ${i === index ? "bg-primary" : "bg-transparent"}`} />)}
-      </div>
-    </div>
-  );
-}
 
 function Testimonios() {
   const state = usePublicStats();

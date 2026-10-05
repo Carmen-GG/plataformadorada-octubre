@@ -5,7 +5,7 @@
  *  - números agregados;
  *  - listas ya formateadas ("María G. · Cataluña") de personas que han autorizado
  *    expresamente aparecer;
- *  - testimonios aprobados por el equipo.
+ *  - testimonios cuyo uso público ha sido autorizado por la persona que responde, con nombre o de forma anónima.
  * Nunca se devuelven apellidos completos, correos, teléfonos, DNI ni respuestas sin autorizar.
  *
  * Se llama desde la web con: <URL /exec>?action=public
@@ -41,15 +41,12 @@ var PD = {
   LIST_ENTIDADES: 500,
 
   // TESTIMONIOS
-  // true  = solo se publica un testimonio si el equipo pone "Sí" en la columna
-  //         "Publicar en web" y escribe el texto en "Texto web" (recomendado: los
-  //         testimonios pueden contener datos de salud de terceros).
-  // false = se publica automáticamente el campo TESTIMONIO_TEXTO_AUTO de quienes
-  //         autorizaron su uso con nombre. Aun así "Ocultar = Sí" lo retira.
-  REQUIRE_APPROVAL: true,
+  // Los testimonios se publican automáticamente cuando la persona ha respondido Sí
+  // al consentimiento de uso público; no se exige una segunda columna de moderación.
+  REQUIRE_APPROVAL: false,
   TESTIMONIO_TEXTO_AUTO: "que cosas deberian mejorar",
-  // ¿Se publican los marcados como "Anónimo"? (sin nombre, solo la comunidad)
-  PUBLISH_ANONYMOUS: false,
+  // Los marcados como "Anónimo" también se publican, sin nombre.
+  PUBLISH_ANONYMOUS: true,
 
   CACHE_SECONDS: 20,
 

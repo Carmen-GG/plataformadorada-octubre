@@ -4,6 +4,8 @@
  */
 
 var PD_CMS = {
+  // Base de datos CMS para NoticiasWeb y RecursosWeb.
+  CMS_SPREADSHEET_ID: "1nNK3t4_jrJf9n1bUs1W-bg09-zprzKsZ3KRfFPSoyC4",
   EVENTOS_SPREADSHEET_ID: "1uexiL3JPV1DTDGLl6NsbGWjMmn9584thAmVaheyAYpU",
   EVENTOS_SHEET_NAME: "Eventos",
   RESOURCE_FOLDER_PROPERTY: "RECURSOS_FOLDER_ID",
@@ -43,8 +45,12 @@ function countAllAdhesions_() {
   return sheet ? Math.max(0, sheet.getLastRow() - 1) : 0;
 }
 
+function getCmsSpreadsheet_() {
+  return SpreadsheetApp.openById(PD_CMS.CMS_SPREADSHEET_ID);
+}
+
 function getOrCreateSheet_(name, headers) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getCmsSpreadsheet_();
   var sheet = ss.getSheetByName(name);
   if (!sheet) sheet = ss.insertSheet(name);
   ensureHeaders_(sheet, headers);
@@ -89,7 +95,13 @@ function readNews_(){
   return rows.filter(function(r){return String(r[6]).toLowerCase()!=="no";}).map(function(r){return {id:r[0],title:cleanPublicText_(r[1],300),media:cleanPublicText_(r[2],160),date:r[3],url:r[4],summary:cleanPublicText_(r[5],1000)};}).reverse();
 }
 
-function drivePreviewUrl_(id){ return id ? "https://drive.google.com/thumbnail?id="+encodeURIComponent(id)+"&sz=w1000" : ""; }
+function drivePreviewUrl_(id, filename){
+  if (!id) return "";
+  if (/\.(png|jpe?g|gif|webp|svg)$/i.test(String(filename || ""))) {
+    return "https://drive.google.com/uc?export=view&id=" + encodeURIComponent(id);
+  }
+  return "https://drive.google.com/thumbnail?id=" + encodeURIComponent(id) + "&sz=w1000";
+}
 function driveDownloadUrl_(id){ return id ? "https://drive.google.com/uc?export=download&id="+encodeURIComponent(id) : ""; }
 
 function readResources_(){
@@ -97,7 +109,7 @@ function readResources_(){
   return rows.map(function(r){
     var fileId=String(r[7]||"");
     if(!fileId){var m=String(r[5]||"").match(/[?&]id=([^&]+)/);if(m)fileId=m[1];}
-    return {id:r[0],title:cleanPublicText_(r[1],300),category:cleanPublicText_(r[2],100),description:cleanPublicText_(r[3],1000),filename:r[4],url:r[5]||driveDownloadUrl_(fileId),previewUrl:drivePreviewUrl_(fileId)};
+    return {id:r[0],title:cleanPublicText_(r[1],300),category:cleanPublicText_(r[2],100),description:cleanPublicText_(r[3],1000),filename:r[4],url:r[5]||driveDownloadUrl_(fileId),previewUrl:drivePreviewUrl_(fileId,r[4])};
   }).reverse();
 }
 
@@ -149,7 +161,7 @@ function getPublicContent(){return getPublicContent_();}
 function obtenerContenidoPublico(){return getPublicContent_();}
 function getBackofficeContent(){var c=getPublicContent_();c.propuestas=readProposals_().todas;return c;}
 
-function setupBackoffice(){getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);getOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();getOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);getOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);getOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);getDriveFolder_();return "Backoffice preparado";}
+function setupBackoffice(){getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);getOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();getOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);getOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);getOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);getDriveFolder_();return "Backoffice preparado en la base CMS configurada";}
 
 function saveNews(data){assertAdmin_(data&&data.password);var s=getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS),id=Utilities.getUuid();s.appendRow([id,cleanPublicText_(data.title,300),cleanPublicText_(data.media,160),String(data.date||"").trim(),String(data.url||"").trim(),cleanPublicText_(data.summary,1000),data.published===false?"No":"Sí",new Date().toISOString()]);return{ok:true,id:id};}
 

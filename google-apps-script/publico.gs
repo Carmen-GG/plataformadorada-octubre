@@ -399,7 +399,9 @@ function pdAdhesiones_() {
   });
   res.entidadesLista = res.entidadesLista.slice(0, PD.LIST_ENTIDADES);
 
-  // Últimas adhesiones PÚBLICAS: solo personas individuales que lo han autorizado.
+  // Últimas adhesiones PÚBLICAS: solo personas individuales que han autorizado aparecer.
+  // Se devuelve el nombre ya reducido y el municipio por separado para que la web pueda
+  // presentarlos de forma clara y consistente.
   if (iConsent >= 0 && iName >= 0) {
     for (var k = t.rows.length - 1; k >= 0 && res.ultimas.length < PD.LIST_ADHESIONES; k--) {
       var rw = t.rows[k];
@@ -408,7 +410,7 @@ function pdAdhesiones_() {
       var name = pdPublicName_(pdCell_(rw, iName), pdCell_(rw, iSur));
       if (!name) continue;
       var place = pdTidy_(pdCell_(rw, iCity)) || pdCcaa_(pdCell_(rw, iCcaa));
-      res.ultimas.push(place ? name + " · " + place : name);
+      res.ultimas.push({ nombre: name, municipio: place });
     }
   }
   return res;
@@ -466,10 +468,19 @@ function pdRelacion_(raw) {
   return "";
 }
 
+function pdPublicFullName_(given, surnames) {
+  var g = pdClean_(given).split(" ").filter(Boolean);
+  var s = pdClean_(surnames).split(" ").filter(Boolean);
+  if (!g.length) return "";
+  var firstName = g.slice(0, 2).map(pdCap_).join(" ");
+  var firstSurname = "";
+  for (var i = 0; i < s.length; i++) {
+    if (!PD_PARTICLES[pdNorm_(s[i])]) { firstSurname = pdCap_(s[i]); break; }
+  }
+  return firstSurname ? firstName + " " + firstSurname : firstName;
+}
+
 function pdTestimonios_() {
-  // El formulario real no utiliza la antigua pregunta "como quieres que usemos...".
-  // La columna de consentimiento actual es la 7ª del formulario y se identifica por
-  // "quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos".
   var t = pdReadTable_(
     pdOpen_(PD.TESTIMONIOS_SPREADSHEET_ID),
     "quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos",
@@ -477,65 +488,50 @@ function pdTestimonios_() {
   if (!t) throw new Error("No encuentro la hoja de testimonios.");
 
   var h = t.headers;
-  var iUse = pdIdx_(
-    h,
-    pdHas_("quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos"),
-  );
+  var iUse = pdIdx_(h, pdHas_("quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos"));
+  var iDisplay = pdIdx_(h, function(x) { return x.indexOf("com vols apareixer") >= 0 || x.indexOf("como quieres aparecer") >= 0; });
   var iName = pdIdx_(h, pdHas_("nom nombre y dni"));
   if (iName < 0) iName = pdIdx_(h, pdHas_("nombre y dni"));
-  var iPub = pdIdx_(h, pdEq_("publicar en web"));
-  var iText = pdIdx_(h, pdEq_("texto web"));
-  var iHide = pdIdx_(h, pdEq_("ocultar"));
-  var iAuto = pdIdx_(h, pdHas_(PD.TESTIMONIO_TEXTO_AUTO));
   var iCcaa = pdIdx_(h, pdEq_("autonomia"));
+  var iCity = pdIdx_(h, pdHas_("ciudad en la que vives"));
+  var iAuto = pdIdx_(h, pdHas_("que cosas deberian mejorar"));
+  var iAsk = pdIdx_(h, pdHas_("que solicitasteis"));
+  var iProblem = pdIdx_(h, pdHas_("cual es el problema principal"));
+  var iMore = pdIdx_(h, pdHas_("quieres afegir alguna cosa mes"));
 
-  // IMPORTANTE: todas las filas de respuestas cuentan como testimonios recibidos,
-  // independientemente del consentimiento para publicar y de si la persona también
-  // participa como voluntaria.
+  // Todas las respuestas cuentan como recibidas. Para el carrusel público solo se usan
+  // las que han respondido Sí al consentimiento de uso público. No se exponen otros datos.
   var res = { recibidos: t.rows.length, autorizados: 0, publicados: 0, lista: [], porCcaa: {} };
 
   for (var k = t.rows.length - 1; k >= 0; k--) {
     var row = t.rows[k];
-    var use = iUse >= 0 ? pdNorm_(pdCell_(row, iUse)) : "";
-    var autorizado = pdYes_(use);
+    var autorizado = iUse >= 0 && pdYes_(pdCell_(row, iUse));
     if (autorizado) res.autorizados++;
     var ccaa = iCcaa >= 0 ? pdCcaa_(pdCell_(row, iCcaa)) : "";
     if (ccaa) res.porCcaa[ccaa] = (res.porCcaa[ccaa] || 0) + 1;
-
-    // Nada de lo que no esté expresamente autorizado se envía al navegador.
     if (!autorizado) continue;
-    if (iHide >= 0 && pdYes_(pdCell_(row, iHide))) continue;
 
-    // La publicación efectiva sigue dependiendo de la moderación del equipo cuando
-    // están disponibles las columnas internas Publicar en web / Texto web.
     var text = "";
-    if (PD.REQUIRE_APPROVAL && iPub >= 0) {
-      if (!pdYes_(pdCell_(row, iPub))) continue;
-      text = iText >= 0 ? pdCell_(row, iText) : "";
-    } else if (iText >= 0) {
-      text = pdCell_(row, iText);
+    var textCandidates = [iAuto, iProblem, iAsk, iMore];
+    for (var q = 0; q < textCandidates.length; q++) {
+      var idx = textCandidates[q];
+      if (idx >= 0 && pdCell_(row, idx)) { text = pdCell_(row, idx); break; }
     }
-    if (!text && iAuto >= 0) text = pdCell_(row, iAuto);
-
-    text = String(text || "")
-      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
-      .slice(0, 1500);
+    text = String(text || "").replace(/[\u0000-\u001F]/g, "").trim().slice(0, 1500);
     if (!text) continue;
 
-    var author = "Anónimo";
-    if (iName >= 0) {
+    var displayChoice = iDisplay >= 0 ? pdNorm_(pdCell_(row, iDisplay)) : "";
+    var anonymous = displayChoice.indexOf("anon") >= 0 || displayChoice.indexOf("anonima") >= 0;
+    var author = "Anónima";
+    if (!anonymous && iName >= 0) {
       var parts = pdSplitFull_(pdCell_(row, iName));
-      var publicName = pdPublicName_(parts.given, parts.surnames);
-      if (publicName) author = publicName;
+      author = pdPublicFullName_(parts.given, parts.surnames) || "Anónima";
     }
+    var city = iCity >= 0 ? pdTidy_(pdCell_(row, iCity)) : "";
 
     res.publicados++;
     if (res.lista.length < PD.LIST_TESTIMONIOS) {
-      res.lista.push({
-        texto: text,
-        autor: author,
-        contexto: "",
-      });
+      res.lista.push({ texto: text, autor: author, contexto: city });
     }
   }
   return res;

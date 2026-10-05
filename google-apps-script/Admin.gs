@@ -16,11 +16,10 @@ var PROPOSAL_HEADERS = ["id","tipo","titulo","artista","texto","proponente","pub
 var TIMELINE_HEADERS = ["id","fecha","titulo","descripcion","imagenNombre","imagenUrl","imagenId","orden","activa","creada"];
 var ROADMAP_HEADERS = ["id","fase","titulo","detalle","fecha","orden","activa","creada"];
 
-function doGet(e) {
-  var action = e && e.parameter ? String(e.parameter.action || "") : "";
-  var payload = action === "content" ? getPublicContent_() : action === "public" ? getPublicStats_() : { adhesiones: countAllAdhesions_(), actualizado: new Date().toISOString() };
-  var callback = e && e.parameter ? String(e.parameter.callback || "") : "";
-  return outputJson_(payload, callback);
+function checkBackofficePassword(password) {
+  var expected = PropertiesService.getScriptProperties().getProperty("BACKOFFICE_PASSWORD");
+  if (!expected) return { ok:false, error:"El backoffice aún no tiene contraseña configurada." };
+  return String(password || "") === String(expected) ? { ok:true } : { ok:false, error:"Contraseña incorrecta." };
 }
 
 function doPost(e) {
@@ -103,8 +102,28 @@ function readResources_(){
 }
 
 function readEvents_(){
-  var s=getEventsSheet_(), rows=rowValues_(s,EVENT_HEADERS.length);
-  return rows.filter(function(r){return String(r[11]).toLowerCase()!=="no";}).map(function(r){return {id:r[0],title:cleanPublicText_(r[1],300),date:r[2],time:r[3],place:cleanPublicText_(r[4],200),city:cleanPublicText_(r[5],120),description:cleanPublicText_(r[6],1500),url:r[7],documentName:r[8],documentUrl:r[9]||driveDownloadUrl_(r[10]),documentId:r[10],previewUrl:r[10]?drivePreviewUrl_(r[10]):""};}).reverse();
+  var ss = openEventsSpreadsheet_();
+  var all = [];
+  ss.getSheets().forEach(function(sh){
+    var lastRow = sh.getLastRow(), lastCol = sh.getLastColumn();
+    if (lastRow < 2 || lastCol < 2) return;
+    var headers = sh.getRange(1,1,1,lastCol).getDisplayValues()[0].map(function(x){ return String(x||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim(); });
+    var titleIdx = headers.findIndex(function(x){ return x === "titulo" || x === "title"; });
+    var dateIdx = headers.findIndex(function(x){ return x === "fecha" || x.indexOf("fecha") === 0; });
+    if (titleIdx < 0 || dateIdx < 0) return;
+    var idx = function(names, fallback){ var i=headers.findIndex(function(h){ return names.some(function(n){ return h === n || h.indexOf(n) >= 0; }); }); return i >= 0 ? i : fallback; };
+    var timeIdx=idx(["hora"],3), placeIdx=idx(["lugar"],4), cityIdx=idx(["ciudad"],5), descIdx=idx(["descripcion","detalle"],6), urlIdx=idx(["url","enlace"],7), docNameIdx=idx(["documentonombre","nombredocumento","archivo"],8), docUrlIdx=idx(["documentourl","urldocumento"],9), docIdIdx=idx(["documentoid","idarchivo"],10), pubIdx=idx(["publicada","publicado"],11), idIdx=idx(["id"],0);
+    var rows=sh.getRange(2,1,lastRow-1,lastCol).getDisplayValues();
+    rows.forEach(function(r,i){
+      var title=String(r[titleIdx]||"").trim(), date=String(r[dateIdx]||"").trim();
+      if(!title || !date) return;
+      if(pubIdx < r.length && String(r[pubIdx]||"").toLowerCase()==="no") return;
+      var docId=String(r[docIdIdx]||"").trim();
+      var docUrl=String(r[docUrlIdx]||"").trim() || (docId ? driveDownloadUrl_(docId) : "");
+      all.push({id:String(r[idIdx]||(`${sh.getName()}-${i+2}`)),title:cleanPublicText_(title,300),date:date,time:String(r[timeIdx]||"").trim(),place:cleanPublicText_(r[placeIdx],200),city:cleanPublicText_(r[cityIdx],120),description:cleanPublicText_(r[descIdx],1500),url:String(r[urlIdx]||"").trim(),documentName:String(r[docNameIdx]||"").trim(),documentUrl:docUrl,documentId:docId,previewUrl:docId?drivePreviewUrl_(docId):"",sourceSheet:sh.getName()});
+    });
+  });
+  return all.sort(function(a,b){ return String(a.date).localeCompare(String(b.date)) || String(a.id).localeCompare(String(b.id)); });
 }
 
 function readProposals_(){
@@ -127,6 +146,7 @@ function getPublicContent_(){
   return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,actualizado:new Date().toISOString()};
 }
 function getPublicContent(){return getPublicContent_();}
+function obtenerContenidoPublico(){return getPublicContent_();}
 function getBackofficeContent(){var c=getPublicContent_();c.propuestas=readProposals_().todas;return c;}
 
 function setupBackoffice(){getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);getOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();getOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);getOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);getOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);getDriveFolder_();return "Backoffice preparado";}

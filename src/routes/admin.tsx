@@ -17,7 +17,7 @@ export const Route = createFileRoute("/admin")({
 });
 
 function Page() {
-  const adminUrl = cmsUrl ? `${cmsUrl}${cmsUrl.includes("?") ? "&" : "?"}admin=1` : "";
+  const adminUrl = cmsUrl ? `${cmsUrl}${cmsUrl.includes("?") ? "&" : "?"}view=admin` : "";
   return (
     <>
       <PageHeader

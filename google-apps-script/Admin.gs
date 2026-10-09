@@ -100,6 +100,17 @@ function readNews_(includeUnpublished){
   return rows.filter(function(r){var p=String(r[6]||"").trim().toLowerCase();return includeUnpublished || (p!=="no"&&p!=="false"&&p!=="0");}).map(function(r){var p=String(r[6]||"").trim().toLowerCase();return {id:String(r[0]||""),title:cleanPublicText_(r[1],300),media:cleanPublicText_(r[2],160),date:String(r[3]||""),url:String(r[4]||""),summary:cleanPublicText_(r[5],1000),type:["video","audio","texto"].indexOf(String(r[8]||"texto").toLowerCase())>=0?String(r[8]||"texto").toLowerCase():"texto",mediaUrl:String(r[9]||""),contentText:String(r[10]||""),published:p!=="no"&&p!=="false"&&p!=="0"};}).reverse();
 }
 
+function extractDriveFileId_(value){
+  var url=String(value||"").trim(), match;
+  match=url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(match) return match[1];
+  match=url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if(match) return match[1];
+  match=url.match(/\/document\/d\/([a-zA-Z0-9_-]+)/);
+  if(match) return match[1];
+  match=url.match(/\/presentation\/d\/([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : "";
+}
 function drivePreviewUrl_(id, filename){
   if (!id) return "";
   if (/\.(png|jpe?g|gif|webp|svg)$/i.test(String(filename || ""))) {
@@ -113,7 +124,7 @@ function readResources_(){
   var s=cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS), rows=rowValues_(s,RESOURCE_HEADERS.length);
   return rows.map(function(r){
     var fileId=String(r[7]||"");
-    if(!fileId){var m=String(r[5]||"").match(/[?&]id=([^&]+)/);if(m)fileId=m[1];}
+    if(!fileId) fileId=extractDriveFileId_(r[5]);
     return {id:r[0],title:cleanPublicText_(r[1],300),category:cleanPublicText_(r[2],100),description:cleanPublicText_(r[3],1000),filename:r[4],url:r[5]||driveDownloadUrl_(fileId),previewUrl:drivePreviewUrl_(fileId,r[4])};
   }).reverse();
 }

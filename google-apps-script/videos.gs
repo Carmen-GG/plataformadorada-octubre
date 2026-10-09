@@ -37,7 +37,7 @@ function videoRows_() {
       url: String(r[3] || ''),
       platform: String(r[4] || 'youtube'),
       order: Number(r[5] || 0),
-      published: String(r[6] || '').toLowerCase() !== 'no' && String(r[6] || '').toLowerCase() !== 'false',
+      published: !/^(no|false|0)$/i.test(String(r[6] || '').trim()),
       created: String(r[7] || '')
     };
   });

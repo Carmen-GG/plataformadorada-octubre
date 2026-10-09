@@ -76,6 +76,7 @@ function getPublicContent_() {
   return {
     noticias: readNews_(),
     recursos: readResources_(),
+    videos: readVideos_(),
     actualizado: new Date().toISOString()
   };
 }
@@ -137,6 +138,7 @@ function getPublicContent() {
 function setupBackoffice() {
   getOrCreateSheet_('NoticiasWeb', ['id', 'titulo', 'medio', 'fecha', 'url', 'resumen', 'publicada', 'creada']);
   getOrCreateSheet_('RecursosWeb', ['id', 'titulo', 'categoria', 'descripcion', 'archivo', 'url', 'creado']);
+  getOrCreateSheet_('VideosWeb', ['id', 'title', 'description', 'url', 'platform', 'order', 'published', 'created']);
   getDriveFolder_();
   return 'Backoffice preparado';
 }

@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/page-header";
 import { LatestInstagramVideo, TikTokFeed } from "@/components/social-feeds";
 import { SITE } from "@/lib/content";
 import { pageHead } from "@/lib/seo";
-import { useCmsContent } from "@/lib/cms";
+import { useCmsContent, type CmsVideo } from "@/lib/cms";
 
 const fallbackPhrases = [
   "Cuidar también es sostener la vida.",
@@ -128,18 +128,18 @@ function RedesSociales(){
           <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Archivo audiovisual</p>
           <h2 className="mt-1 font-display text-2xl font-semibold">Plataforma Dorada en vídeo</h2>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">Entrevistas y vídeos sobre la dependencia, los cuidados y la iniciativa de Plataforma Dorada. Abre una búsqueda de la lista y pega el enlace del vídeo que quieras reproducir en el televisor.</p>
-          <VideosLibrary />
+          <VideosLibrary videos={cms?.videos ?? videoSearches} />
         </article>
       </div>
     </section>
   </>;
 }
 
-const videoSearches = [
-  { title: "Plataforma Dorada · Vídeo 1", description: "Vídeo de YouTube", url: "https://www.youtube.com/watch?v=-s3pZV8apaY", platform: "youtube" },
-  { title: "Plataforma Dorada · Vídeo 2", description: "Vídeo de YouTube", url: "https://www.youtube.com/watch?v=5sbiaLrUKjM", platform: "youtube" },
-  { title: "¿Qué es Plataforma Dorada?", description: "Vídeo publicado en Facebook por Assumpta Serna y Alicia Lopmar", url: "https://www.facebook.com/100058237623701/videos/ya-sab%C3%A9is-qu%C3%A9-es-plataforma-dorada-assumptaserna-y-alicialopmar-est%C3%A1n-denunciand/1070927795538559/", platform: "facebook" },
-  { title: "3 millones de visualizaciones y más de 2.100 testimonios", description: "Vídeo de Assumpta Serna en Facebook", url: "https://www.facebook.com/assumptaserna/videos/nunca-imagin%C3%A9-esto-y-aqu%C3%AD-estamos3-millones-de-visualizaciones-2100-testimonios-/1690736175986098/", platform: "facebook" },
+const videoSearches: CmsVideo[] = [
+  { id: "video-1", title: "Plataforma Dorada · Vídeo 1", description: "Vídeo de YouTube", url: "https://www.youtube.com/watch?v=-s3pZV8apaY", platform: "youtube", order: 1, published: true },
+  { id: "video-2", title: "Plataforma Dorada · Vídeo 2", description: "Vídeo de YouTube", url: "https://www.youtube.com/watch?v=5sbiaLrUKjM", platform: "youtube", order: 2, published: true },
+  { id: "video-3", title: "¿Qué es Plataforma Dorada?", description: "Vídeo publicado en Facebook por Assumpta Serna y Alicia Lopmar", url: "https://www.facebook.com/100058237623701/videos/ya-sab%C3%A9is-qu%C3%A9-es-plataforma-dorada-assumptaserna-y-alicialopmar-est%C3%A1n-denunciand/1070927795538559/", platform: "facebook", order: 3, published: true },
+  { id: "video-4", title: "3 millones de visualizaciones y más de 2.100 testimonios", description: "Vídeo de Assumpta Serna en Facebook", url: "https://www.facebook.com/assumptaserna/videos/nunca-imagin%C3%A9-esto-y-aqu%C3%AD-estamos3-millones-de-visualizaciones-2100-testimonios-/1690736175986098/", platform: "facebook", order: 4, published: true },
 ];
 function getYouTubeId(value: string) {
   try {
@@ -154,7 +154,7 @@ function getYouTubeId(value: string) {
   return null;
 }
 
-function VideosLibrary() {
+function VideosLibrary({ videos }: { videos: CmsVideo[] }) {
   const [videoUrl, setVideoUrl] = useState("");
   const [selectedVideo, setSelectedVideo] = useState<(typeof videoSearches)[number] | null>(null);
   const [error, setError] = useState("");
@@ -188,8 +188,8 @@ function VideosLibrary() {
         {error && <p role="alert" className="mt-2 text-sm text-destructive">{error}</p>}
       </form>
       <div><h3 className="mb-3 font-display text-xl font-semibold">Vídeos para descubrir</h3><ul className="space-y-2">
-        {videoSearches.map((item) => <li key={item.url}><button type="button" onClick={() => { setSelectedVideo(item); setError(""); }} aria-pressed={selectedVideo?.url === item.url} className={"group flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-colors " + (selectedVideo?.url === item.url ? "border-primary bg-accent/20" : "border-border bg-background/65 hover:bg-accent/15")}><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">{item.platform === "youtube" ? <Youtube size={20} aria-hidden="true" /> : <span className="text-xs font-bold">f</span>}</span><span className="min-w-0"><span className="block text-sm font-semibold group-hover:text-primary">{item.title}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{item.description}</span><span className="mt-1 block text-xs font-semibold text-primary">▶ Reproducir en el televisor</span></span></button></li>)}
-      </ul><p className="mt-3 text-xs leading-relaxed text-muted-foreground">Pulsa cualquier elemento de la lista para cargar el vídeo en la pantalla central. Los vídeos de Facebook dependen de que su autor permita la reproducción incrustada.</p></div>
+        {videos.filter((item) => item.published).sort((a, b) => a.order - b.order).map((item) => <li key={item.id || item.url}><button type="button" onClick={() => { setSelectedVideo(item); setError(""); }} aria-pressed={selectedVideo?.url === item.url} className={"group flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-colors " + (selectedVideo?.url === item.url ? "border-primary bg-accent/20" : "border-border bg-background/65 hover:bg-accent/15")}><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">{item.platform === "youtube" ? <Youtube size={20} aria-hidden="true" /> : <span className="text-xs font-bold">f</span>}</span><span className="min-w-0"><span className="block text-sm font-semibold group-hover:text-primary">{item.title}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{item.description}</span><span className="mt-1 block text-xs font-semibold text-primary">▶ Reproducir en el televisor</span></span></button></li>)}
+      </ul>{videos.filter((item) => item.published).length === 0 && <p className="text-sm text-muted-foreground">Todavía no hay vídeos publicados.</p>}<p className="mt-3 text-xs leading-relaxed text-muted-foreground">Pulsa cualquier elemento de la lista para cargar el vídeo en la pantalla central. Los vídeos de Facebook dependen de que su autor permita la reproducción incrustada.</p></div>
     </div>
   </div>;
 }

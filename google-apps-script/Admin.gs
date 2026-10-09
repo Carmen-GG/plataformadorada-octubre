@@ -95,9 +95,9 @@ function rowValues_(sheet, headersCount) { return sheet.getLastRow()>1 ? sheet.g
 function findRowById_(sheet,id){ var v=sheet.getDataRange().getDisplayValues(); for(var i=1;i<v.length;i++) if(String(v[i][0])===String(id)) return i+1; return -1; }
 function assertAdmin_(password){ var expected=PropertiesService.getScriptProperties().getProperty("BACKOFFICE_PASSWORD"); if(!expected) throw new Error("El backoffice aún no tiene contraseña configurada."); if(String(password||"")!==expected) throw new Error("Contraseña incorrecta."); }
 
-function readNews_(){
+function readNews_(includeUnpublished){
   var s=cmsGetOrCreateSheet_("NoticiasWeb",NEWS_HEADERS), rows=rowValues_(s,NEWS_HEADERS.length);
-  return rows.filter(function(r){var p=String(r[6]||"").trim().toLowerCase();return p!=="no"&&p!=="false"&&p!=="0";}).map(function(r){return {id:String(r[0]||""),title:cleanPublicText_(r[1],300),media:cleanPublicText_(r[2],160),date:String(r[3]||""),url:String(r[4]||""),summary:cleanPublicText_(r[5],1000),type:["video","audio","texto"].indexOf(String(r[8]||"texto").toLowerCase())>=0?String(r[8]||"texto").toLowerCase():"texto",mediaUrl:String(r[9]||""),contentText:String(r[10]||"")};}).reverse();
+  return rows.filter(function(r){var p=String(r[6]||"").trim().toLowerCase();return includeUnpublished || (p!=="no"&&p!=="false"&&p!=="0");}).map(function(r){var p=String(r[6]||"").trim().toLowerCase();return {id:String(r[0]||""),title:cleanPublicText_(r[1],300),media:cleanPublicText_(r[2],160),date:String(r[3]||""),url:String(r[4]||""),summary:cleanPublicText_(r[5],1000),type:["video","audio","texto"].indexOf(String(r[8]||"texto").toLowerCase())>=0?String(r[8]||"texto").toLowerCase():"texto",mediaUrl:String(r[9]||""),contentText:String(r[10]||""),published:p!=="no"&&p!=="false"&&p!=="0"};}).reverse();
 }
 
 function drivePreviewUrl_(id, filename){
@@ -177,7 +177,7 @@ function getPublicContent_(){
 }
 function getPublicContent(){return getPublicContent_();}
 function obtenerContenidoPublico(){return getPublicContent_();}
-function getBackofficeContent(){var c=getPublicContent_();c.propuestas=readProposals_().todas;return c;}
+function getBackofficeContent(){var c=getPublicContent_();c.noticias=readNews_(true);c.propuestas=readProposals_().todas;return c;}
 
 function setupBackoffice(){cmsGetOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);getDriveFolder_();return "Backoffice preparado en la base CMS configurada";}
 

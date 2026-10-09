@@ -4,7 +4,19 @@
  */
 
 function videoSheet_() {
-  return getOrCreateSheet_('VideosWeb', ['id', 'title', 'description', 'url', 'platform', 'order', 'published', 'created']);
+  // Los datos editoriales de la web van siempre al spreadsheet CMS, nunca a Firmantes.
+  var ss = SpreadsheetApp.openById("1nNK3t4_jrJf9n1bUs1W-bg09-zprzKsZ3KRfFPSoyC4");
+  var sheet = ss.getSheetByName("VideosWeb");
+  var headers = ["id", "title", "description", "url", "platform", "order", "published", "created"];
+  if (!sheet) {
+    sheet = ss.insertSheet("VideosWeb");
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.setFrozenRows(1);
+  } else if (sheet.getLastRow() === 0) {
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
 }
 
 function videoPlatform_(url) {

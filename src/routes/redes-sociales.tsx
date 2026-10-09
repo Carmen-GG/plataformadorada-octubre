@@ -127,7 +127,7 @@ function RedesSociales(){
         <article id="videos" className="glass-panel rounded-3xl p-5 sm:p-7">
           <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Archivo audiovisual</p>
           <h2 className="mt-1 font-display text-2xl font-semibold">Plataforma Dorada en vídeo</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">Entrevistas y vídeos sobre la dependencia, los cuidados y la iniciativa de Plataforma Dorada. Elige una búsqueda de la lista o pega el enlace de un vídeo de YouTube para verlo en el televisor.</p>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">Entrevistas y vídeos sobre la dependencia, los cuidados y la iniciativa de Plataforma Dorada. Abre una búsqueda de la lista y pega el enlace del vídeo que quieras reproducir en el televisor.</p>
           <VideosLibrary />
         </article>
       </div>
@@ -170,7 +170,7 @@ function VideosLibrary() {
     <div className="rounded-[2rem] border-4 border-primary/80 bg-accent/25 p-3 shadow-xl sm:p-5">
       <div className="mb-3 flex items-center justify-between gap-3 px-2"><span className="font-display text-sm font-semibold tracking-wide text-primary">PLATAFORMA DORADA · TELEVISIÓN</span><span className="size-3 rounded-full bg-primary/70 shadow-inner" aria-hidden="true" /></div>
       <div className="rounded-[1.4rem] border-[7px] border-foreground/80 bg-foreground p-2 shadow-inner sm:border-[10px] sm:p-3">
-        <div className="relative aspect-video overflow-hidden rounded-lg bg-[#211b14]">
+        <div className="relative aspect-video overflow-hidden rounded-lg bg-primary">
           {videoId ? <iframe title="Vídeo de YouTube sobre Plataforma Dorada" src={"https://www.youtube-nocookie.com/embed/" + videoId + "?autoplay=0&rel=0"} className="absolute inset-0 h-full w-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /> : <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center text-primary-foreground"><Youtube size={42} className="mb-3 text-accent" aria-hidden="true" /><p className="font-display text-xl sm:text-2xl">Tu ventana a los cuidados</p><p className="mt-2 max-w-sm text-xs leading-relaxed text-primary-foreground/75 sm:text-sm">Selecciona una búsqueda y pega el enlace del vídeo que quieras reproducir aquí.</p></div>}
         </div>
       </div>

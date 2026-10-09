@@ -145,7 +145,7 @@ async function refresh() {
       })),
 
       trayectoria: (raw.trayectoria ?? []).map((x) => ({ id:String(x.id??""), date:String(x.fecha??""), title:String(x.titulo??""), description:String(x.descripcion??""), imageUrl:String(x.imagenUrl??"") })),
-      videos: (raw.videos ?? []).map((x) => ({ id:String(x.id??""), title:String(x.title??""), description:String(x.description??""), url:String(x.url??""), platform:x.platform === "facebook" ? "facebook" : "youtube", order:Number(x.order??0), published:x.published !== false && String(x.published??"Sí").toLowerCase() !== "no" })),
+      ...(raw.videos ? { videos: raw.videos.map((x) => ({ id:String(x.id??""), title:String(x.title??""), description:String(x.description??""), url:String(x.url??""), platform:x.platform === "facebook" ? "facebook" as const : "youtube" as const, order:Number(x.order??0), published:x.published !== false && String(x.published??"Sí").toLowerCase() !== "no" })) } : {}),
       hojaRuta: (raw.hojaRuta ?? []).map((x) => ({ id:String(x.id??""), phase:String(x.fase??""), title:String(x.titulo??""), detail:String(x.detalle??""), date:String(x.fecha??""), active:x.activa !== false })),
       ...(raw.actualizado ? { actualizado: raw.actualizado } : {}),
     };

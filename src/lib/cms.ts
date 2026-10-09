@@ -93,19 +93,24 @@ type AppsScriptContentResponse = {
 
 function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
   const declared = String(item.tipo ?? item.type ?? "").trim().toLowerCase();
-  if (declared === "video" || declared === "audio" || declared === "texto") return declared;
+  if (declared === "video" || declared === "audio") return declared;
 
-  const candidate = String(item.urlMultimedia ?? item.mediaUrl ?? item.url ?? "").trim();
-  if (!candidate) return "texto";
-  try {
-    const u = new URL(candidate);
-    const host = u.hostname.toLowerCase();
-    if (host === "youtu.be" || host.endsWith("youtube.com") || host.endsWith("vimeo.com")) return "video";
-    if (host === "open.spotify.com" || host === "soundcloud.com" || host === "www.soundcloud.com") return "audio";
-  } catch {
-    // Enlaces no válidos o incompletos se muestran como texto y se pueden corregir desde el CMS.
+  // Prioriza el enlace multimedia: las hojas antiguas pueden no tener todavía
+  // la columna "tipo" y el backend devuelve "texto" como valor por defecto.
+  const multimedia = String(item.urlMultimedia ?? item.mediaUrl ?? "").trim();
+  const candidates = [multimedia, String(item.url ?? "").trim()].filter(Boolean);
+  for (const candidate of candidates) {
+    try {
+      const u = new URL(candidate);
+      const host = u.hostname.toLowerCase();
+      if (host === "youtu.be" || host === "youtube.com" || host.endsWith(".youtube.com") || host === "vimeo.com" || host.endsWith(".vimeo.com")) return "video";
+      if (host === "open.spotify.com" || host === "soundcloud.com" || host === "www.soundcloud.com") return "audio";
+    } catch {
+      // Un enlace incompleto no se considera un reproductor.
+    }
+    if (/\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(candidate)) return "audio";
   }
-  if (/\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(candidate)) return "audio";
+
   return "texto";
 }
 

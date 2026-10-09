@@ -6,14 +6,12 @@ La pestaña **Vídeos** permite añadir, editar, ordenar, ocultar y eliminar ví
 
 Estos cambios en GitHub no actualizan automáticamente el proyecto de Google Apps Script que está desplegado. Para activar el circuito completo:
 
-1. Abre el mismo proyecto de Apps Script que sirve el backoffice actual.
-2. Añade un archivo de script llamado `videos.gs` y pega el contenido de este repositorio.
-3. En el archivo de servidor que contiene `getPublicContent_()`, incorpora `videos: readVideos_(),` al objeto devuelto por esa función. En la función `setupBackoffice()`, crea también la hoja con estas cabeceras: `VideosWeb` y `['id', 'title', 'description', 'url', 'platform', 'order', 'published', 'created']`. **Integra estas líneas en el código existente; no sustituyas el servidor completo**, porque puede contener otras funciones del backoffice que no están en este repositorio.
+1. Conserva el mismo proyecto de Apps Script que sirve el backoffice actual.
+2. Integra `videos.gs` junto con `Admin.gs`, `publico.gs` y el archivo de enrutamiento `adhesiones.gs`, evitando duplicar funciones globales.
+3. La función `getPublicContent_()` ya incluye `videos: readVideos_()` en el código actual de GitHub; no vuelvas a añadir esa propiedad.
 4. Sustituye el HTML del panel por `admin.html` de este repositorio.
-5. Ejecuta una vez `setupVideoBackoffice()` desde el editor de Apps Script y autoriza los permisos solicitados. Esto crea la pestaña `VideosWeb`.
-6. `setupVideoBackoffice()` crea la pestaña `VideosWeb` y, si está vacía, precarga los cuatro vídeos que ya aparecen en la web.
-7. En **Implementar → Administrar implementaciones**, edita la aplicación web, selecciona **Nueva versión** y vuelve a implementar. La URL `/exec` se mantiene.
-8. Abre el backoffice, entra en la pestaña **Vídeos** y revisa los cuatro registros iniciales. A partir de ahí podrás mantener la lista sin tocar código.
+5. **No ejecutes todavía `setupVideoBackoffice()`**: si la hoja está vacía, esta función puede insertar cuatro vídeos de ejemplo. Hazlo solo cuando se haya revisado el código y se haya confirmado que corresponde preparar los datos del CMS.
+6. Cuando se apruebe la sincronización, revisa la hoja `VideosWeb` y decide expresamente si hay que inicializarla. Después se podrá publicar una nueva versión desde **Implementar → Administrar implementaciones**. La URL `/exec` debería mantenerse al editar la implementación existente.
 
 ## Campos
 

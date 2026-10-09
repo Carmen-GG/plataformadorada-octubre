@@ -103,13 +103,20 @@ function readNews_() {
 }
 
 function readResources_() {
-  var sheet = getOrCreateSheet_('RecursosWeb', ['id', 'titulo', 'categoria', 'descripcion', 'archivo', 'url', 'creado']);
+  // Leer la hoja de recursos indicada expresamente por el proyecto.
+  var ss = SpreadsheetApp.openById('1nNK3t4_jrJf9n1bUs1W-bg09-zprzKsZ3KRfFPSoyC4');
+  var sheet = ss.getSheetByName('RecursosWeb');
+  if (!sheet) return [];
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return [];
-  var values = sheet.getRange(2, 1, lastRow - 1, 7).getDisplayValues();
+  var lastColumn = Math.max(sheet.getLastColumn(), 8);
+  var values = sheet.getRange(2, 1, lastRow - 1, lastColumn).getDisplayValues();
   return values.map(function(r) {
-    return { id: r[0], title: r[1], category: r[2], description: r[3], filename: r[4], url: r[5] };
-  }).reverse();
+    var fileId = String(r[7] || '').trim();
+    var filename = String(r[4] || '').trim();
+    var previewUrl = fileId ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(fileId) + '&sz=w1000' : '';
+    return { id: String(r[0] || ''), title: String(r[1] || ''), category: String(r[2] || ''), description: String(r[3] || ''), filename: filename, url: String(r[5] || ''), vistaPreviaUrl: previewUrl, archivoId: fileId };
+  }).filter(function(r) { return r.id || r.title || r.url; }).reverse();
 }
 
 function getDriveFolder_() {

@@ -61,12 +61,23 @@ function ensureHeaders_(sheet, headers) {
   if (sheet.getLastRow() === 0) {
     sheet.getRange(1,1,1,headers.length).setValues([headers]);
     sheet.setFrozenRows(1);
-    return sheet;
+  } else {
+    var current = sheet.getRange(1,1,1,Math.max(sheet.getLastColumn(), headers.length)).getDisplayValues()[0];
+    var changed = false;
+    headers.forEach(function(h,i){ if (!String(current[i] || "").trim()) { sheet.getRange(1,i+1).setValue(h); changed = true; } });
+    if (changed) sheet.setFrozenRows(1);
   }
-  var current = sheet.getRange(1,1,1,Math.max(sheet.getLastColumn(), headers.length)).getDisplayValues()[0];
-  var changed = false;
-  headers.forEach(function(h,i){ if (!String(current[i] || "").trim()) { sheet.getRange(1,i+1).setValue(h); changed = true; } });
-  if (changed) sheet.setFrozenRows(1);
+
+  // En NoticiasWeb, la columna "tipo" usa valores estables que consume la web.
+  // No se aplica a RecursosWeb, que almacena archivos descargables.
+  if (sheet.getName() === "NoticiasWeb" && headers.indexOf("tipo") >= 0) {
+    var typeColumn = headers.indexOf("tipo") + 1;
+    var validation = SpreadsheetApp.newDataValidation()
+      .requireValueInList(["video", "audio", "texto"], true)
+      .setAllowInvalid(false)
+      .build();
+    sheet.getRange(2, typeColumn, Math.max(sheet.getMaxRows() - 1, 1), 1).setDataValidation(validation);
+  }
   return sheet;
 }
 

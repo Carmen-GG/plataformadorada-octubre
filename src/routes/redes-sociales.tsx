@@ -126,6 +126,7 @@ function RedesSociales(){
           <PhraseCarousel phrases={visiblePhrases}/>
           <ProposalForm type="frase" />
         </article>
+      </div>
       <div id="panel-videos" role="tabpanel" aria-labelledby="tab-videos" hidden={activeTab !== "videos"}>
         <article id="videos" className="glass-panel rounded-3xl p-5 sm:p-7">
           <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Archivo audiovisual</p>
@@ -133,7 +134,6 @@ function RedesSociales(){
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">Entrevistas y vídeos sobre la dependencia, los cuidados y la iniciativa de Plataforma Dorada. Elige una búsqueda de la lista o pega el enlace de un vídeo de YouTube para verlo en el televisor.</p>
           <VideosLibrary />
         </article>
-      </div>
       </div>
     </section>
   </>;
@@ -153,7 +153,7 @@ function getYouTubeId(value: string) {
     if (url.hostname.includes("youtu.be")) return url.pathname.slice(1).split("/")[0] || null;
     if (url.hostname.includes("youtube.com")) {
       if (url.pathname === "/watch") return url.searchParams.get("v");
-      const match = url.pathname.match(/\\/(?:embed|shorts)\\/([^/?]+)/);
+      const match = url.pathname.match(/\/(?:embed|shorts)\/([^/?]+)/);
       return match?.[1] ?? null;
     }
   } catch { /* URL todavía incompleta */ }

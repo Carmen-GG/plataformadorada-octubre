@@ -163,7 +163,29 @@ function getBackofficeContent(){var c=getPublicContent_();c.propuestas=readPropo
 
 function setupBackoffice(){getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);getOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();getOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);getOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);getOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);getDriveFolder_();return "Backoffice preparado en la base CMS configurada";}
 
-function saveNews(data){assertAdmin_(data&&data.password);var s=getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS),id=Utilities.getUuid();s.appendRow([id,cleanPublicText_(data.title,300),cleanPublicText_(data.media,160),String(data.date||"").trim(),String(data.url||"").trim(),cleanPublicText_(data.summary,1000),data.published===false?"No":"Sí",new Date().toISOString()]);return{ok:true,id:id};}
+// Nombre exclusivo para evitar conflictos con funciones antiguas de otros archivos del proyecto.
+function saveNewsToCmsSpreadsheet(data) {
+  assertAdmin_(data && data.password);
+  var ss = SpreadsheetApp.openById(PD_CMS.CMS_SPREADSHEET_ID);
+  var sheet = ss.getSheetByName("NoticiasWeb");
+  if (!sheet) {
+    sheet = ss.insertSheet("NoticiasWeb");
+    sheet.getRange(1, 1, 1, NEWS_HEADERS.length).setValues([NEWS_HEADERS]);
+    sheet.setFrozenRows(1);
+  }
+  var id = Utilities.getUuid();
+  sheet.appendRow([
+    id,
+    cleanPublicText_(data.title, 300),
+    cleanPublicText_(data.media, 160),
+    String(data.date || "").trim(),
+    String(data.url || "").trim(),
+    cleanPublicText_(data.summary, 1000),
+    data.published === false ? "No" : "Sí",
+    new Date().toISOString()
+  ]);
+  return { ok: true, id: id };
+}
 
 function saveResource(data){
   assertAdmin_(data&&data.password);

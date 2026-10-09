@@ -169,19 +169,20 @@ function readEvents_(){
 
 function readProposals_(){
   var s=cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS), rows=rowValues_(s,PROPOSAL_HEADERS.length);
-  var all=rows.map(function(r){return{id:r[0],type:r[1],title:r[2],artist:r[3],text:r[4],proposer:r[5],published:String(r[6]).toLowerCase()!=="no",created:r[7]};}).reverse();
+  var all=rows.map(function(r){
+    var published=!/^(no|false|0)$/i.test(String(r[6]||"").trim());
+    return{id:r[0],type:r[1],title:r[2],artist:r[3],text:r[4],proposer:r[5],published:published,created:r[7]};
+  }).reverse();
   return {canciones:all.filter(function(x){return x.type==="cancion"&&x.published;}).map(function(x){return{x:x.title,artist:x.artist};}),frases:all.filter(function(x){return x.type==="frase"&&x.published;}).map(function(x){return{text:x.text,name:x.proposer};}),todas:all};
 }
-
 function readTimeline_(){
   var s=cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS), rows=rowValues_(s,TIMELINE_HEADERS.length);
-  return rows.filter(function(r){return String(r[8]).toLowerCase()!=="no";}).map(function(r){return{id:r[0],fecha:r[1],titulo:cleanPublicText_(r[2],300),descripcion:cleanPublicText_(r[3],1500),imagenNombre:r[4],imagenUrl:r[5],imagenId:r[6],orden:Number(r[7])||0};}).sort(function(a,b){return a.orden-b.orden||String(a.fecha).localeCompare(String(b.fecha));});
+  return rows.filter(function(r){return !/^(no|false|0)$/i.test(String(r[8]||"").trim());}).map(function(r){return{id:r[0],fecha:r[1],titulo:cleanPublicText_(r[2],300),descripcion:cleanPublicText_(r[3],1500),imagenNombre:r[4],imagenUrl:r[5],imagenId:r[6],orden:Number(r[7])||0};}).sort(function(a,b){return a.orden-b.orden||String(a.fecha).localeCompare(String(b.fecha));});
 }
 function readRoadmap_(){
   var s=cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS), rows=rowValues_(s,ROADMAP_HEADERS.length);
-  return rows.filter(function(r){return String(r[6]).toLowerCase()!=="no";}).map(function(r){return{id:r[0],fase:cleanPublicText_(r[1],100),titulo:cleanPublicText_(r[2],300),detalle:cleanPublicText_(r[3],1500),fecha:r[4],orden:Number(r[5])||0,activa:String(r[6]).toLowerCase()!=="no"};}).sort(function(a,b){return a.orden-b.orden;});
+  return rows.filter(function(r){return !/^(no|false|0)$/i.test(String(r[6]||"").trim());}).map(function(r){return{id:r[0],fase:cleanPublicText_(r[1],100),titulo:cleanPublicText_(r[2],300),detalle:cleanPublicText_(r[3],1500),fecha:r[4],orden:Number(r[5])||0,activa:!/^(no|false|0)$/i.test(String(r[6]||"").trim())};}).sort(function(a,b){return a.orden-b.orden;});
 }
-
 function getPublicContent_(){
   var p=readProposals_();
   return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),videos:readVideos_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,actualizado:new Date().toISOString()};

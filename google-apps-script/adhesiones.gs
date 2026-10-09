@@ -93,12 +93,29 @@ function getOrCreateSheet_(name, headers) {
 }
 
 function readNews_() {
-  var sheet = getOrCreateSheet_('NoticiasWeb', ['id', 'titulo', 'medio', 'fecha', 'url', 'resumen', 'publicada', 'creada']);
+  // Leer NoticiasWeb del mismo spreadsheet explícito que usa la web para RecursosWeb.
+  var ss = SpreadsheetApp.openById('1nNK3t4_jrJf9n1bUs1W-bg09-zprzKsZ3KRfFPSoyC4');
+  var sheet = ss.getSheetByName('NoticiasWeb');
+  if (!sheet) return [];
+
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return [];
+
   var values = sheet.getRange(2, 1, lastRow - 1, 8).getDisplayValues();
-  return values.filter(function(r) { return String(r[6]).toLowerCase() !== 'no'; }).map(function(r) {
-    return { id: r[0], title: r[1], media: r[2], date: r[3], url: r[4], summary: r[5] };
+  return values.filter(function(r) {
+    var published = String(r[6] || '').trim().toLowerCase();
+    return published !== 'no' && published !== 'false' && published !== '0';
+  }).map(function(r) {
+    return {
+      id: String(r[0] || ''),
+      title: String(r[1] || ''),
+      media: String(r[2] || ''),
+      date: String(r[3] || ''),
+      url: String(r[4] || ''),
+      summary: String(r[5] || '')
+    };
+  }).filter(function(r) {
+    return r.title || r.url;
   }).reverse();
 }
 

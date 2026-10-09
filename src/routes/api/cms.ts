@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+
 const DEFAULT_CMS_URL =
-  "https://script.google.com/macros/s/AKfycby53cqO5YcEOwgxc5orNADhjFhmXj3_ufXloAXTb573UjVVXzRyvCQyQQJqaJHHio1x/exec";
+  "https://script.google.com/macros/s/AKfycbxKl68XDCa_Z7XAisrDDjYwrDz-1hHMGJ8JwnErWvB1s6aIwClitHKmpbbKON63D0KZ/exec";
 const CMS_URL = import.meta.env.VITE_ADHESION_COUNT_URL?.trim() || DEFAULT_CMS_URL;
 
 const TIMEOUT_MS = 30_000;

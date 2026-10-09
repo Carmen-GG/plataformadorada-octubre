@@ -63,7 +63,7 @@ function videoEmbedUrl(raw: string) {
     }
     if (u.hostname.endsWith("vimeo.com")) {
       const id = u.pathname.split("/").filter(Boolean).pop();
-      if (id && /^\\d+$/.test(id)) return "https://player.vimeo.com/video/" + id;
+      if (id && /^\d+$/.test(id)) return "https://player.vimeo.com/video/" + id;
     }
   } catch {}
   return "";
@@ -78,7 +78,7 @@ function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsConten
   }
   if (type === "audio") {
     const src = item.mediaUrl || item.url;
-    const directAudio = /\\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(src);
+    const directAudio = /\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(src);
     return <section className="rounded-3xl border border-border bg-card p-5 sm:p-7"><div className="mb-4 flex items-center gap-3"><div className="rounded-2xl bg-primary/10 p-3 text-primary"><Headphones size={28} aria-hidden="true" /></div><div><p className="text-xs font-semibold uppercase tracking-widest text-primary">Audio / podcast</p><h2 className="font-display text-xl font-semibold">{item.title}</h2></div></div>{directAudio ? <audio className="w-full" controls preload="none" src={src}>Tu navegador no admite la reproducción de audio. <a href={src}>Abrir audio</a>.</audio> : <p className="text-sm text-muted-foreground">Este enlace no parece ser un archivo de audio directo. Ábrelo en la plataforma de origen para escucharlo.</p>}<a className="mt-4 inline-flex rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground" href={src} target="_blank" rel="noreferrer">Abrir audio o podcast</a>{item.summary && <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>}</section>;
   }
   return <article className="rounded-3xl border border-amber-200 bg-[#fff9ed] p-6 text-[#382b1d] shadow-sm sm:p-8"><div className="mb-5 flex items-center gap-3 border-b border-amber-200 pb-4"><BookOpen size={30} aria-hidden="true" /><div><p className="text-xs font-semibold uppercase tracking-widest">Lectura</p><h2 className="font-display text-2xl font-semibold">{item.title}</h2></div></div><p className="mb-4 text-sm text-[#725d45]">{[item.media,item.date].filter(Boolean).join(" · ")}</p><div className="whitespace-pre-line text-base leading-8">{item.contentText || item.summary || "No se ha añadido el texto completo. Puedes consultar la noticia original."}</div>{item.url && <a className="mt-6 inline-flex rounded-full bg-[#704516] px-5 py-3 text-sm font-semibold text-white" href={item.url} target="_blank" rel="noreferrer">Consultar fuente original</a>}</article>;

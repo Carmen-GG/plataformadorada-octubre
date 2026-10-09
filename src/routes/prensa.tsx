@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
-import { SITE, pressResources as fallbackResources } from "@/lib/content";
+import { SITE } from "@/lib/content";
 import { useCmsContent, type CmsResource } from "@/lib/cms";
 
 export const Route = createFileRoute("/prensa")({
@@ -53,7 +53,7 @@ function ResourcePreview({ resource }: { resource: CmsResource }) {
 
 function Page() {
   const cms = useCmsContent();
-  const resources = cms?.recursos ?? fallbackResources.map((r, i) => ({ id: String(i), title: r.title, category: r.category, description: r.description, filename: "", url: "", previewUrl: "" }));
+  const resources = cms?.recursos ?? [];
   const categories = useMemo(() => ["Todos", ...Array.from(new Set(resources.map(categoryFor)))], [resources]);
   const [selected, setSelected] = useState("Todos");
   const visible = selected === "Todos" ? resources : resources.filter((resource) => categoryFor(resource) === selected);

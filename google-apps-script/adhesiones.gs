@@ -16,7 +16,7 @@ function doGet(e) {
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
 
-  var callback = /^[A-Za-z_$][\\w$.]*$/.test(params.callback || "") ? params.callback : "";
+  var callback = /^[A-Za-z_$][\w$.]*$/.test(params.callback || "") ? params.callback : "";
   var action = params.action || "count";
   var payload;
 

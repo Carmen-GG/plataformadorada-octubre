@@ -13,9 +13,10 @@ Este backoffice permite gestionar desde Google Apps Script:
 
 No crees otro proyecto de Apps Script. Usa el mismo proyecto que ya está vinculado a la hoja donde tienes `Firmantes`.
 
-1. Sustituye el código del archivo de servidor por `adhesiones.gs` incluido en esta carpeta, o incorpora sus funciones al código actual.
-2. En Apps Script crea un archivo HTML llamado exactamente `admin` y pega el contenido de `admin.html`.
-3. Guarda.
+1. Conserva el proyecto de Apps Script existente y sus funciones relacionadas con adhesiones y estadísticas.
+2. Integra los archivos de servidor de esta carpeta en el mismo proyecto: `adhesiones.gs` (enrutamiento), `Admin.gs` (CMS/backoffice), `publico.gs` (estadísticas públicas) y `videos.gs` (gestión de vídeos). No dupliques funciones globales si ya existen en el proyecto.
+3. En Apps Script crea un archivo HTML llamado exactamente `admin` y pega el contenido de `admin.html`.
+4. Guarda.
 
 ## 2. Configura la contraseña
 
@@ -39,11 +40,7 @@ Desde el editor de Apps Script ejecuta una vez:
 
 Autoriza Drive y Sheets cuando Google lo solicite.
 
-Se crearán automáticamente:
-
-- `NoticiasWeb`
-- `RecursosWeb`
-- carpeta de Drive `Plataforma Dorada - Recursos`
+Se crearán automáticamente las hojas `NoticiasWeb`, `RecursosWeb`, `EventosWeb`, `PropuestasWeb`, `TrayectoriaWeb` y `HojaRutaWeb`, además de la carpeta de Drive `Plataforma Dorada - Recursos`. La hoja `VideosWeb` se prepara con `setupVideoBackoffice()` cuando se decida activar y revisar esa función.
 
 ## 4. Nueva implementación
 
@@ -57,8 +54,11 @@ Después de guardar el código:
 La misma URL `/exec` sirve para:
 
 - contador: `/exec`
-- contenido público: `/exec?action=content`
+- estadísticas públicas: `/exec?action=public`
+- contenido editorial público: `/exec?action=content`
 - backoffice: `/exec?view=admin`
+
+**Importante:** los cambios de GitHub no se aplican automáticamente al despliegue. Primero termina la revisión de los archivos y de las hojas; después sincroniza el conjunto completo y publica una nueva versión de Apps Script. No ejecutes funciones de preparación que escriban en el CMS hasta haber confirmado que corresponde hacerlo.
 
 ## 5. Abrir el backoffice
 

@@ -136,13 +136,11 @@ function RedesSociales(){
 }
 
 const videoSearches = [
-  { title: "Plataforma Dorada: entrevistas y noticias", description: "Cobertura de la iniciativa y del Pacto de Estado.", query: "Plataforma Dorada Assumpta Serna" },
-  { title: "Assumpta Serna denuncia el sistema de dependencia", description: "Vídeos sobre el origen de la iniciativa y su denuncia pública.", query: "Assumpta Serna dependencia no es ni humano ni justo" },
-  { title: "Pacto de Estado por la Dependencia", description: "Debates y entrevistas sobre la necesidad de un pacto estatal.", query: "Pacto de Estado dependencia cuidados España" },
-  { title: "Familias cuidadoras y personas dependientes", description: "Testimonios y reportajes sobre las dificultades de los cuidados.", query: "familias cuidadoras dependencia España reportaje" },
-  { title: "Entrevistas en medios de comunicación", description: "Conversaciones con Assumpta Serna sobre cuidados y derechos.", query: "Assumpta Serna Plataforma Dorada entrevista" },
+  { title: "Plataforma Dorada · Vídeo 1", description: "Vídeo de YouTube", url: "https://www.youtube.com/watch?v=-s3pZV8apaY", platform: "youtube" },
+  { title: "Plataforma Dorada · Vídeo 2", description: "Vídeo de YouTube", url: "https://www.youtube.com/watch?v=5sbiaLrUKjM", platform: "youtube" },
+  { title: "¿Qué es Plataforma Dorada?", description: "Vídeo publicado en Facebook por Assumpta Serna y Alicia Lopmar", url: "https://www.facebook.com/100058237623701/videos/ya-sab%C3%A9is-qu%C3%A9-es-plataforma-dorada-assumptaserna-y-alicialopmar-est%C3%A1n-denunciand/1070927795538559/", platform: "facebook" },
+  { title: "3 millones de visualizaciones y más de 2.100 testimonios", description: "Vídeo de Assumpta Serna en Facebook", url: "https://www.facebook.com/assumptaserna/videos/nunca-imagin%C3%A9-esto-y-aqu%C3%AD-estamos3-millones-de-visualizaciones-2100-testimonios-/1690736175986098/", platform: "facebook" },
 ];
-
 function getYouTubeId(value: string) {
   try {
     const url = new URL(value);
@@ -158,33 +156,40 @@ function getYouTubeId(value: string) {
 
 function VideosLibrary() {
   const [videoUrl, setVideoUrl] = useState("");
-  const [videoId, setVideoId] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<(typeof videoSearches)[number] | null>(null);
   const [error, setError] = useState("");
   const playVideo = () => {
     const id = getYouTubeId(videoUrl.trim());
     if (!id) { setError("Pega un enlace válido de YouTube (youtube.com/watch, youtu.be, Shorts o embed)."); return; }
-    setVideoId(id);
+    setSelectedVideo({ title: "Vídeo de YouTube", description: "Vídeo seleccionado", url: "https://www.youtube.com/watch?v=" + id, platform: "youtube" });
     setError("");
   };
+  const embedUrl = selectedVideo
+    ? selectedVideo.platform === "youtube"
+      ? "https://www.youtube-nocookie.com/embed/" + (getYouTubeId(selectedVideo.url) ?? "") + "?autoplay=0&rel=0"
+      : "https://www.facebook.com/plugins/video.php?href=" + encodeURIComponent(selectedVideo.url) + "&show_text=false&width=800"
+    : null;
+
   return <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.85fr)]">
     <div className="rounded-[2rem] border-4 border-primary/80 bg-accent/25 p-3 shadow-xl sm:p-5">
       <div className="mb-3 flex items-center justify-between gap-3 px-2"><span className="font-display text-sm font-semibold tracking-wide text-primary">PLATAFORMA DORADA · TELEVISIÓN</span><span className="size-3 rounded-full bg-primary/70 shadow-inner" aria-hidden="true" /></div>
       <div className="rounded-[1.4rem] border-[7px] border-foreground/80 bg-foreground p-2 shadow-inner sm:border-[10px] sm:p-3">
         <div className="relative aspect-video overflow-hidden rounded-lg bg-primary">
-          {videoId ? <iframe title="Vídeo de YouTube sobre Plataforma Dorada" src={"https://www.youtube-nocookie.com/embed/" + videoId + "?autoplay=0&rel=0"} className="absolute inset-0 h-full w-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /> : <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center text-primary-foreground"><Youtube size={42} className="mb-3 text-accent" aria-hidden="true" /><p className="font-display text-xl sm:text-2xl">Tu ventana a los cuidados</p><p className="mt-2 max-w-sm text-xs leading-relaxed text-primary-foreground/75 sm:text-sm">Selecciona una búsqueda y pega el enlace del vídeo que quieras reproducir aquí.</p></div>}
+          {embedUrl ? <iframe key={embedUrl} title={selectedVideo?.title ?? "Vídeo sobre Plataforma Dorada"} src={embedUrl} className="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /> : <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center text-primary-foreground"><Youtube size={42} className="mb-3 text-accent" aria-hidden="true" /><p className="font-display text-xl sm:text-2xl">Tu ventana a los cuidados</p><p className="mt-2 max-w-sm text-xs leading-relaxed text-primary-foreground/75 sm:text-sm">Selecciona uno de los vídeos de la lista para reproducirlo aquí.</p></div>}
         </div>
       </div>
-      <div className="mt-3 flex items-center justify-between px-2 text-xs font-semibold text-primary"><span>ARCHIVO AUDIOVISUAL</span><span aria-hidden="true">● ━━━ ◉</span></div>
+      <div className="mt-3 flex items-center justify-between gap-3 px-2 text-xs font-semibold text-primary"><span className="truncate">{selectedVideo?.title ?? "ARCHIVO AUDIOVISUAL"}</span><span aria-hidden="true">● ━━━ ◉</span></div>
+      {selectedVideo && <a className="mt-2 inline-block px-2 text-xs font-semibold text-primary underline" href={selectedVideo.url} target="_blank" rel="noreferrer">Abrir vídeo en {selectedVideo.platform === "youtube" ? "YouTube" : "Facebook"} si no se reproduce</a>}
     </div>
     <div className="space-y-4">
       <form onSubmit={(e) => { e.preventDefault(); playVideo(); }} className="rounded-2xl border border-border bg-background/70 p-4">
-        <label htmlFor="youtube-video-url" className="block text-sm font-semibold">Reproducir un vídeo de YouTube</label>
+        <label htmlFor="youtube-video-url" className="block text-sm font-semibold">También puedes pegar un enlace de YouTube</label>
         <div className="mt-2 flex gap-2"><input id="youtube-video-url" type="url" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="Pega aquí el enlace del vídeo" className="min-w-0 flex-1 rounded-xl border border-input bg-card px-3 py-2 text-sm" /><button type="submit" className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Ver</button></div>
         {error && <p role="alert" className="mt-2 text-sm text-destructive">{error}</p>}
       </form>
       <div><h3 className="mb-3 font-display text-xl font-semibold">Vídeos para descubrir</h3><ul className="space-y-2">
-        {videoSearches.map((item) => <li key={item.title}><a href={"https://www.youtube.com/results?search_query=" + encodeURIComponent(item.query)} target="_blank" rel="noreferrer" className="group flex gap-3 rounded-2xl border border-border bg-background/65 p-3 transition-colors hover:bg-accent/15"><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground"><Youtube size={20} aria-hidden="true" /></span><span className="min-w-0"><span className="block text-sm font-semibold group-hover:text-primary">{item.title}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{item.description}</span><span className="mt-1 block text-xs font-semibold text-primary">Buscar en YouTube ↗</span></span></a></li>)}
-      </ul><p className="mt-3 text-xs leading-relaxed text-muted-foreground">Los enlaces abren búsquedas de YouTube para que puedas escoger vídeos disponibles y actuales; después, pega el enlace del vídeo en el reproductor para verlo en el televisor.</p></div>
+        {videoSearches.map((item) => <li key={item.url}><button type="button" onClick={() => { setSelectedVideo(item); setError(""); }} aria-pressed={selectedVideo?.url === item.url} className={"group flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-colors " + (selectedVideo?.url === item.url ? "border-primary bg-accent/20" : "border-border bg-background/65 hover:bg-accent/15")}><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">{item.platform === "youtube" ? <Youtube size={20} aria-hidden="true" /> : <span className="text-xs font-bold">f</span>}</span><span className="min-w-0"><span className="block text-sm font-semibold group-hover:text-primary">{item.title}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{item.description}</span><span className="mt-1 block text-xs font-semibold text-primary">▶ Reproducir en el televisor</span></span></button></li>)}
+      </ul><p className="mt-3 text-xs leading-relaxed text-muted-foreground">Pulsa cualquier elemento de la lista para cargar el vídeo en la pantalla central. Los vídeos de Facebook dependen de que su autor permita la reproducción incrustada.</p></div>
     </div>
   </div>;
 }

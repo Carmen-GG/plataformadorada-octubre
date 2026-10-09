@@ -69,6 +69,22 @@ function videoEmbedUrl(raw: string) {
   return "";
 }
 
+function audioEmbedUrl(raw: string) {
+  try {
+    const u = new URL(raw);
+    if (u.hostname === "open.spotify.com") {
+      const parts = u.pathname.split("/").filter(Boolean);
+      if (["episode", "show", "track", "album"].includes(parts[0] || "") && parts[1]) {
+        return "https://open.spotify.com/embed/" + parts[0] + "/" + parts[1];
+      }
+    }
+    if (u.hostname === "soundcloud.com" || u.hostname === "www.soundcloud.com") {
+      return "https://w.soundcloud.com/player/?url=" + encodeURIComponent(u.toString()) + "&auto_play=false";
+    }
+  } catch {}
+  return "";
+}
+
 function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsContent>>["noticias"][number] | null }) {
   if (!item) return <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-3xl border border-border bg-muted/30 p-8 text-center"><Tv size={42} aria-hidden="true" /><h2 className="font-display text-xl font-semibold">Contenido destacado</h2><p className="max-w-sm text-sm text-muted-foreground">Selecciona una noticia para ver el vídeo, escuchar el audio o leer el texto aquí.</p></div>;
   const type = item.type || "texto";
@@ -79,7 +95,8 @@ function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsConten
   if (type === "audio") {
     const src = item.mediaUrl || item.url;
     const directAudio = /\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(src);
-    return <section className="rounded-3xl border border-border bg-card p-5 sm:p-7"><div className="mb-4 flex items-center gap-3"><div className="rounded-2xl bg-primary/10 p-3 text-primary"><Headphones size={28} aria-hidden="true" /></div><div><p className="text-xs font-semibold uppercase tracking-widest text-primary">Audio / podcast</p><h2 className="font-display text-xl font-semibold">{item.title}</h2></div></div>{directAudio ? <audio className="w-full" controls preload="none" src={src}>Tu navegador no admite la reproducción de audio. <a href={src}>Abrir audio</a>.</audio> : <p className="text-sm text-muted-foreground">Este enlace no parece ser un archivo de audio directo. Ábrelo en la plataforma de origen para escucharlo.</p>}<a className="mt-4 inline-flex rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground" href={src} target="_blank" rel="noreferrer">Abrir audio o podcast</a>{item.summary && <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>}</section>;
+    const audioEmbed = audioEmbedUrl(src);
+    return <section className="rounded-3xl border border-border bg-card p-5 sm:p-7"><div className="mb-4 flex items-center gap-3"><div className="rounded-2xl bg-primary/10 p-3 text-primary"><Headphones size={28} aria-hidden="true" /></div><div><p className="text-xs font-semibold uppercase tracking-widest text-primary">Audio / podcast</p><h2 className="font-display text-xl font-semibold">{item.title}</h2></div></div>{directAudio ? <audio className="w-full" controls preload="none" src={src}>Tu navegador no admite la reproducción de audio. <a href={src}>Abrir audio</a>.</audio> : audioEmbed ? <iframe className="h-40 w-full rounded-xl border-0 sm:h-48" src={audioEmbed} title={`Reproductor de audio: ${item.title}`} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" /> : <p className="text-sm text-muted-foreground">Este enlace no se puede reproducir aquí automáticamente. Puedes abrirlo en la plataforma de origen.</p>}<a className="mt-4 inline-flex rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground" href={src} target="_blank" rel="noreferrer">Abrir audio o podcast</a>{item.summary && <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>}</section>;
   }
   return <article className="rounded-3xl border border-amber-200 bg-[#fff9ed] p-6 text-[#382b1d] shadow-sm sm:p-8"><div className="mb-5 flex items-center gap-3 border-b border-amber-200 pb-4"><BookOpen size={30} aria-hidden="true" /><div><p className="text-xs font-semibold uppercase tracking-widest">Lectura</p><h2 className="font-display text-2xl font-semibold">{item.title}</h2></div></div><p className="mb-4 text-sm text-[#725d45]">{[item.media,item.date].filter(Boolean).join(" · ")}</p><div className="whitespace-pre-line text-base leading-8">{item.contentText || item.summary || "No se ha añadido el texto completo. Puedes consultar la noticia original."}</div>{item.url && <a className="mt-6 inline-flex rounded-full bg-[#704516] px-5 py-3 text-sm font-semibold text-white" href={item.url} target="_blank" rel="noreferrer">Consultar fuente original</a>}</article>;
 }

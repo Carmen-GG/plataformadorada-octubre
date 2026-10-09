@@ -10,7 +10,7 @@ var PD_CMS = {
   RESOURCE_FOLDER_PROPERTY: "RECURSOS_FOLDER_ID",
 };
 
-var NEWS_HEADERS = ["id","titulo","medio","fecha","url","resumen","publicada","creada"];
+var NEWS_HEADERS = ["id","titulo","medio","fecha","url","resumen","publicada","creada","tipo","urlMultimedia","contenidoTexto"];
 var RESOURCE_HEADERS = ["id","titulo","categoria","descripcion","archivo","url","creado","archivoId"];
 var EVENT_HEADERS = ["id","titulo","fecha","hora","lugar","ciudad","descripcion","url","documentoNombre","documentoUrl","documentoId","publicada","creada"];
 var PROPOSAL_HEADERS = ["id","tipo","titulo","artista","texto","proponente","publicada","creada"];
@@ -96,8 +96,8 @@ function findRowById_(sheet,id){ var v=sheet.getDataRange().getDisplayValues(); 
 function assertAdmin_(password){ var expected=PropertiesService.getScriptProperties().getProperty("BACKOFFICE_PASSWORD"); if(!expected) throw new Error("El backoffice aún no tiene contraseña configurada."); if(String(password||"")!==expected) throw new Error("Contraseña incorrecta."); }
 
 function readNews_(){
-  var s=cmsGetOrCreateSheet_"NoticiasWeb",NEWS_HEADERS), rows=rowValues_(s,NEWS_HEADERS.length);
-  return rows.filter(function(r){return String(r[6]).toLowerCase()!=="no";}).map(function(r){return {id:r[0],title:cleanPublicText_(r[1],300),media:cleanPublicText_(r[2],160),date:r[3],url:r[4],summary:cleanPublicText_(r[5],1000)};}).reverse();
+  var s=cmsGetOrCreateSheet_("NoticiasWeb",NEWS_HEADERS), rows=rowValues_(s,NEWS_HEADERS.length);
+  return rows.filter(function(r){var p=String(r[6]||"").trim().toLowerCase();return p!=="no"&&p!=="false"&&p!=="0";}).map(function(r){return {id:String(r[0]||""),title:cleanPublicText_(r[1],300),media:cleanPublicText_(r[2],160),date:String(r[3]||""),url:String(r[4]||""),summary:cleanPublicText_(r[5],1000),type:["video","audio","texto"].indexOf(String(r[8]||"texto").toLowerCase())>=0?String(r[8]||"texto").toLowerCase():"texto",mediaUrl:String(r[9]||""),contentText:String(r[10]||"")};}).reverse();
 }
 
 function drivePreviewUrl_(id, filename){
@@ -110,7 +110,7 @@ function drivePreviewUrl_(id, filename){
 function driveDownloadUrl_(id){ return id ? "https://drive.google.com/uc?export=download&id="+encodeURIComponent(id) : ""; }
 
 function readResources_(){
-  var s=cmsGetOrCreateSheet_"RecursosWeb",RESOURCE_HEADERS), rows=rowValues_(s,RESOURCE_HEADERS.length);
+  var s=cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS), rows=rowValues_(s,RESOURCE_HEADERS.length);
   return rows.map(function(r){
     var fileId=String(r[7]||"");
     if(!fileId){var m=String(r[5]||"").match(/[?&]id=([^&]+)/);if(m)fileId=m[1];}
@@ -157,17 +157,17 @@ function readEvents_(){
 }
 
 function readProposals_(){
-  var s=cmsGetOrCreateSheet_"PropuestasWeb",PROPOSAL_HEADERS), rows=rowValues_(s,PROPOSAL_HEADERS.length);
+  var s=cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS), rows=rowValues_(s,PROPOSAL_HEADERS.length);
   var all=rows.map(function(r){return{id:r[0],type:r[1],title:r[2],artist:r[3],text:r[4],proposer:r[5],published:String(r[6]).toLowerCase()!=="no",created:r[7]};}).reverse();
   return {canciones:all.filter(function(x){return x.type==="cancion"&&x.published;}).map(function(x){return{x:x.title,artist:x.artist};}),frases:all.filter(function(x){return x.type==="frase"&&x.published;}).map(function(x){return{text:x.text,name:x.proposer};}),todas:all};
 }
 
 function readTimeline_(){
-  var s=cmsGetOrCreateSheet_"TrayectoriaWeb",TIMELINE_HEADERS), rows=rowValues_(s,TIMELINE_HEADERS.length);
+  var s=cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS), rows=rowValues_(s,TIMELINE_HEADERS.length);
   return rows.filter(function(r){return String(r[8]).toLowerCase()!=="no";}).map(function(r){return{id:r[0],fecha:r[1],titulo:cleanPublicText_(r[2],300),descripcion:cleanPublicText_(r[3],1500),imagenNombre:r[4],imagenUrl:r[5],imagenId:r[6],orden:Number(r[7])||0};}).sort(function(a,b){return a.orden-b.orden||String(a.fecha).localeCompare(String(b.fecha));});
 }
 function readRoadmap_(){
-  var s=cmsGetOrCreateSheet_"HojaRutaWeb",ROADMAP_HEADERS), rows=rowValues_(s,ROADMAP_HEADERS.length);
+  var s=cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS), rows=rowValues_(s,ROADMAP_HEADERS.length);
   return rows.filter(function(r){return String(r[6]).toLowerCase()!=="no";}).map(function(r){return{id:r[0],fase:cleanPublicText_(r[1],100),titulo:cleanPublicText_(r[2],300),detalle:cleanPublicText_(r[3],1500),fecha:r[4],orden:Number(r[5])||0,activa:String(r[6]).toLowerCase()!=="no"};}).sort(function(a,b){return a.orden-b.orden;});
 }
 
@@ -179,35 +179,26 @@ function getPublicContent(){return getPublicContent_();}
 function obtenerContenidoPublico(){return getPublicContent_();}
 function getBackofficeContent(){var c=getPublicContent_();c.propuestas=readProposals_().todas;return c;}
 
-function setupBackoffice(){cmsGetOrCreateSheet_"NoticiasWeb",NEWS_HEADERS);cmsGetOrCreateSheet_"RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();cmsGetOrCreateSheet_"PropuestasWeb",PROPOSAL_HEADERS);cmsGetOrCreateSheet_"TrayectoriaWeb",TIMELINE_HEADERS);cmsGetOrCreateSheet_"HojaRutaWeb",ROADMAP_HEADERS);getDriveFolder_();return "Backoffice preparado en la base CMS configurada";}
+function setupBackoffice(){cmsGetOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);getDriveFolder_();return "Backoffice preparado en la base CMS configurada";}
 
 // Nombre exclusivo para evitar conflictos con funciones antiguas de otros archivos del proyecto.
 function saveNewsToCmsSpreadsheet(data) {
   assertAdmin_(data && data.password);
-  var ss = SpreadsheetApp.openById(PD_CMS.CMS_SPREADSHEET_ID);
-  var sheet = ss.getSheetByName("NoticiasWeb");
-  if (!sheet) {
-    sheet = ss.insertSheet("NoticiasWeb");
-    sheet.getRange(1, 1, 1, NEWS_HEADERS.length).setValues([NEWS_HEADERS]);
-    sheet.setFrozenRows(1);
-  }
-  var id = Utilities.getUuid();
-  sheet.appendRow([
-    id,
-    cleanPublicText_(data.title, 300),
-    cleanPublicText_(data.media, 160),
-    String(data.date || "").trim(),
-    String(data.url || "").trim(),
-    cleanPublicText_(data.summary, 1000),
-    data.published === false ? "No" : "Sí",
-    new Date().toISOString()
-  ]);
-  return { ok: true, id: id };
+  var sheet = cmsGetOrCreateSheet_("NoticiasWeb", NEWS_HEADERS);
+  var id = String(data.id || "").trim();
+  var row = id ? findRowById_(sheet, id) : -1;
+  if (row < 0) { id = Utilities.getUuid(); row = sheet.getLastRow() + 1; }
+  var created = row <= sheet.getLastRow() ? String(sheet.getRange(row, 8).getDisplayValue() || "") : "";
+  if (!created) created = new Date().toISOString();
+  var type = String(data.type || "texto").toLowerCase();
+  if (["video","audio","texto"].indexOf(type) < 0) type = "texto";
+  sheet.getRange(row, 1, 1, NEWS_HEADERS.length).setValues([[id,cleanPublicText_(data.title,300),cleanPublicText_(data.media,160),String(data.date||"").trim(),String(data.url||"").trim(),cleanPublicText_(data.summary,1000),data.published===false?"No":"Sí",created,type,String(data.mediaUrl||"").trim(),String(data.contentText||"").trim()]]);
+  return {ok:true,id:id};
 }
 
 function saveResource(data){
   assertAdmin_(data&&data.password);
-  var s=cmsGetOrCreateSheet_"RecursosWeb",RESOURCE_HEADERS), id=String(data.id||"").trim(), row=id?findRowById_(s,id):-1;
+  var s=cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS), id=String(data.id||"").trim(), row=id?findRowById_(s,id):-1;
   if(!data.fileName||!data.base64){ if(row<0) throw new Error("Falta el archivo."); return updateResourceMetadata_(data,s,row); }
   var bytes=Utilities.base64Decode(data.base64); if(bytes.length>10*1024*1024)throw new Error("El archivo supera el límite de 10 MB.");
   var oldId=row>0?String(s.getRange(row,8).getDisplayValue()||""):"";
@@ -231,20 +222,20 @@ function saveEvent(data){
 }
 
 function saveTimeline(data){
-  assertAdmin_(data&&data.password); var s=cmsGetOrCreateSheet_"TrayectoriaWeb",TIMELINE_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
+  assertAdmin_(data&&data.password); var s=cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
   var oldId=row>0?String(s.getRange(row,7).getDisplayValue()||""):"";var imageName=String(data.imageName||"").trim(),imageUrl=String(data.imageUrl||"").trim(),imageId=oldId;
   if(data.base64&&data.fileName){if(oldId){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}var bytes=Utilities.base64Decode(data.base64);if(bytes.length>10*1024*1024)throw new Error("La imagen supera 10 MB.");var f=getDriveFolder_().createFile(Utilities.newBlob(bytes,data.mimeType||"image/*",data.fileName));f.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);imageId=f.getId();imageName=data.fileName;imageUrl=driveDownloadUrl_(imageId);}
   var created=row<=s.getLastRow()?String(s.getRange(row,10).getDisplayValue()||""):"";if(!created)created=new Date().toISOString();
   s.getRange(row,1,1,10).setValues([[id,String(data.date||"").trim(),cleanPublicText_(data.title,300),cleanPublicText_(data.description,1500),imageName,imageUrl,imageId,Number(data.order)||0,data.active===false?"No":"Sí",created]]);return{ok:true,id:id};
 }
-function saveRoadmap(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_"HojaRutaWeb",ROADMAP_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}var created=row<=s.getLastRow()?String(s.getRange(row,8).getDisplayValue()||""):"";if(!created)created=new Date().toISOString();s.getRange(row,1,1,8).setValues([[id,cleanPublicText_(data.phase,100),cleanPublicText_(data.title,300),cleanPublicText_(data.detail,1500),String(data.date||"").trim(),Number(data.order)||0,data.active===false?"No":"Sí",created]]);return{ok:true,id:id};}
+function saveRoadmap(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}var created=row<=s.getLastRow()?String(s.getRange(row,8).getDisplayValue()||""):"";if(!created)created=new Date().toISOString();s.getRange(row,1,1,8).setValues([[id,cleanPublicText_(data.phase,100),cleanPublicText_(data.title,300),cleanPublicText_(data.detail,1500),String(data.date||"").trim(),Number(data.order)||0,data.active===false?"No":"Sí",created]]);return{ok:true,id:id};}
 
 function deleteNews(data){assertAdmin_(data&&data.password);return deleteRowById_("NoticiasWeb",data.id);}
 function deleteEvent(data){assertAdmin_(data&&data.password);var s=getEventsSheet_(),row=findRowById_(s,data.id);if(row<0)throw new Error("Evento no encontrado.");var fid=String(s.getRange(row,11).getDisplayValue()||"");if(fid){try{DriveApp.getFileById(fid).setTrashed(true);}catch(e){}}s.deleteRow(row);return{ok:true};}
-function deleteResource(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_"RecursosWeb",RESOURCE_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Recurso no encontrado.");var fid=String(s.getRange(row,8).getDisplayValue()||"");if(!fid){var m=String(s.getRange(row,6).getDisplayValue()||"").match(/[?&]id=([^&]+)/);if(m)fid=m[1];}if(fid){try{DriveApp.getFileById(fid).setTrashed(true);}catch(e){}}s.deleteRow(row);return{ok:true};}
-function deleteTimeline(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_"TrayectoriaWeb",TIMELINE_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Hito no encontrado.");var fid=String(s.getRange(row,7).getDisplayValue()||"");if(fid){try{DriveApp.getFileById(fid).setTrashed(true);}catch(e){}}s.deleteRow(row);return{ok:true};}
+function deleteResource(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Recurso no encontrado.");var fid=String(s.getRange(row,8).getDisplayValue()||"");if(!fid){var m=String(s.getRange(row,6).getDisplayValue()||"").match(/[?&]id=([^&]+)/);if(m)fid=m[1];}if(fid){try{DriveApp.getFileById(fid).setTrashed(true);}catch(e){}}s.deleteRow(row);return{ok:true};}
+function deleteTimeline(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Hito no encontrado.");var fid=String(s.getRange(row,7).getDisplayValue()||"");if(fid){try{DriveApp.getFileById(fid).setTrashed(true);}catch(e){}}s.deleteRow(row);return{ok:true};}
 function deleteRoadmap(data){assertAdmin_(data&&data.password);return deleteRowById_("HojaRutaWeb",data.id);}
-function deleteRowById_(name,id){var s=cmsGetOrCreateSheet_name,[]),row=findRowById_(s,id);if(row<0)throw new Error("Registro no encontrado.");s.deleteRow(row);return{ok:true};}
-function setPublished_(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_"PropuestasWeb",PROPOSAL_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Propuesta no encontrada.");s.getRange(row,7).setValue(data.published?"Sí":"No");return{ok:true};}
+function deleteRowById_(name,id){var s=cmsGetOrCreateSheet_(name,[]),row=findRowById_(s,id);if(row<0)throw new Error("Registro no encontrado.");s.deleteRow(row);return{ok:true};}
+function setPublished_(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Propuesta no encontrada.");s.getRange(row,7).setValue(data.published?"Sí":"No");return{ok:true};}
 function deleteProposal(data){assertAdmin_(data&&data.password);return deleteRowById_("PropuestasWeb",data.id);}
-function saveProposalPublic_(data){var type=data.type==="cancion"||data.type==="frase"?data.type:"";if(!type)throw new Error("Tipo no válido.");var s=cmsGetOrCreateSheet_"PropuestasWeb",PROPOSAL_HEADERS);s.appendRow([Utilities.getUuid(),type,String(data.title||"").slice(0,200),String(data.artist||"").slice(0,160),String(data.text||"").slice(0,1000),String(data.proposer||"").slice(0,120),"No",new Date().toISOString()]);return{ok:true,message:"Propuesta recibida. Quedará pendiente de revisión."};}
+function saveProposalPublic_(data){var type=data.type==="cancion"||data.type==="frase"?data.type:"";if(!type)throw new Error("Tipo no válido.");var s=cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);s.appendRow([Utilities.getUuid(),type,String(data.title||"").slice(0,200),String(data.artist||"").slice(0,160),String(data.text||"").slice(0,1000),String(data.proposer||"").slice(0,120),"No",new Date().toISOString()]);return{ok:true,message:"Propuesta recibida. Quedará pendiente de revisión."};}

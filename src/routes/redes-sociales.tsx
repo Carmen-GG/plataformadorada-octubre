@@ -73,10 +73,15 @@ function RedesSociales(){
       titleAside={
         <a
           href="https://plataforma-dorada.ccguzmangallego.workers.dev/imagen-perfil"
-          className="inline-flex max-w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          className="group relative inline-flex max-w-full items-center justify-center gap-3 overflow-hidden rounded-2xl border-2 border-amber-300 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 px-6 py-4 text-base font-extrabold text-slate-950 shadow-[0_8px_24px_rgba(245,158,11,0.32)] transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_12px_30px_rgba(245,158,11,0.42)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 focus-visible:ring-offset-2 sm:px-7 sm:py-5 sm:text-lg"
         >
-          <HeartHandshake size={18} aria-hidden="true" />
-          <span>Crea tu imagen de perfil solidaria</span>
+          <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/45 to-transparent transition-transform duration-700 group-hover:translate-x-full" aria-hidden="true" />
+          <HeartHandshake size={26} strokeWidth={2.5} aria-hidden="true" />
+          <span className="relative flex flex-col items-start leading-tight">
+            <span>Crea tu imagen de perfil</span>
+            <span className="mt-1 text-xs font-bold uppercase tracking-[0.12em] sm:text-sm">Únete al movimiento solidario</span>
+          </span>
+          <span className="text-2xl leading-none" aria-hidden="true">→</span>
         </a>
       }
     />

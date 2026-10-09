@@ -132,7 +132,7 @@ export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
             >
               <title id="territory-map-title">{metricLabel} por comunidad autónoma</title>
               <desc id="territory-map-description">
-                Mapa de España con círculos graduados por intensidad. Al enfocar cada comunidad se muestran sus cinco indicadores territoriales.
+                Mapa de España con círculos graduados por intensidad y cifras numéricas visibles dentro de cada círculo. La tabla lateral muestra el total del indicador seleccionado por comunidad.
               </desc>
               <image href={MAP_BASE_URL} x="0" y="0" width="923" height="658" preserveAspectRatio="none" opacity=".7" />
               <rect x="0" y="0" width="923" height="658" fill="var(--map-land)" opacity=".16" />
@@ -153,7 +153,20 @@ export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
                   <g key={community} tabIndex={0} className="cursor-help">
                     <title>{title}</title>
                     <circle cx={point.x} cy={point.y} r={radius} fill={fillColor} stroke="white" strokeWidth="4" opacity={0.96} />
-                    <text x={point.x} y={point.y + 5} textAnchor="middle" fontSize={radius > 22 ? 13 : 11} fontWeight="900" fill="white" paintOrder="stroke" stroke="var(--map-deep)" strokeWidth="2.5" strokeOpacity="0.45">
+                    <text
+                      x={point.x}
+                      y={point.y + 5}
+                      textAnchor="middle"
+                      fontSize={radius > 27 ? 15 : radius > 21 ? 13 : 11}
+                      fontWeight="900"
+                      fill="#ffffff"
+                      paintOrder="stroke"
+                      stroke="#49310b"
+                      strokeWidth="3"
+                      strokeLinejoin="round"
+                      strokeOpacity="0.95"
+                      style={{ pointerEvents: "none", fontVariantNumeric: "tabular-nums" }}
+                    >
                       {stats ? formatCount(value) : "…"}
                     </text>
                     <text x={point.x} y={point.y + radius + 18} textAnchor="middle" fontSize="12" fontWeight="800" fill="var(--ink)" paintOrder="stroke" stroke="white" strokeWidth="4">

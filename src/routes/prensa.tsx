@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { BookOpen, Headphones, Play, Tv } from "lucide-react";
+import { BookOpen, Headphones, Tv } from "lucide-react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";

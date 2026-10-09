@@ -101,10 +101,19 @@ function RedesSociales(){
       <div id="panel-instagram" role="tabpanel" aria-labelledby="tab-instagram" hidden={activeTab !== "instagram"}>
         <article id="instagram" className="glass-panel rounded-3xl p-5 sm:p-7">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div><p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Instagram</p><h2 className="mt-1 font-display text-2xl font-semibold">Último vídeo de @assumptaserna</h2></div>
-            <a href={SITE.instagram} target="_blank" rel="noreferrer" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Ver Instagram</a>
+            <div>
+              <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Instagram</p>
+              <h2 className="mt-1 font-display text-2xl font-semibold">@assumptaserna</h2>
+              <p className="mt-2 text-sm text-muted-foreground">Sigue el perfil de Assumpta Serna y descubre sus publicaciones sobre Plataforma Dorada.</p>
+            </div>
+            <a href={SITE.instagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">Ver perfil de Instagram <Instagram size={17} aria-hidden="true" /></a>
           </div>
-          <div className="mx-auto mt-5 max-w-2xl"><LatestInstagramVideo /></div>
+          <div className="mx-auto mt-5 max-w-2xl">
+            <div className="mb-4 rounded-2xl border border-border bg-background/70 p-4 text-sm text-muted-foreground">
+              Instagram no permite incrustar de forma fiable un perfil completo en todas las webs. Por eso mostramos el acceso directo al perfil y, cuando Instagram lo permite, el último vídeo público.
+            </div>
+            <LatestInstagramVideo />
+          </div>
         </article>
       </div>
 

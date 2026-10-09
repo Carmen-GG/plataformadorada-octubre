@@ -91,6 +91,24 @@ type AppsScriptContentResponse = {
   actualizado?: string;
 };
 
+function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
+  const declared = String(item.tipo ?? item.type ?? "").trim().toLowerCase();
+  if (declared === "video" || declared === "audio" || declared === "texto") return declared;
+
+  const candidate = String(item.urlMultimedia ?? item.mediaUrl ?? item.url ?? "").trim();
+  if (!candidate) return "texto";
+  try {
+    const u = new URL(candidate);
+    const host = u.hostname.toLowerCase();
+    if (host === "youtu.be" || host.endsWith("youtube.com") || host.endsWith("vimeo.com")) return "video";
+    if (host === "open.spotify.com" || host === "soundcloud.com" || host === "www.soundcloud.com") return "audio";
+  } catch {
+    // Enlaces no válidos o incompletos se muestran como texto y se pueden corregir desde el CMS.
+  }
+  if (/\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(candidate)) return "audio";
+  return "texto";
+}
+
 let data: CmsPayload | null = null;
 let loading = false;
 let timer: number | undefined;
@@ -136,7 +154,7 @@ async function refresh() {
         date: String(item.fecha ?? item.date ?? ""),
         url: String(item.url ?? ""),
         summary: String(item.resumen ?? item.summary ?? ""),
-        type: (["video","audio","texto"].includes(String(item.tipo ?? item.type ?? "").toLowerCase()) ? String(item.tipo ?? item.type).toLowerCase() : "texto") as "video" | "audio" | "texto",
+        type: inferNewsType(item),
         mediaUrl: String(item.urlMultimedia ?? item.mediaUrl ?? ""),
         contentText: String(item.contenidoTexto ?? item.contentText ?? ""),
         published: item.publicada !== false && String(item.publicada ?? "Sí").toLowerCase() !== "no",

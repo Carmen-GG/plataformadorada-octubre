@@ -211,33 +211,61 @@ function saveResource(data){
   assertAdmin_(data&&data.password);
   var s=cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS), id=String(data.id||"").trim(), row=id?findRowById_(s,id):-1;
   if(!data.fileName||!data.base64){ if(row<0) throw new Error("Falta el archivo."); return updateResourceMetadata_(data,s,row); }
-  var bytes=Utilities.base64Decode(data.base64); if(bytes.length>10*1024*1024)throw new Error("El archivo supera el límite de 10 MB.");
+  var bytes=Utilities.base64Decode(data.base64);
+  if(bytes.length>10*1024*1024)throw new Error("El archivo supera el límite de 10 MB.");
   var oldId=row>0?String(s.getRange(row,8).getDisplayValue()||""):"";
   if(!oldId && row>0){var m=String(s.getRange(row,6).getDisplayValue()||"").match(/[?&]id=([^&]+)/);if(m)oldId=m[1];}
-  if(oldId){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}
-  var file=getDriveFolder_().createFile(Utilities.newBlob(bytes,data.mimeType||"application/octet-stream",data.fileName)); file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
+  // Crear y guardar el nuevo archivo antes de enviar el anterior a la papelera.
+  var file=getDriveFolder_().createFile(Utilities.newBlob(bytes,data.mimeType||"application/octet-stream",data.fileName));
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
   id=id||Utilities.getUuid(); row=row>0?row:s.getLastRow()+1;
   var created=row<=s.getLastRow()?String(s.getRange(row,7).getDisplayValue()||""):""; if(!created)created=new Date().toISOString();
   s.getRange(row,1,1,8).setValues([[id,cleanPublicText_(data.title||data.fileName,300),cleanPublicText_(data.category||"Materiales",100),cleanPublicText_(data.description,1000),data.fileName,driveDownloadUrl_(file.getId()),created,file.getId()]]);
+  if(oldId && oldId!==file.getId()){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}
   return{ok:true,id:id};
 }
 function updateResourceMetadata_(data,s,row){s.getRange(row,2,1,3).setValues([[cleanPublicText_(data.title,300),cleanPublicText_(data.category,100),cleanPublicText_(data.description,1000)]]);return{ok:true,id:data.id};}
 
 function saveEvent(data){
-  assertAdmin_(data&&data.password); var title=cleanPublicText_(data.title,300),date=String(data.date||"").trim(); if(!title)throw new Error("El título del evento es obligatorio."); if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw new Error("La fecha del evento no es válida.");
-  var s=getEventsSheet_(),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1; if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
-  var oldId=row>0?String(s.getRange(row,11).getDisplayValue()||""):""; var documentName=String(data.documentName||"").trim(),documentUrl=String(data.documentUrl||"").trim(),documentId=oldId;
-  if(data.base64&&data.fileName){if(oldId){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}var bytes=Utilities.base64Decode(data.base64);if(bytes.length>10*1024*1024)throw new Error("El documento supera 10 MB.");var file=getDriveFolder_().createFile(Utilities.newBlob(bytes,data.mimeType||"application/octet-stream",data.fileName));file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);documentId=file.getId();documentName=data.fileName;documentUrl=driveDownloadUrl_(documentId);}
-  var created=row<=s.getLastRow()?String(s.getRange(row,13).getDisplayValue()||""):"";if(!created)created=new Date().toISOString();
-  s.getRange(row,1,1,13).setValues([[id,title,date,String(data.time||"").trim(),cleanPublicText_(data.place,200),cleanPublicText_(data.city,120),cleanPublicText_(data.description,1500),String(data.url||"").trim(),documentName,documentUrl,documentId,data.published===false?"No":"Sí",created]]);return{ok:true,id:id};
+  assertAdmin_(data&&data.password);
+  var title=cleanPublicText_(data.title,300),date=String(data.date||"").trim();
+  if(!title)throw new Error("El título del evento es obligatorio.");
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw new Error("La fecha del evento no es válida.");
+  var s=getEventsSheet_(),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;
+  if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
+  var oldId=row<=s.getLastRow()?String(s.getRange(row,11).getDisplayValue()||""):"";
+  var documentName=String(data.documentName||"").trim(),documentUrl=String(data.documentUrl||"").trim(),documentId=oldId,newFile=null;
+  if(data.base64&&data.fileName){
+    var bytes=Utilities.base64Decode(data.base64);
+    if(bytes.length>10*1024*1024)throw new Error("El documento supera 10 MB.");
+    newFile=getDriveFolder_().createFile(Utilities.newBlob(bytes,data.mimeType||"application/octet-stream",data.fileName));
+    newFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
+    documentId=newFile.getId();documentName=data.fileName;documentUrl=driveDownloadUrl_(documentId);
+  }
+  var created=row<=s.getLastRow()?String(s.getRange(row,13).getDisplayValue()||""):"";
+  if(!created)created=new Date().toISOString();
+  s.getRange(row,1,1,13).setValues([[id,title,date,String(data.time||"").trim(),cleanPublicText_(data.place,200),cleanPublicText_(data.city,120),cleanPublicText_(data.description,1500),String(data.url||"").trim(),documentName,documentUrl,documentId,data.published===false?"No":"Sí",created]]);
+  if(newFile && oldId && oldId!==newFile.getId()){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}
+  return{ok:true,id:id};
 }
-
 function saveTimeline(data){
-  assertAdmin_(data&&data.password); var s=cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
-  var oldId=row>0?String(s.getRange(row,7).getDisplayValue()||""):"";var imageName=String(data.imageName||"").trim(),imageUrl=String(data.imageUrl||"").trim(),imageId=oldId;
-  if(data.base64&&data.fileName){if(oldId){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}var bytes=Utilities.base64Decode(data.base64);if(bytes.length>10*1024*1024)throw new Error("La imagen supera 10 MB.");var f=getDriveFolder_().createFile(Utilities.newBlob(bytes,data.mimeType||"image/*",data.fileName));f.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);imageId=f.getId();imageName=data.fileName;imageUrl=driveDownloadUrl_(imageId);}
-  var created=row<=s.getLastRow()?String(s.getRange(row,10).getDisplayValue()||""):"";if(!created)created=new Date().toISOString();
-  s.getRange(row,1,1,10).setValues([[id,String(data.date||"").trim(),cleanPublicText_(data.title,300),cleanPublicText_(data.description,1500),imageName,imageUrl,imageId,Number(data.order)||0,data.active===false?"No":"Sí",created]]);return{ok:true,id:id};
+  assertAdmin_(data&&data.password);
+  var s=cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;
+  if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
+  var oldId=row<=s.getLastRow()?String(s.getRange(row,7).getDisplayValue()||""):"";
+  var imageName=String(data.imageName||"").trim(),imageUrl=String(data.imageUrl||"").trim(),imageId=oldId,newFile=null;
+  if(data.base64&&data.fileName){
+    var bytes=Utilities.base64Decode(data.base64);
+    if(bytes.length>10*1024*1024)throw new Error("La imagen supera 10 MB.");
+    newFile=getDriveFolder_().createFile(Utilities.newBlob(bytes,data.mimeType||"image/*",data.fileName));
+    newFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
+    imageId=newFile.getId();imageName=data.fileName;imageUrl=driveDownloadUrl_(imageId);
+  }
+  var created=row<=s.getLastRow()?String(s.getRange(row,10).getDisplayValue()||""):"";
+  if(!created)created=new Date().toISOString();
+  s.getRange(row,1,1,10).setValues([[id,String(data.date||"").trim(),cleanPublicText_(data.title,300),cleanPublicText_(data.description,1500),imageName,imageUrl,imageId,Number(data.order)||0,data.active===false?"No":"Sí",created]]);
+  if(newFile && oldId && oldId!==newFile.getId()){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}
+  return{ok:true,id:id};
 }
 function saveRoadmap(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}var created=row<=s.getLastRow()?String(s.getRange(row,8).getDisplayValue()||""):"";if(!created)created=new Date().toISOString();s.getRange(row,1,1,8).setValues([[id,cleanPublicText_(data.phase,100),cleanPublicText_(data.title,300),cleanPublicText_(data.detail,1500),String(data.date||"").trim(),Number(data.order)||0,data.active===false?"No":"Sí",created]]);return{ok:true,id:id};}
 

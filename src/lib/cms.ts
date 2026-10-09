@@ -49,6 +49,13 @@ type AppsScriptNews = {
   media?: string;
   date?: string;
   summary?: string;
+  tipo?: string;
+  type?: string;
+  urlMultimedia?: string;
+  mediaUrl?: string;
+  contenidoTexto?: string;
+  contentText?: string;
+  publicada?: boolean | string;
 };
 
 type AppsScriptMilestone = { id?:string; fecha?:string; titulo?:string; descripcion?:string; imagenUrl?:string };

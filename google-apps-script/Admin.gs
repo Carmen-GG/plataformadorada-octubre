@@ -173,7 +173,7 @@ function readRoadmap_(){
 
 function getPublicContent_(){
   var p=readProposals_();
-  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,actualizado:new Date().toISOString()};
+  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),videos:readVideos_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,actualizado:new Date().toISOString()};
 }
 function getPublicContent(){return getPublicContent_();}
 function obtenerContenidoPublico(){return getPublicContent_();}

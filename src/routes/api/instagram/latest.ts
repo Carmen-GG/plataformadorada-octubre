@@ -3,22 +3,38 @@ import { createFileRoute } from "@tanstack/react-router";
 let cache: { at: number; permalink: string | null } = { at: 0, permalink: null };
 const CACHE_MS = 10 * 60 * 1000;
 
-function extractLatestStandardVideo(html: string): string | null {
-  // Instagram's public profile HTML can contain several post records. Prefer standard
-  // /p/ publications and only accept records whose nearby structured data marks them
-  // as video. Reels (/reel/ or /reels/) are deliberately excluded.
+function extractLatestVideo(html: string): string | null {
+  // Instagram publica vídeos tanto como Reels (/reel/) como publicaciones (/p/).
+  // Reunimos ambos formatos y recorremos las referencias en el orden en que aparecen
+  // en el HTML público del perfil.
   const seen = new Set<string>();
-  const candidates: Array<{ url: string; pos: number }> = [];
-  const re = /(?:https?:\/\/www\.instagram\.com)?\/?p\/([A-Za-z0-9_-]+)\/?/gi;
+  const candidates: Array<{ url: string; pos: number; isReel: boolean }> = [];
+  const re = /(?:https?:\/\/www\.instagram\.com)?\/?(reel|reels|p)\/([A-Za-z0-9_-]+)\/?/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(html))) {
-    const url = `https://www.instagram.com/p/${m[1]}/`;
-    if (!seen.has(url)) { seen.add(url); candidates.push({ url, pos: m.index }); }
+    const kind = m[1].toLowerCase();
+    const shortcode = m[2];
+    const url = `https://www.instagram.com/${kind === "p" ? "p" : "reel"}/${shortcode}/`;
+    if (!seen.has(url)) {
+      seen.add(url);
+      candidates.push({ url, pos: m.index, isReel: kind !== "p" });
+    }
   }
-  for (const c of candidates) {
-    const context = html.slice(Math.max(0, c.pos - 5000), Math.min(html.length, c.pos + 8000));
-    if (/(?:\"|')is_video(?:\"|')\s*:\s*true/i.test(context) || /\"video_url\"\s*:/i.test(context) || /<meta[^>]+property=[\"']og:video/i.test(context)) {
-      return c.url;
+
+  for (const candidate of candidates) {
+    // Un Reel es contenido de vídeo. Para publicaciones normales comprobamos
+    // los metadatos cercanos para no mostrar una fotografía por error.
+    if (candidate.isReel) return candidate.url;
+    const context = html.slice(
+      Math.max(0, candidate.pos - 5000),
+      Math.min(html.length, candidate.pos + 8000),
+    );
+    if (
+      /(?:\"|')is_video(?:\"|')\s*:\s*true/i.test(context) ||
+      /\"video_url\"\s*:/i.test(context) ||
+      /<meta[^>]+property=[\"']og:video/i.test(context)
+    ) {
+      return candidate.url;
     }
   }
   return null;
@@ -28,7 +44,9 @@ export const Route = createFileRoute("/api/instagram/latest")({
   server: {
     handlers: {
       GET: async () => {
-        if (Date.now() - cache.at < CACHE_MS) return Response.json({ permalink: cache.permalink });
+        if (Date.now() - cache.at < CACHE_MS) {
+          return Response.json({ permalink: cache.permalink });
+        }
         try {
           const response = await fetch("https://www.instagram.com/assumptaserna/", {
             headers: {
@@ -40,12 +58,15 @@ export const Route = createFileRoute("/api/instagram/latest")({
           });
           if (!response.ok) throw new Error(`Instagram respondió ${response.status}`);
           const html = await response.text();
-          const permalink = extractLatestStandardVideo(html);
+          const permalink = extractLatestVideo(html);
           cache = { at: Date.now(), permalink };
           return Response.json({ permalink });
         } catch (error) {
-          console.error("No se pudo obtener el último vídeo estándar de Instagram", error);
-          return Response.json({ permalink: cache.permalink, error: "Instagram no disponible temporalmente" });
+          console.error("No se pudo obtener el último vídeo de Instagram", error);
+          return Response.json({
+            permalink: cache.permalink,
+            error: "Instagram no disponible temporalmente",
+          });
         }
       },
     },

@@ -1,12 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";
-import { useCmsContent, type CmsResource } from "@/lib/cms";
+import { useCmsContent, type CmsNews, type CmsResource } from "@/lib/cms";
 
 export const Route = createFileRoute("/prensa")({
-  head: () => pageHead({ path: "/prensa", title: "Recursos", description: "Dossier de prensa, logotipos, carteles y material para redes de la Plataforma Dorada." }),
+  head: () => pageHead({ path: "/prensa", title: "Prensa y recursos", description: "Noticias de prensa y materiales para comunicar y compartir Plataforma Dorada." }),
   component: Page,
 });
 
@@ -54,6 +54,8 @@ function ResourcePreview({ resource }: { resource: CmsResource }) {
 function Page() {
   const cms = useCmsContent();
   const resources = cms?.recursos ?? [];
+  const news = cms?.noticias ?? [];
+  const [activeTab, setActiveTab] = useState<"prensa" | "recursos">("recursos");
   const categories = useMemo(() => ["Todos", ...Array.from(new Set(resources.map(categoryFor)))], [resources]);
   const [selected, setSelected] = useState("Todos");
   const visible = selected === "Todos" ? resources : resources.filter((resource) => categoryFor(resource) === selected);
@@ -62,14 +64,37 @@ function Page() {
     <>
       <PageHeader
         eyebrow="Para medios y difusión"
-        title="Recursos"
+        title="Prensa y recursos"
         lead={`Contacto de prensa: ${SITE.email}`}
-        titleAside={<Link to="/imagen-perfil" className="shrink-0 rounded-3xl bg-accent px-5 py-3 text-right font-semibold text-accent-foreground shadow-sm"><span className="block text-xs uppercase tracking-[0.16em]">Herramienta</span><span>Crea tu imagen de perfil solidaria</span></Link>}
       >
-        <span className="text-sm text-muted-foreground">Materiales para comunicar y compartir Plataforma Dorada.</span>
+        <span className="text-sm text-muted-foreground">Consulta las noticias que compartimos y los materiales para comunicar Plataforma Dorada.</span>
       </PageHeader>
 
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
+        <div className="mb-7 flex flex-wrap gap-2 rounded-2xl border border-border bg-muted/40 p-2" role="tablist" aria-label="Secciones de prensa y recursos">
+          <button type="button" role="tab" id="tab-prensa" aria-controls="panel-prensa" aria-selected={activeTab === "prensa"} onClick={() => setActiveTab("prensa")} className={activeTab === "prensa" ? "rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm" : "rounded-xl px-5 py-3 text-sm font-semibold text-muted-foreground hover:bg-background hover:text-foreground"}>Prensa</button>
+          <button type="button" role="tab" id="tab-recursos" aria-controls="panel-recursos" aria-selected={activeTab === "recursos"} onClick={() => setActiveTab("recursos")} className={activeTab === "recursos" ? "rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm" : "rounded-xl px-5 py-3 text-sm font-semibold text-muted-foreground hover:bg-background hover:text-foreground"}>Recursos</button>
+        </div>
+
+        <div id="panel-prensa" role="tabpanel" aria-labelledby="tab-prensa" hidden={activeTab !== "prensa"}>
+          {news.length ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {news.map((item) => (
+                <Panel key={item.id || item.url || item.title} className="flex flex-col">
+                  {item.media && <p className="text-xs font-semibold tracking-widest text-primary uppercase">{item.media}</p>}
+                  <h2 className="mt-2 font-display text-xl font-semibold">{item.title}</h2>
+                  {item.date && <p className="mt-2 text-xs font-medium text-muted-foreground">{item.date}</p>}
+                  {item.summary && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>}
+                  {item.url && <a href={item.url} target="_blank" rel="noreferrer" className="mt-5 inline-flex self-start rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">Leer noticia</a>}
+                </Panel>
+              ))}
+            </div>
+          ) : (
+            <p className="rounded-2xl border border-border bg-muted/30 p-6 text-muted-foreground">Todavía no hay noticias publicadas. Cuando se introduzcan y publiquen desde el backoffice, aparecerán aquí.</p>
+          )}
+        </div>
+
+        <div id="panel-recursos" role="tabpanel" aria-labelledby="tab-recursos" hidden={activeTab !== "recursos"}>
         <div className="mb-7 flex flex-wrap gap-2" role="group" aria-label="Filtrar recursos por tipo">
           {categories.map((category) => (
             <button
@@ -105,6 +130,7 @@ function Page() {
         ) : (
           <p className="text-muted-foreground">No hay recursos de este tipo todavía.</p>
         )}
+        </div>
       </section>
     </>
   );

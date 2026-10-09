@@ -10,6 +10,10 @@ export type CmsNews = {
   date: string;
   url: string;
   summary?: string;
+  type?: "video" | "audio" | "texto";
+  mediaUrl?: string;
+  contentText?: string;
+  published?: boolean;
 };
 
 export type CmsResource = {
@@ -125,6 +129,10 @@ async function refresh() {
         date: String(item.fecha ?? item.date ?? ""),
         url: String(item.url ?? ""),
         summary: String(item.resumen ?? item.summary ?? ""),
+        type: (["video","audio","texto"].includes(String(item.tipo ?? item.type ?? "").toLowerCase()) ? String(item.tipo ?? item.type).toLowerCase() : "texto") as "video" | "audio" | "texto",
+        mediaUrl: String(item.urlMultimedia ?? item.mediaUrl ?? ""),
+        contentText: String(item.contenidoTexto ?? item.contentText ?? ""),
+        published: item.publicada !== false && String(item.publicada ?? "Sí").toLowerCase() !== "no",
       })),
 
       canciones: (raw.canciones ?? []).map((item) => ({ x:String(item.x??""), artist:String(item.artist??"") })),

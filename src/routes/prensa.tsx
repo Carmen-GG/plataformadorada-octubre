@@ -25,6 +25,11 @@ function categoryFor(resource: CmsResource) {
   return "Otros";
 }
 
+function newsKey(item: { id: string; title: string; url: string }, index: number) {
+  // Los IDs del CMS pueden estar vacíos o repetidos; la selección necesita una clave estable y única.
+  return item.id ? `${item.id}::${item.url}::${item.title}::${index}` : `${item.url}::${item.title}::${index}`;
+}
+
 function ResourcePreview({ resource }: { resource: CmsResource }) {
   const [broken, setBroken] = useState(false);
   const thumb = resource.previewUrl || resource.url;
@@ -106,8 +111,8 @@ function Page() {
   const resources = cms?.recursos ?? [];
   const news = cms?.noticias ?? [];
   const [activeTab, setActiveTab] = useState<"prensa" | "recursos">("recursos");
-  const [selectedNewsId, setSelectedNewsId] = useState<string>("");
-  const selectedNews = news.find((item) => item.id === selectedNewsId) ?? news[0] ?? null;
+  const [selectedNewsKey, setSelectedNewsKey] = useState<string>("");
+  const selectedNews = news.find((item, index) => newsKey(item, index) === selectedNewsKey) ?? news[0] ?? null;
   const categories = useMemo(() => ["Todos", ...Array.from(new Set(resources.map(categoryFor)))], [resources]);
   const [selected, setSelected] = useState("Todos");
   const visible = selected === "Todos" ? resources : resources.filter((resource) => categoryFor(resource) === selected);
@@ -134,9 +139,10 @@ function Page() {
               <div className="space-y-3" aria-label="Listado de noticias">
                 <h2 className="font-display text-xl font-semibold">Noticias</h2>
                 {news.map((item) => {
-                  const active = selectedNews?.id === item.id;
+                  const itemKey = newsKey(item, news.indexOf(item));
+                  const active = selectedNews ? newsKey(selectedNews, news.indexOf(selectedNews)) === itemKey : false;
                   const type = item.type || "texto";
-                  return <button key={item.id || item.url || item.title} type="button" onClick={() => setSelectedNewsId(item.id)} aria-pressed={active} className={active ? "w-full rounded-2xl border-2 border-primary bg-primary/5 p-4 text-left shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" : "w-full rounded-2xl border border-border bg-card p-4 text-left transition hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"}>
+                  return <button key={itemKey} type="button" onClick={() => setSelectedNewsKey(itemKey)} aria-pressed={active} className={active ? "w-full rounded-2xl border-2 border-primary bg-primary/5 p-4 text-left shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" : "w-full rounded-2xl border border-border bg-card p-4 text-left transition hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"}>
                     <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold uppercase"><span aria-hidden="true">{type === "video" ? "▶" : type === "audio" ? "♫" : "▤"}</span>{type === "video" ? "Vídeo" : type === "audio" ? "Audio / podcast" : "Texto"}</span>
                     <span className="mt-2 block font-display text-lg font-semibold">{item.title}</span>
                     <span className="mt-1 block text-xs text-muted-foreground">{[item.media,item.date].filter(Boolean).join(" · ")}</span>

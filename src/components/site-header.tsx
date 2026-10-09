@@ -35,7 +35,7 @@ export function SiteHeader() {
                 {active === group.label && (
                   <div className="absolute right-0 top-full mt-2 w-80 rounded-3xl border border-border bg-background/98 p-3 shadow-xl backdrop-blur" role="menu">
                     {group.items.map(([to, title, desc]) => (
-                      <Link key={to + title} to={to as any} onClick={() => setActive(null)} className="block rounded-2xl px-4 py-3 hover:bg-accent/15" role="menuitem">
+                      <Link key={to + title} to={to.split("#")[0] as any} hash={to.includes("#") ? to.split("#")[1] : undefined} onClick={() => setActive(null)} className="block rounded-2xl px-4 py-3 hover:bg-accent/15" role="menuitem">
                         <span className="block font-semibold text-foreground">{title}</span>
                         <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{desc}</span>
                       </Link>
@@ -65,7 +65,7 @@ export function SiteHeader() {
               <details key={group.label} className="border-b border-border last:border-0">
                 <summary className="cursor-pointer list-none py-3 font-semibold text-primary">{group.label}</summary>
                 <div className="pb-3 pl-3">
-                  {group.items.map(([to, title, desc]) => <Link key={to + title} to={to as any} onClick={() => setOpen(false)} className="block rounded-xl px-3 py-2.5"><span className="block font-medium">{title}</span><span className="text-xs text-muted-foreground">{desc}</span></Link>)}
+                  {group.items.map(([to, title, desc]) => <Link key={to + title} to={to.split("#")[0] as any} hash={to.includes("#") ? to.split("#")[1] : undefined} onClick={() => setOpen(false)} className="block rounded-xl px-3 py-2.5"><span className="block font-medium">{title}</span><span className="text-xs text-muted-foreground">{desc}</span></Link>)}
                 </div>
               </details>
             ))}

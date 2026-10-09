@@ -1,6 +1,6 @@
 import { createFileRoute, useLocation } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import { Instagram, Music2, Headphones, Quote, Youtube } from "lucide-react";
+import { Instagram, Music2, Headphones, Quote, Youtube, HeartHandshake } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { LatestInstagramVideo, TikTokFeed } from "@/components/social-feeds";
 import { SITE } from "@/lib/content";
@@ -66,7 +66,20 @@ function RedesSociales(){
   };
 
   return <>
-    <PageHeader eyebrow="Redes sociales" title="Síguenos y participa" lead="Encuentra nuestras publicaciones y ayúdanos a construir una comunidad que también comparte música, frases y mensajes por los cuidados." />
+    <PageHeader
+      eyebrow="Redes sociales"
+      title="Síguenos y participa"
+      lead="Encuentra nuestras publicaciones y ayúdanos a construir una comunidad que también comparte música, frases y mensajes por los cuidados."
+      titleAside={
+        <a
+          href="https://plataforma-dorada.ccguzmangallego.workers.dev/imagen-perfil"
+          className="inline-flex max-w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        >
+          <HeartHandshake size={18} aria-hidden="true" />
+          <span>Crea tu imagen de perfil solidaria</span>
+        </a>
+      }
+    />
     <section className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6">
       <div className="mb-6 grid grid-cols-2 gap-2 rounded-2xl border border-border bg-muted/40 p-2 sm:grid-cols-3 lg:grid-cols-5" role="tablist" aria-label="Contenido de redes sociales">
         {socialTabs.map((tab) => (

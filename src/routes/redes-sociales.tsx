@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useLocation } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { Instagram, Music2, Headphones, Quote, Youtube } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
@@ -53,16 +53,12 @@ function RedesSociales(){
   const phrases=((cms?.frases??[]).map(x=>x.text).filter(Boolean));
   const visiblePhrases=phrases.length?phrases:fallbackPhrases;
   const [activeTab, setActiveTab] = useState<SocialTab>("instagram");
+  const locationHash = useLocation({ select: (location) => location.hash });
 
   useEffect(() => {
-    const selectHashTab = () => {
-      const hash = window.location.hash.replace("#", "");
-      if (socialTabs.some((tab) => tab.id === hash)) setActiveTab(hash as SocialTab);
-    };
-    selectHashTab();
-    window.addEventListener("hashchange", selectHashTab);
-    return () => window.removeEventListener("hashchange", selectHashTab);
-  }, []);
+    const hash = locationHash.replace("#", "");
+    if (socialTabs.some((tab) => tab.id === hash)) setActiveTab(hash as SocialTab);
+  }, [locationHash]);
 
   const changeTab = (id: SocialTab) => {
     setActiveTab(id);
@@ -90,7 +86,7 @@ function RedesSociales(){
       </div>
 
       <div id="panel-instagram" role="tabpanel" aria-labelledby="tab-instagram" hidden={activeTab !== "instagram"}>
-        <article className="glass-panel rounded-3xl p-5 sm:p-7">
+        <article id="instagram" className="glass-panel rounded-3xl p-5 sm:p-7">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div><p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Instagram</p><h2 className="mt-1 font-display text-2xl font-semibold">Último vídeo de @assumptaserna</h2></div>
             <a href={SITE.instagram} target="_blank" rel="noreferrer" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Ver Instagram</a>
@@ -100,7 +96,7 @@ function RedesSociales(){
       </div>
 
       <div id="panel-tiktok" role="tabpanel" aria-labelledby="tab-tiktok" hidden={activeTab !== "tiktok"}>
-        <article className="glass-panel rounded-3xl p-5 sm:p-7">
+        <article id="tiktok" className="glass-panel rounded-3xl p-5 sm:p-7">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div><p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">TikTok</p><h2 className="mt-1 font-display text-2xl font-semibold">Últimos vídeos</h2></div>
             <a href={SITE.tiktok} target="_blank" rel="noreferrer" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Ver TikTok</a>
@@ -120,7 +116,7 @@ function RedesSociales(){
       </div>
 
       <div id="panel-lemas" role="tabpanel" aria-labelledby="tab-lemas" hidden={activeTab !== "lemas"}>
-        <article id="frases" className="glass-panel rounded-3xl p-5 sm:p-7">
+        <article id="lemas" className="glass-panel rounded-3xl p-5 sm:p-7">
           <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Palabras</p>
           <h2 className="mt-1 font-display text-2xl font-semibold">Lemas y citas</h2>
           <PhraseCarousel phrases={visiblePhrases}/>

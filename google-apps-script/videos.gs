@@ -88,6 +88,16 @@ function deleteVideo(data) {
 }
 
 function setupVideoBackoffice() {
-  videoSheet_();
+  var sheet = videoSheet_();
+  // Primera instalación: cargar los cuatro vídeos actuales como registros editables.
+  if (sheet.getLastRow() < 2) {
+    var now = new Date().toISOString();
+    sheet.getRange(2, 1, 4, 8).setValues([
+      [Utilities.getUuid(), 'Plataforma Dorada · Vídeo 1', 'Vídeo de YouTube', 'https://www.youtube.com/watch?v=-s3pZV8apaY', 'youtube', 1, 'Sí', now],
+      [Utilities.getUuid(), 'Plataforma Dorada · Vídeo 2', 'Vídeo de YouTube', 'https://www.youtube.com/watch?v=5sbiaLrUKjM', 'youtube', 2, 'Sí', now],
+      [Utilities.getUuid(), '¿Qué es Plataforma Dorada?', 'Vídeo publicado en Facebook por Assumpta Serna y Alicia Lopmar', 'https://www.facebook.com/100058237623701/videos/ya-sab%C3%A9is-qu%C3%A9-es-plataforma-dorada-assumptaserna-y-alicialopmar-est%C3%A1n-denunciand/1070927795538559/', 'facebook', 3, 'Sí', now],
+      [Utilities.getUuid(), '3 millones de visualizaciones y más de 2.100 testimonios', 'Vídeo de Assumpta Serna en Facebook', 'https://www.facebook.com/assumptaserna/videos/nunca-imagin%C3%A9-esto-y-aqu%C3%AD-estamos3-millones-de-visualizaciones-2100-testimonios-/1690736175986098/', 'facebook', 4, 'Sí', now]
+    ]);
+  }
   return 'Pestaña VideosWeb preparada';
 }

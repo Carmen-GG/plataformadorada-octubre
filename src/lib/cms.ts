@@ -156,7 +156,7 @@ async function refresh() {
         description: String(item.descripcion ?? item.description ?? ""),
         filename: String(item.nombreArchivo ?? item.filename ?? ""),
         url: String(item.url ?? ""),
-        previewUrl: String(item.vistaPreviaUrl ?? ""),
+        previewUrl: String(item.previewUrl ?? item.vistaPreviaUrl ?? ""),
       })),
 
       trayectoria: (raw.trayectoria ?? []).map((x) => ({ id:String(x.id??""), date:String(x.fecha??""), title:String(x.titulo??""), description:String(x.descripcion??""), imageUrl:String(x.imagenUrl??"") })),

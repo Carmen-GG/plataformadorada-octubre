@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";
-import { useCmsContent, type CmsNews, type CmsResource } from "@/lib/cms";
+import { useCmsContent, type CmsResource } from "@/lib/cms";
 
 export const Route = createFileRoute("/prensa")({
   head: () => pageHead({ path: "/prensa", title: "Prensa y recursos", description: "Noticias de prensa y materiales para comunicar y compartir Plataforma Dorada." }),

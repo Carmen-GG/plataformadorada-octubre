@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BookOpen, Headphones, Tv } from "lucide-react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
@@ -110,7 +110,23 @@ function Page() {
   const cms = useCmsContent();
   const resources = cms?.recursos ?? [];
   const news = cms?.noticias ?? [];
-  const [activeTab, setActiveTab] = useState<"prensa" | "recursos">("recursos");
+  const [activeTab, setActiveTab] = useState<"prensa" | "recursos">(() => {
+    if (typeof window === "undefined") return "recursos";
+    return window.location.hash === "#prensa" || window.location.hash === "#tab-prensa" ? "prensa" : "recursos";
+  });
+
+  useEffect(() => {
+    const syncTabFromHash = () => {
+      if (window.location.hash === "#prensa" || window.location.hash === "#tab-prensa") {
+        setActiveTab("prensa");
+      } else if (window.location.hash === "#recursos" || window.location.hash === "#tab-recursos") {
+        setActiveTab("recursos");
+      }
+    };
+    syncTabFromHash();
+    window.addEventListener("hashchange", syncTabFromHash);
+    return () => window.removeEventListener("hashchange", syncTabFromHash);
+  }, []);
   const [selectedNewsKey, setSelectedNewsKey] = useState<string>("");
   const selectedNews = news.find((item, index) => newsKey(item, index) === selectedNewsKey) ?? news[0] ?? null;
   const categories = useMemo(() => ["Todos", ...Array.from(new Set(resources.map(categoryFor)))], [resources]);

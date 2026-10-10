@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Cifras y listas públicas del movimiento, leídas de Google Sheets a través de /api/cms.
@@ -36,17 +36,6 @@ export type PublicStats = {
 };
 
 type State = { stats: PublicStats | null; failed: boolean };
-
-let state: State = { stats: null, failed: false };
-let timer: number | undefined;
-let loading = false;
-const listeners = new Set<() => void>();
-const SERVER_STATE: State = { stats: null, failed: false };
-
-function set(next: State) {
-  state = next;
-  listeners.forEach((l) => l());
-}
 
 function isStats(value: unknown): value is PublicStats {
   return (
@@ -178,11 +167,50 @@ function onVisible() {
 }
 
 export function usePublicStats(): State {
-  return useSyncExternalStore(
-    subscribe,
-    () => state,
-    () => SERVER_STATE,
-  );
+  const [result, setResult] = useState<State>({ stats: null, failed: false });
+
+  useEffect(() => {
+    let active = true;
+    let controller: AbortController | null = null;
+
+    const load = async () => {
+      controller?.abort();
+      controller = new AbortController();
+      const requestController = controller;
+      const timeout = window.setTimeout(() => requestController.abort(), TIMEOUT_MS);
+      try {
+        const response = await fetch(`/api/cms?action=public&_=${Date.now()}`, {
+          cache: "no-store",
+          signal: requestController.signal,
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const raw: unknown = await response.json();
+        if (!isStats(raw)) throw new Error("Respuesta inesperada de /api/cms");
+        if (active) setResult({ stats: normalize(raw), failed: false });
+      } catch (error) {
+        console.error("[public-stats] Error al cargar /api/cms:", error);
+        if (active) setResult((previous) => ({ stats: previous.stats, failed: previous.stats === null }));
+      } finally {
+        window.clearTimeout(timeout);
+      }
+    };
+
+    void load();
+    const interval = window.setInterval(() => void load(), REFRESH_MS);
+    const onVisible = () => {
+      if (!document.hidden) void load();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+
+    return () => {
+      active = false;
+      controller?.abort();
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, []);
+
+  return result;
 }
 
 const nf = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 });

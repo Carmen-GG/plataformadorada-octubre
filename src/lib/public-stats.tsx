@@ -132,12 +132,12 @@ function normalize(raw: PublicStats): PublicStats {
 }
 
 async function refresh() {
-  if (loading || typeof window === "undefined" || document.hidden) return;
+  if (loading || typeof window === "undefined") return;
   loading = true;
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
-    const response = await fetch("/api/cms?action=public", {
+    const response = await fetch(`/api/cms?action=public&_=${Date.now()}`, {
       cache: "no-store",
       signal: controller.signal,
     });
@@ -145,8 +145,10 @@ async function refresh() {
     const raw: unknown = await response.json();
     if (!isStats(raw)) throw new Error("Respuesta inesperada");
     set({ stats: normalize(raw), failed: false });
-  } catch {
-    // Si ya había datos, se conservan; solo se marca el fallo cuando no hay nada que mostrar.
+  } catch (error) {
+    // Se conserva el último dato válido. Si es la primera carga, se registra el fallo
+    // para que la interfaz pueda mostrar el estado correspondiente y el intervalo reintente.
+    console.error("[public-stats] No se pudieron cargar las cifras públicas:", error);
     set({ stats: state.stats, failed: state.stats === null });
   } finally {
     window.clearTimeout(timeout);

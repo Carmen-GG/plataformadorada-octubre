@@ -3,7 +3,7 @@ import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";
 import { ShareButtons } from "@/components/share-buttons";
-import { formatCount, usePublicStats } from "@/lib/public-stats";
+import { listStatus, usePublicStats, LiveCount } from "@/lib/public-stats";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/unete")({
@@ -35,6 +35,7 @@ function Unete() {
   }, [recent.length]);
 
   const currentRecent = recent[recentIndex] ?? recent[0];
+  const recentStatus = listStatus(state, recent.length, "Todavía no hay adhesiones públicas autorizadas.");
   return (
     <>
       <PageHeader
@@ -45,7 +46,7 @@ function Unete() {
           <div className="flex w-full max-w-xs flex-col items-end gap-4">
             <div className="w-full rounded-3xl border border-border bg-card px-6 py-4 text-right shadow-sm">
               <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Adhesiones</p>
-              <p className="mt-1 font-display text-4xl font-bold text-primary">{state.stats ? formatCount(state.stats.contadores.adhesiones) : "…"}</p>
+              <p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="adhesiones" /></p>
             </div>
             <a
               href={SITE.joinFormUrl}
@@ -87,12 +88,8 @@ function Unete() {
           <div className="space-y-6 lg:col-span-5">
             <Panel>
               <h2 className="font-display text-xl font-semibold">Últimas adhesiones públicas</h2>
-              {!state.stats && !state.failed ? (
-                <p className="mt-4 text-sm text-muted-foreground" role="status">Cargando adhesiones…</p>
-              ) : state.failed && !state.stats ? (
-                <p className="mt-4 text-sm text-muted-foreground" role="status">No se han podido cargar las adhesiones. Inténtalo de nuevo más tarde.</p>
-              ) : recent.length === 0 ? (
-                <p className="mt-4 text-sm text-muted-foreground">Todavía no hay adhesiones públicas autorizadas.</p>
+              {recentStatus ? (
+                <p className="mt-4 text-sm text-muted-foreground" role="status">{recentStatus}</p>
               ) : (
                 <div className="mt-4" aria-roledescription="carrusel" aria-label="Últimas adhesiones públicas">
                   <div className="flex min-h-28 flex-col justify-center rounded-2xl border border-border/70 bg-background/50 px-4 py-5">

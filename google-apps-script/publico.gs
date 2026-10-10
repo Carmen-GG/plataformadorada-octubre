@@ -400,7 +400,7 @@ function pdAdhesiones_() {
     for (var k = t.rows.length - 1; k >= 0 && res.ultimas.length < PD.LIST_ADHESIONES; k--) {
       var rw = t.rows[k];
       if (isOrgRow(rw)) continue;
-      var givenName = pdTidy_(pdCell_(rw, iName)).split(/\\s+/)[0];
+      var givenName = pdTidy_(pdCell_(rw, iName)).split(/\s+/)[0];
       if (!givenName) continue;
       var place = pdTidy_(pdCell_(rw, iCity)) || pdCcaa_(pdCell_(rw, iCcaa));
       res.ultimas.push({ nombre: givenName, municipio: place });

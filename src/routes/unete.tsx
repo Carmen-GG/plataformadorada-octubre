@@ -27,16 +27,17 @@ function Unete() {
         eyebrow="Adhesión"
         title="Únete a Plataforma Dorada"
         lead="Adherirte es gratuito y no implica militancia en ningún partido. Cuantas más personas seamos, más fuerza tendrá la petición de un Pacto de Estado por la Dependencia y los Cuidados."
-      >
-        <a
-          href={SITE.joinFormUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-block rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground"
-        >
-          Rellenar el formulario de adhesión
-        </a>
-      </PageHeader>
+        titleAside={
+          <a
+            href={SITE.joinFormUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-block shrink-0 rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground"
+          >
+            Rellenar el formulario de adhesión
+          </a>
+        }
+      />
       <section className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6"><div className="ml-auto w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-right shadow-sm"><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Adhesiones</p><p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="adhesiones" /></p></div></section>
 
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">

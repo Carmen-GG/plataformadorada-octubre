@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { TerritoryMap } from "@/components/territory-map";
 import { pageHead } from "@/lib/seo";
 import { counters, indicators } from "@/lib/content";
-import { formatCount, formatNumberEs, usePublicStats, type CounterKey, type PublicStats } from "@/lib/public-stats";
+import { formatCount, formatNumberEs, type CounterKey, type PublicStats } from "@/lib/public-stats";
 
 const COUNTER_KEY: Record<string, CounterKey> = {
   adhesiones: "adhesiones",
@@ -44,7 +45,34 @@ export const Route = createFileRoute("/datos")({
 });
 
 function Page() {
-  const { stats } = usePublicStats();
+  const [stats, setStats] = useState<PublicStats | null>(null);
+
+  // Load directly on this page, bypassing the shared store that has remained stuck in loading.
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      try {
+        const response = await fetch("/api/cms?action=public&pagina=datos&t=" + Date.now(), {
+          cache: "no-store",
+          headers: { Accept: "application/json" },
+        });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const data = await response.json();
+        if (!data || typeof data !== "object" || !data.contadores || typeof data.contadores !== "object") {
+          throw new Error("La API no ha devuelto el objeto de contadores esperado");
+        }
+        if (active) setStats(data as PublicStats);
+      } catch (error) {
+        console.error("[datos] No se han podido cargar los indicadores:", error);
+      }
+    };
+    void load();
+    const interval = window.setInterval(() => void load(), 30_000);
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+    };
+  }, []);
 
   return (
     <>

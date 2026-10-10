@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 const DEFAULT_CMS_URL =
-  "https://script.google.com/macros/s/AKfycby53cqO5YcEOwgxc5orNADhjFhmXj3_ufXloAXTb573UjVVXzRyvCQyQQJqaJHHio1x/exec";
+  "https://script.google.com/macros/s/AKfycbxKl68XDCa_Z7XAisrDDjYwrDz-1hHMGJ8JwnErWvB1s6aIwClitHKmpbbKON63D0KZ/exec";
 const CMS_URL = import.meta.env.VITE_ADHESION_COUNT_URL?.trim() || DEFAULT_CMS_URL;
 const INE_URL =
   "https://www.ine.es/servergis/rest/services/Hosted/Viviendas_tur%C3%ADsticas_2026M05/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson&resultRecordCount=10000&geometryPrecision=5";
@@ -67,14 +67,14 @@ export const Route = createFileRoute("/api/mociones-municipios")({
               properties: {
                 NAMEUNIT: name,
                 codigoIne: last5,
-                motionStatus: match?.estado || null,
-                motionCount: match?.mociones || 0,
+                motionStatus: match ? norm(match.estado).replace(/\s+/g, "") : null,
+                motionCount: Number(match?.mociones || 0),
                 motionProvince: match?.provincia || "",
               },
             };
           });
 
-          const out = { ok: true, total: Number(cms.contadores?.mocionesPresentadas || 0), features };
+          const out = { ok: true, total: Number(cms.contadores?.mocionesPresentadas || cms.mocionesMunicipios?.length || 0), features };
           cache = { at: Date.now(), data: out };
           return Response.json(out, { headers: { "Cache-Control": "public, max-age=300" } });
         } catch (error) {

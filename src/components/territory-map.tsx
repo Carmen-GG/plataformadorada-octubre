@@ -125,6 +125,7 @@ export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
           {!stats && <div className="px-5 pt-3 text-sm" role="status">Cargando datos territoriales…</div>}
           <div className="flex flex-1 items-center justify-center px-2 py-3 sm:px-5">
             <svg
+              key={metric}
               viewBox="0 0 923 658"
               role="img"
               aria-labelledby="territory-map-title territory-map-description"
@@ -202,7 +203,7 @@ export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
                   <th className="px-2 py-2.5 text-right">Total</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody key={metric}>
                 {sorted.map((item, index) => (
                   <tr key={item.community} className="border-b border-border/60">
                     <th scope="row" className="px-2 py-[7px] text-left font-medium">

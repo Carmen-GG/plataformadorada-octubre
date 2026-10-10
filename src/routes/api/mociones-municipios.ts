@@ -99,7 +99,7 @@ export const Route = createFileRoute("/api/mociones-municipios")({
               properties: {
                 NAMEUNIT: name,
                 codigoIne: last5,
-                motionStatus,
+                motionStatus: motionStatus || "no presentada",
                 motionCount: Number(match?.mociones || 0),
                 motionProvince: match?.provincia || "",
               },

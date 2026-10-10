@@ -102,7 +102,7 @@ export function MunicipalMotionsMap() {
       </div>
       <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
         <div className="overflow-x-auto">
-          <svg viewBox="0 0 1100 620" role="img" aria-label="Mapa de mociones presentadas en ayuntamientos de España" className="block min-w-[760px] w-full h-auto bg-[#f1e3cb]">
+          <svg viewBox="0 0 1100 620" role="img" aria-label="Mapa de mociones presentadas en ayuntamientos de España" className="block min-w-[760px] w-full h-auto bg-[#f4ead8]">
             <title>Mapa de mociones en ayuntamientos</title>
             <desc>Los municipios con una moción registrada se colorean según su situación: presentada, aprobada o rechazada. Los demás municipios quedan sin color.</desc>
             {features.map((feature, i) => {
@@ -111,14 +111,14 @@ export function MunicipalMotionsMap() {
               if (!path) return null;
               const active = Boolean(status && (statusFilter === "todas" || statusFilter === status));
               const count = getCount(feature);
-              return <path key={`${getName(feature)}-${i}`} d={path} fill={active && status ? STATUS[status].fill : "#d9c09c"} fillOpacity={active ? 1 : 1} stroke="#fffaf0" strokeWidth="0.5" vectorEffect="non-scaling-stroke" onClick={() => status && setSelected(feature)} onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && status) { e.preventDefault(); setSelected(feature); } }} tabIndex={status ? 0 : -1} aria-label={status ? `${getName(feature)}: ${STATUS[status].label}${count > 1 ? `, ${count} mociones` : ""}` : `${getName(feature)}: sin moción registrada`} />;
+              return <path key={`${getName(feature)}-${i}`} d={path} fill={active && status ? STATUS[status].fill : "#ffffff"} fillOpacity={active ? 1 : 1} stroke="#fffaf0" strokeWidth="0.5" vectorEffect="non-scaling-stroke" onClick={() => status && setSelected(feature)} onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && status) { e.preventDefault(); setSelected(feature); } }} tabIndex={status ? 0 : -1} aria-label={status ? `${getName(feature)}: ${STATUS[status].label}${count > 1 ? `, ${count} mociones` : ""}` : `${getName(feature)}: sin moción registrada`} />;
             })}
           </svg>
         </div>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border bg-card px-5 py-4 text-sm">
           <strong>Leyenda</strong>
           {(Object.keys(STATUS) as MotionStatus[]).map((key) => <span key={key} className="inline-flex items-center gap-2"><span className="size-4 rounded-sm" style={{ backgroundColor: STATUS[key].fill }} aria-hidden="true" />{STATUS[key].label}</span>)}
-          <span className="inline-flex items-center gap-2"><span className="size-4 rounded-sm border border-border bg-transparent" aria-hidden="true" />Sin moción registrada</span>
+          <span className="inline-flex items-center gap-2"><span className="size-4 rounded-sm border border-border bg-white" aria-hidden="true" />Moción no presentada</span>
         </div>
       </div>
       {selected && getStatus(selected) && (

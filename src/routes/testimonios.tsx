@@ -50,8 +50,12 @@ function Testimonios() {
   return (
     <>
       <PageHeader eyebrow="Voces reales" title="Testimonios" lead="Detrás de cada expediente hay una familia. Estos son los relatos de quienes esperan una valoración, una ayuda o un respiro."
-        titleAside={<div className="flex flex-col items-end gap-3 rounded-2xl border border-border bg-card px-5 py-4 text-right shadow-sm"><div><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Testimonios recibidos</p><p className="font-display text-3xl font-bold text-primary"><LiveCount name="testimoniosRecibidos" /></p></div><a href={SITE.testimonyFormUrl} target="_blank" rel="noreferrer" className="inline-flex rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">Comparte tu testimonio</a></div>}
-      />
+        titleAside={<div className="rounded-2xl border border-border bg-card px-5 py-3 text-right shadow-sm"><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Testimonios recibidos</p><p className="font-display text-3xl font-bold text-primary"><LiveCount name="testimoniosRecibidos" /></p></div>}
+      >
+        <div className="mt-4 flex justify-end">
+          <a href={SITE.testimonyFormUrl} target="_blank" rel="noreferrer" className="inline-flex rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground">Comparte tu testimonio</a>
+        </div>
+      </PageHeader>
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         {status ? <p className="text-muted-foreground" role="status">{status}</p> : <TestimonyCarousel items={items} />}
         <Panel className="mt-8">

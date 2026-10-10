@@ -412,7 +412,7 @@ function pdAdhesiones_() {
 // ───────────────────────────── voluntarios ─────────────────────────────
 
 function pdVoluntarios_() {
-  var t = pdReadTable_(pdOpen_(PD.VOLUNTARIOS_SPREADSHEET_ID), "codigo etico");
+  var t = pdReadTable_(pdOpen_(PD.VOLUNTARIOS_SPREADSHEET_ID), "codigo etico", "Respuestas de formulario 1");
   if (!t) throw new Error("No encuentro la hoja de voluntarios.");
   var h = t.headers;
   var iCode = pdIdx_(h, pdHas_("codigo etico"));

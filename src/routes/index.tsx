@@ -20,6 +20,7 @@ const COUNTER_KEY: Record<string, CounterKey> = {
 import { useCmsContent } from "@/lib/cms";
 import { LatestInstagramVideo } from "@/components/social-feeds";
 import { TestimonyCarousel } from "@/components/testimony-carousel";
+import { AdhesionCarousel } from "@/components/adhesion-carousel";
 import { pageHead } from "@/lib/seo";
 import {
   counters,
@@ -225,14 +226,7 @@ function Home() {
             {joinsStatus}
           </p>
         ) : (
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {recentJoins.map((item, i) => (
-              <li key={`${item.nombre}-${item.municipio}-${i}`} className="glass-panel rounded-2xl px-5 py-4 font-medium">
-                <span className="block">{item.nombre}</span>
-                {item.municipio && <span className="mt-1 block text-sm font-normal text-muted-foreground">{item.municipio}</span>}
-              </li>
-            ))}
-          </ul>
+          <AdhesionCarousel items={recentJoins} />
         )}
       </section>
 

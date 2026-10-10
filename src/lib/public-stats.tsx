@@ -120,52 +120,6 @@ function normalize(raw: PublicStats): PublicStats {
   };
 }
 
-async function refresh() {
-  if (loading || typeof window === "undefined") return;
-  loading = true;
-  const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
-  try {
-    const response = await fetch(`/api/cms?action=public&_=${Date.now()}`, {
-      cache: "no-store",
-      signal: controller.signal,
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const raw: unknown = await response.json();
-    if (!isStats(raw)) throw new Error("Respuesta inesperada");
-    set({ stats: normalize(raw), failed: false });
-  } catch (error) {
-    // Se conserva el último dato válido. Si es la primera carga, se registra el fallo
-    // para que la interfaz pueda mostrar el estado correspondiente y el intervalo reintente.
-    console.error("[public-stats] No se pudieron cargar las cifras públicas:", error);
-    set({ stats: state.stats, failed: state.stats === null });
-  } finally {
-    window.clearTimeout(timeout);
-    loading = false;
-  }
-}
-
-function subscribe(listener: () => void) {
-  listeners.add(listener);
-  if (listeners.size === 1 && typeof window !== "undefined") {
-    void refresh();
-    timer = window.setInterval(() => void refresh(), REFRESH_MS);
-    document.addEventListener("visibilitychange", onVisible);
-  }
-  return () => {
-    listeners.delete(listener);
-    if (listeners.size === 0 && timer !== undefined) {
-      window.clearInterval(timer);
-      timer = undefined;
-      document.removeEventListener("visibilitychange", onVisible);
-    }
-  };
-}
-
-function onVisible() {
-  if (!document.hidden) void refresh();
-}
-
 export function usePublicStats(): State {
   const [result, setResult] = useState<State>({ stats: null, failed: false });
 

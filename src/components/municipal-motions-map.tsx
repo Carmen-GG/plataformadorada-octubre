@@ -195,7 +195,7 @@ export function MunicipalMotionsMap() {
             <h3 className="mb-3 font-semibold text-gray-900">Estado de las mociones</h3>
             <div className="space-y-3 text-sm text-gray-800">
               {(Object.keys(STATUS) as MotionStatus[]).map((key) => <button type="button" key={key} onClick={() => setStatusFilter(statusFilter === key ? "todas" : key)} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === key ? "font-bold" : ""}`} aria-pressed={statusFilter === key}><span className="size-3.5 shrink-0 rounded-full" style={{ backgroundColor: STATUS[key].color }} />{STATUS[key].label}</button>)}
-              <button type="button" onClick={() => setStatusFilter("todas")} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === "todas" ? "font-bold" : ""}`} aria-pressed={statusFilter === "todas"}><span className="size-3.5 shrink-0 rounded-full border border-gray-400 bg-white" />No presentada</button>
+              <button type="button" onClick={() => setStatusFilter("todas")} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === "todas" ? "font-bold" : ""}`} aria-pressed={statusFilter === "todas"}><span className="size-3.5 shrink-0 rounded-full border border-gray-400 bg-white" />Mostrar todos</button>
             </div>
             <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600">{data ? `${formatCount(data.features.filter((f) => featureStatus(f as Feature)).length)} municipios con estado asignado` : "Cargando municipios…"}</div>
             <p className="mt-2 text-[10px] text-gray-500">Cartografía base: OpenStreetMap</p>

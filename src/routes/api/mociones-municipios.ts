@@ -7,7 +7,7 @@ const INE_URL =
   "https://www.ine.es/servergis/rest/services/Hosted/Viviendas_tur%C3%ADsticas_2026M05/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson&resultRecordCount=10000&geometryPrecision=5";
 
 let cache: { at: number; data: unknown } = { at: 0, data: null };
-const CACHE_MS = 6 * 60 * 60 * 1000;
+const CACHE_MS = 60 * 1000;
 
 function norm(v: unknown) {
   return String(v ?? "")

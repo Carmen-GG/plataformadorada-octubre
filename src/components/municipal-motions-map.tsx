@@ -7,7 +7,7 @@ type Feature = {
   properties?: Record<string, unknown>;
   geometry?: { type: string; coordinates: any };
 };
-type MotionMapData = { ok: boolean; total: number; features: Feature[]; error?: string };
+type MotionMapData = { ok: boolean; total: number; features: Feature[]; communities: Feature[]; error?: string };
 
 const STATUS: Record<MotionStatus, { label: string; color: string }> = {
   presentada: { label: "Presentada", color: "#2586d8" },
@@ -15,7 +15,6 @@ const STATUS: Record<MotionStatus, { label: string; color: string }> = {
   rechazada: { label: "Rechazada", color: "#e53935" },
   "no presentada": { label: "No presentada", color: "#ffffff" },
 };
-const NO_STATUS = "#ffffff";
 
 declare global {
   interface Window { L?: any }
@@ -80,6 +79,7 @@ export function MunicipalMotionsMap() {
     (async () => {
       try {
         const allFeatures: Feature[] = [];
+        let communities: Feature[] = [];
         let offset = 0;
         let total = 0;
         const pageSize = 300;
@@ -90,11 +90,12 @@ export function MunicipalMotionsMap() {
             throw new Error(String(json?.error || `No se han podido obtener los datos del mapa (HTTP ${response.status}).`));
           }
           allFeatures.push(...(Array.isArray(json.features) ? json.features : []));
+          if (offset === 0) communities = Array.isArray(json.communities) ? json.communities : [];
           total = Number(json.total || total);
           if (!json.hasMore || !json.features?.length) break;
           offset += pageSize;
         }
-        if (active) setData({ ok: true, total, features: allFeatures });
+        if (active) setData({ ok: true, total, features: allFeatures, communities });
       } catch (reason) {
         if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa.");
       }
@@ -121,9 +122,10 @@ export function MunicipalMotionsMap() {
           const status = featureStatus(feature);
           const visible = statusFilter === "todas" || status === statusFilter;
           return {
-            color: "#64748b",
-            weight: 0.55,
-            opacity: 0.9,
+            // Keep municipal fills but remove internal outlines to reduce visual clutter.
+            color: STATUS[status].color,
+            weight: 0,
+            opacity: 0,
             fillColor: STATUS[status].color,
             fillOpacity: visible ? (status === "no presentada" ? 0.48 : 0.78) : 0.08,
           };
@@ -138,11 +140,21 @@ export function MunicipalMotionsMap() {
             : '<div style="font-size:12px;color:#666;margin-top:8px">Estado de la moción</div><div style="font-size:16px;margin-top:4px">No presentada</div><div style="font-size:12px;color:#666;margin-top:6px">No consta ninguna moción registrada.</div>';
           const safeName = featureName(feature).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] || char);
           leafletLayer.bindPopup(`<div style="min-width:180px"><strong style="font-size:18px">${safeName}</strong>${detail}</div>`);
-          leafletLayer.on("mouseover", () => leafletLayer.setStyle({ weight: 1.8, color: "#222", fillOpacity: 0.9 }));
+          leafletLayer.on("mouseover", () => leafletLayer.setStyle({ weight: 0.8, color: "#334155", fillOpacity: 0.9 }));
           leafletLayer.on("mouseout", () => layer.resetStyle(leafletLayer));
         },
       }).addTo(map);
       layerRef.current = layer;
+
+      // Add only autonomous-community outlines above the colored municipalities.
+      // This layer is non-interactive so municipality popups still work underneath.
+      if (data.communities.length) {
+        L.geoJSON({ type: "FeatureCollection", features: data.communities }, {
+          interactive: false,
+          style: { color: "#334155", weight: 2.2, opacity: 0.95, fill: false },
+        }).addTo(map);
+      }
+
       const bounds = layer.getBounds();
       if (bounds.isValid()) map.fitBounds(bounds, { padding: [12, 12] });
     }).catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa interactivo."); });
@@ -163,8 +175,9 @@ export function MunicipalMotionsMap() {
       const status = featureStatus(item.feature as Feature);
       const visible = statusFilter === "todas" || status === statusFilter;
       item.setStyle({
-        color: "#64748b",
-        weight: 0.55,
+        color: STATUS[status].color,
+        weight: 0,
+        opacity: 0,
         fillColor: STATUS[status].color,
         fillOpacity: visible ? (status === "no presentada" ? 0.48 : 0.78) : 0.08,
       });
@@ -190,7 +203,7 @@ export function MunicipalMotionsMap() {
           </aside>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">Cada municipio aparece delimitado y relleno según el estado de su moción: azul (presentada), verde (aprobada), rojo (rechazada) y blanco (no presentada). Selecciona un estado en la leyenda para resaltarlo. Cartografía base: OpenStreetMap.</p>
+      <p className="text-xs text-muted-foreground">Los municipios se rellenan según el estado de su moción, sin mostrar sus límites internos. Solo se destacan los límites de las comunidades autónomas. Azul: presentada; verde: aprobada; rojo: rechazada; blanco: no presentada.</p>
     </div>
   );
 }

@@ -76,7 +76,11 @@ export function MunicipalMotionsMap() {
   useEffect(() => {
     let active = true;
     fetch("/api/mociones-municipios", { cache: "no-store" })
-      .then((response) => { if (!response.ok) throw new Error("No se han podido obtener los datos del mapa."); return response.json(); })
+      .then(async (response) => {
+        const json = await response.json().catch(() => null);
+        if (!response.ok || !json?.ok) throw new Error(String(json?.error || `No se han podido obtener los datos del mapa (HTTP ${response.status}).`));
+        return json;
+      })
       .then((json) => { if (active) setData(json); })
       .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa."); });
     return () => { active = false; };

@@ -15,7 +15,7 @@ function Testimonios() {
   const items = state.stats?.testimonios ?? [];
   const status = listStatus(state, items.length, "Todavía no hay testimonios publicados.");
   const counts = state.stats?.testimoniosPorComunidad ?? {};
-  const normalizeRegion = (value: string) => value.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const normalizeRegion = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
   const aliases: Record<string, string[]> = {
     "Cataluña": ["cataluna", "catalunya"],
     "Comunitat Valenciana": ["comunitatvalenciana", "comunidadvalenciana", "valencia", "comunidadvalenciana"],

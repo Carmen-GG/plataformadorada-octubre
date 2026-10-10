@@ -20,7 +20,7 @@ export function TestimonyCarousel({ items }: { items: PublicTestimony[] }) {
     <div className="mt-6" aria-roledescription="carrusel" aria-label="Voces del cuidado">
       <div className="glass-panel rounded-3xl p-7 sm:p-10" tabIndex={0} onKeyDown={(e) => { if (e.key === "ArrowLeft") previous(); if (e.key === "ArrowRight") next(); if (e.key === " ") { e.preventDefault(); setPaused(v => !v); } }}>
         <p className="text-sm font-semibold text-primary">Testimonio {index + 1} de {items.length}</p>
-        <blockquote className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl">“{item.texto.length > 700 ? `${item.texto.slice(0, 700).trimEnd()}…` : item.texto}”</blockquote>
+        <blockquote className="mt-4 text-base leading-relaxed italic whitespace-pre-wrap">“{item.texto}”</blockquote>
         <figcaption className="mt-6 text-sm font-semibold">{item.autor}{item.contexto && <span className="block font-normal text-muted-foreground">{item.contexto}</span>}</figcaption>
       </div>
       <div className="mt-4 flex flex-wrap items-center justify-center gap-3">

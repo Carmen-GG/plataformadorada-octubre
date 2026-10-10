@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { TerritoryMap } from "@/components/territory-map";
@@ -34,24 +33,7 @@ function counterValue(stats: PublicStats | null, key: CounterKey) {
   return null;
 }
 
-const loadPublicStats = createServerFn({ method: "GET" }).handler(async () => {
-  const cmsUrl = new URL("https://script.google.com/macros/s/AKfycbxKl68XDCa_Z7XAisrDDjYwrDz-1hHMGJ8JwnErWvB1s6aIwClitHKmpbbKON63D0KZ/exec");
-  cmsUrl.searchParams.set("action", "public");
-  const response = await fetch(cmsUrl.toString(), {
-    headers: { Accept: "application/json" },
-    cache: "no-store",
-    redirect: "follow",
-  });
-  if (!response.ok) throw new Error("CMS respondió HTTP " + response.status);
-  const data: unknown = await response.json();
-  if (!data || typeof data !== "object" || !("contadores" in data)) {
-    throw new Error("El CMS no ha devuelto contadores");
-  }
-  return data as PublicStats;
-});
-
 export const Route = createFileRoute("/datos")({
-  loader: () => loadPublicStats(),
   head: () =>
     pageHead({
       path: "/datos",
@@ -63,8 +45,7 @@ export const Route = createFileRoute("/datos")({
 });
 
 function Page() {
-  const initialStats = Route.useLoaderData();
-  const [stats, setStats] = useState<PublicStats | null>(initialStats ?? null);
+  const [stats, setStats] = useState<PublicStats | null>(null);
 
   // Load directly on this page, bypassing the shared store that has remained stuck in loading.
   useEffect(() => {

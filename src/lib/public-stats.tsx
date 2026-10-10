@@ -133,16 +133,16 @@ export function usePublicStats(): State {
       const requestController = controller;
       const timeout = window.setTimeout(() => requestController.abort(), TIMEOUT_MS);
       try {
-        const response = await fetch(`/api/cms?action=public&_=${Date.now()}`, {
+        const response = await fetch(`/api/public-stats?_=${Date.now()}`, {
           cache: "no-store",
           signal: requestController.signal,
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const raw: unknown = await response.json();
-        if (!isStats(raw)) throw new Error("Respuesta inesperada de /api/cms");
+        if (!isStats(raw)) throw new Error("Respuesta inesperada de /api/public-stats");
         if (active) setResult({ stats: normalize(raw), failed: false });
       } catch (error) {
-        console.error("[public-stats] Error al cargar /api/cms:", error);
+        console.error("[public-stats] Error al cargar /api/public-stats:", error);
         if (active) setResult((previous) => ({ stats: previous.stats, failed: previous.stats === null }));
       } finally {
         window.clearTimeout(timeout);

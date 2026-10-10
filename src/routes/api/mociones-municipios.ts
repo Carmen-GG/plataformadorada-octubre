@@ -20,20 +20,6 @@ function norm(v: unknown) {
     .trim();
 }
 
-function centroidOf(geometry: any): [number, number] | null {
-  if (!geometry) return null;
-  const rings = geometry.type === "Polygon" ? geometry.coordinates : geometry.type === "MultiPolygon" ? geometry.coordinates.flat() : [];
-  let x = 0, y = 0, n = 0;
-  for (const ring of rings) {
-    if (!Array.isArray(ring)) continue;
-    for (const point of ring) {
-      if (!Array.isArray(point) || point.length < 2) continue;
-      x += Number(point[0]); y += Number(point[1]); n++;
-    }
-  }
-  return n ? [x / n, y / n] : null;
-}
-
 function prop(feature: any, names: string[]) {
   const p = feature?.properties || {};
   for (const name of names) {
@@ -108,10 +94,11 @@ export const Route = createFileRoute("/api/mociones-municipios")({
               else if (status.startsWith("rechaz") || status.startsWith("deneg") || status.startsWith("no aprob")) motionStatus = "rechazada";
               else motionStatus = "presentada";
             }
-            const center = centroidOf(feature.geometry);
             return {
               type: "Feature",
-              geometry: center ? { type: "Point", coordinates: center } : null,
+              // Preserve the municipal Polygon/MultiPolygon geometry so the map can fill
+              // each municipality according to the recorded motion status.
+              geometry: feature.geometry || null,
               properties: {
                 NAMEUNIT: name,
                 codigoIne: last5,

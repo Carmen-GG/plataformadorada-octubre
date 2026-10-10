@@ -291,11 +291,10 @@ function pdAdhesiones_() {
   var iCity = pdIdx_(
     h,
     function (x) {
-      return x === "ciudad" || x.indexOf("ciudad en la que") === 0;
+      return x === "municipio adherente" || x === "ciudad" || x.indexOf("ciudad en la que") === 0;
     },
     true,
   );
-  var iConsent = pdIdx_(h, pdHas_(PD.CONSENT_HEADER_TEXT), true);
   // Entidades: nombre, web y compromiso de hacer pública la adhesión.
   var iOrgName = pdIdx_(h, pdHas_("nombre de la entidad"));
   var iWeb = pdIdx_(h, pdHas_("pagina web"));
@@ -326,7 +325,6 @@ function pdAdhesiones_() {
       apellidos: iSur >= 0,
       comunidad: iCcaa >= 0,
       ciudad: iCity >= 0,
-      permisoWeb: iConsent >= 0,
       compromisoEntidad: iPublic >= 0,
     },
   };
@@ -396,18 +394,15 @@ function pdAdhesiones_() {
   });
   res.entidadesLista = res.entidadesLista.slice(0, PD.LIST_ENTIDADES);
 
-  // Últimas adhesiones PÚBLICAS: solo personas individuales que han autorizado aparecer.
-  // Se devuelve el nombre ya reducido y el municipio por separado para que la web pueda
-  // presentarlos de forma clara y consistente.
-  if (iConsent >= 0 && iName >= 0) {
+  // Últimas adhesiones individuales en formato anónimo, con el municipio existente.
+  // No se publican nombres personales al no existir una columna de consentimiento específico.
+  if (iName >= 0) {
     for (var k = t.rows.length - 1; k >= 0 && res.ultimas.length < PD.LIST_ADHESIONES; k--) {
       var rw = t.rows[k];
       if (isOrgRow(rw)) continue;
-      if (!pdYes_(pdCell_(rw, iConsent))) continue;
-      var name = pdPublicName_(pdCell_(rw, iName), pdCell_(rw, iSur));
-      if (!name) continue;
+      if (!pdTidy_(pdCell_(rw, iName))) continue;
       var place = pdTidy_(pdCell_(rw, iCity)) || pdCcaa_(pdCell_(rw, iCcaa));
-      res.ultimas.push({ nombre: name, municipio: place });
+      res.ultimas.push({ nombre: "Persona adherida", municipio: place });
     }
   }
   return res;

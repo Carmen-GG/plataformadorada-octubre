@@ -394,15 +394,16 @@ function pdAdhesiones_() {
   });
   res.entidadesLista = res.entidadesLista.slice(0, PD.LIST_ENTIDADES);
 
-  // Últimas adhesiones individuales en formato anónimo, con el municipio existente.
-  // No se publican nombres personales al no existir una columna de consentimiento específico.
+  // Últimas adhesiones individuales: solo nombre de pila y municipio/comunidad.
+  // No se exponen apellidos ni otros datos personales.
   if (iName >= 0) {
     for (var k = t.rows.length - 1; k >= 0 && res.ultimas.length < PD.LIST_ADHESIONES; k--) {
       var rw = t.rows[k];
       if (isOrgRow(rw)) continue;
-      if (!pdTidy_(pdCell_(rw, iName))) continue;
+      var givenName = pdTidy_(pdCell_(rw, iName)).split(/\\s+/)[0];
+      if (!givenName) continue;
       var place = pdTidy_(pdCell_(rw, iCity)) || pdCcaa_(pdCell_(rw, iCcaa));
-      res.ultimas.push({ nombre: "Persona adherida", municipio: place });
+      res.ultimas.push({ nombre: givenName, municipio: place });
     }
   }
   return res;

@@ -109,9 +109,9 @@ export function MunicipalMotionsMap() {
               const status = getStatus(feature);
               const path = geometryPath(feature, box);
               if (!path) return null;
-              const active = status && (statusFilter === "todas" || statusFilter === status);
+              const active = Boolean(status && (statusFilter === "todas" || statusFilter === status));
               const count = getCount(feature);
-              return <path key={`${getName(feature)}-${i}`} d={path} fill={active ? STATUS[status].fill : "transparent"} fillOpacity={active ? 0.9 : 1} stroke="#fffaf0" strokeWidth="0.35" vectorEffect="non-scaling-stroke" onClick={() => status && setSelected(feature)} onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && status) { e.preventDefault(); setSelected(feature); } }} tabIndex={status ? 0 : -1} aria-label={status ? `${getName(feature)}: ${STATUS[status].label}${count > 1 ? `, ${count} mociones` : ""}` : undefined} />;
+              return <path key={`${getName(feature)}-${i}`} d={path} fill={active && status ? STATUS[status].fill : "#eadcc4"} fillOpacity={active ? 0.95 : 1} stroke="#fffaf0" strokeWidth="0.45" vectorEffect="non-scaling-stroke" onClick={() => status && setSelected(feature)} onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && status) { e.preventDefault(); setSelected(feature); } }} tabIndex={status ? 0 : -1} aria-label={status ? `${getName(feature)}: ${STATUS[status].label}${count > 1 ? `, ${count} mociones` : ""}` : `${getName(feature)}: sin moción registrada`} />;
             })}
           </svg>
         </div>

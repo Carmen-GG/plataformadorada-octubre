@@ -52,7 +52,7 @@ function Page() {
     let active = true;
     const load = async () => {
       try {
-        const response = await fetch("/api/cms?action=public&pagina=datos&t=" + Date.now(), {
+        const response = await fetch("/api/public-stats?t=" + Date.now(), {
           cache: "no-store",
           headers: { Accept: "application/json" },
         });

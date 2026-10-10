@@ -117,39 +117,28 @@ export function MunicipalMotionsMap() {
 
       const geoJson = { type: "FeatureCollection", features: data.features };
       const layer = L.geoJSON(geoJson, {
-        pointToLayer: (feature: Feature, latlng: any) => {
-          const status = featureStatus(feature);
-          const visible = statusFilter === "todas" || status === statusFilter;
-          return L.circleMarker(latlng, {
-            radius: status === "no presentada" ? 2.5 : 4,
-            color: status === "no presentada" ? "#7b8790" : STATUS[status].color,
-            weight: 1,
-            fillColor: STATUS[status].color,
-            fillOpacity: visible ? 0.9 : 0.12,
-          });
-        },
         style: (feature: Feature) => {
           const status = featureStatus(feature);
           const visible = statusFilter === "todas" || status === statusFilter;
           return {
-            color: "#ffffff",
-            weight: 0.6,
-            opacity: 0.95,
-            fillColor: status ? STATUS[status].color : NO_STATUS,
-            fillOpacity: visible && status ? 0.78 : 0.18,
+            color: "#64748b",
+            weight: 0.55,
+            opacity: 0.9,
+            fillColor: STATUS[status].color,
+            fillOpacity: visible ? (status === "no presentada" ? 0.48 : 0.78) : 0.08,
           };
         },
         onEachFeature: (feature: Feature, leafletLayer: any) => {
           const status = featureStatus(feature);
-          const statusLabel = status ? STATUS[status].label : "No presentada";
+          const statusLabel = STATUS[status].label;
           const province = String(feature.properties?.motionProvince ?? "");
           const count = Number(feature.properties?.motionCount ?? 0);
-          const detail = status
+          const detail = status !== "no presentada"
             ? `<div style="font-size:12px;color:#666;margin-top:8px">Estado de la moción</div><div style="font-size:16px;margin-top:4px">${statusLabel}</div>${province ? `<div style="font-size:12px;color:#666;margin-top:8px">${province}</div>` : ""}${count > 1 ? `<div style="font-size:12px;margin-top:6px">${formatCount(count)} mociones</div>` : ""}`
             : '<div style="font-size:12px;color:#666;margin-top:8px">Estado de la moción</div><div style="font-size:16px;margin-top:4px">No presentada</div><div style="font-size:12px;color:#666;margin-top:6px">No consta ninguna moción registrada.</div>';
           const safeName = featureName(feature).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] || char);
           leafletLayer.bindPopup(`<div style="min-width:180px"><strong style="font-size:18px">${safeName}</strong>${detail}</div>`);
-          leafletLayer.on("mouseover", () => leafletLayer.setStyle({ weight: 2, color: "#333" }));
+          leafletLayer.on("mouseover", () => leafletLayer.setStyle({ weight: 1.8, color: "#222", fillOpacity: 0.9 }));
           leafletLayer.on("mouseout", () => layer.resetStyle(leafletLayer));
         },
       }).addTo(map);
@@ -167,18 +156,17 @@ export function MunicipalMotionsMap() {
   }, [data]);
 
   useEffect(() => {
-    const L = window.L;
     const map = mapRef.current;
     const layer = layerRef.current;
-    if (!L || !map || !layer) return;
+    if (!window.L || !map || !layer) return;
     layer.eachLayer((item: any) => {
       const status = featureStatus(item.feature as Feature);
       const visible = statusFilter === "todas" || status === statusFilter;
       item.setStyle({
-        color: "#ffffff",
-        weight: 0.6,
-        fillColor: status ? STATUS[status].color : NO_STATUS,
-        fillOpacity: visible && status ? 0.78 : 0.18,
+        color: "#64748b",
+        weight: 0.55,
+        fillColor: STATUS[status].color,
+        fillOpacity: visible ? (status === "no presentada" ? 0.48 : 0.78) : 0.08,
       });
     });
   }, [statusFilter]);
@@ -194,15 +182,15 @@ export function MunicipalMotionsMap() {
           <aside className="absolute right-3 top-3 z-[500] max-h-[calc(100%-24px)] w-56 overflow-y-auto rounded-xl border border-black/10 bg-white/95 p-4 shadow-lg sm:right-5 sm:top-5" aria-label="Leyenda del mapa">
             <h3 className="mb-3 font-semibold text-gray-900">Estado de las mociones</h3>
             <div className="space-y-3 text-sm text-gray-800">
-              {(Object.keys(STATUS) as MotionStatus[]).map((key) => <button type="button" key={key} onClick={() => setStatusFilter(statusFilter === key ? "todas" : key)} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === key ? "font-bold" : ""}`} aria-pressed={statusFilter === key}><span className="size-3.5 shrink-0 rounded-full" style={{ backgroundColor: STATUS[key].color }} />{STATUS[key].label}</button>)}
-              <button type="button" onClick={() => setStatusFilter("todas")} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === "todas" ? "font-bold" : ""}`} aria-pressed={statusFilter === "todas"}><span className="size-3.5 shrink-0 rounded-full border border-gray-400 bg-white" />Mostrar todos</button>
+              {(Object.keys(STATUS) as MotionStatus[]).map((key) => <button type="button" key={key} onClick={() => setStatusFilter(statusFilter === key ? "todas" : key)} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === key ? "font-bold" : ""}`} aria-pressed={statusFilter === key}><span className="size-3.5 shrink-0 rounded-sm border border-gray-300" style={{ backgroundColor: STATUS[key].color }} />{STATUS[key].label}</button>)}
+              <button type="button" onClick={() => setStatusFilter("todas")} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === "todas" ? "font-bold" : ""}`} aria-pressed={statusFilter === "todas"}><span className="size-3.5 shrink-0 rounded-sm border border-gray-400 bg-white" />Mostrar todos</button>
             </div>
-            <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600">{data ? `${formatCount(data.features.filter((f) => featureStatus(f as Feature)).length)} municipios con estado asignado` : "Cargando municipios…"}</div>
+            <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600">{data ? `${formatCount(data.features.length)} municipios en el mapa` : "Cargando municipios…"}</div>
             <p className="mt-2 text-[10px] text-gray-500">Cartografía base: OpenStreetMap</p>
           </aside>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">El color indica el estado registrado de la moción. Todos los municipios tienen un estado; los que no tienen moción registrada aparecen en blanco. Cartografía base: OpenStreetMap.</p>
+      <p className="text-xs text-muted-foreground">Cada municipio aparece delimitado y relleno según el estado de su moción: azul (presentada), verde (aprobada), rojo (rechazada) y blanco (no presentada). Selecciona un estado en la leyenda para resaltarlo. Cartografía base: OpenStreetMap.</p>
     </div>
   );
 }

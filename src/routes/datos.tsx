@@ -34,6 +34,22 @@ function counterValue(stats: PublicStats | null, key: CounterKey) {
 }
 
 export const Route = createFileRoute("/datos")({
+  loader: async () => {
+    try {
+      // Carga inicial en el servidor para que la página no dependa de la hidratación del navegador.
+      const response = await fetch("https://plataforma-dorada.ccguzmangallego.workers.dev/api/public-stats", {
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+      });
+      if (!response.ok) return null;
+      const data: unknown = await response.json();
+      if (!data || typeof data !== "object" || !("contadores" in data)) return null;
+      return data as PublicStats;
+    } catch (error) {
+      console.error("[datos] Error en la carga inicial de estadísticas:", error);
+      return null;
+    }
+  },
   head: () =>
     pageHead({
       path: "/datos",
@@ -45,7 +61,8 @@ export const Route = createFileRoute("/datos")({
 });
 
 function Page() {
-  const [stats, setStats] = useState<PublicStats | null>(null);
+  const initialStats = Route.useLoaderData();
+  const [stats, setStats] = useState<PublicStats | null>(initialStats ?? null);
 
   // Load directly on this page, bypassing the shared store that has remained stuck in loading.
   useEffect(() => {

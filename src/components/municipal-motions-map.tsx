@@ -51,10 +51,11 @@ function loadLeaflet(): Promise<any> {
 
 function normalizeStatus(value: unknown): MotionStatus {
   const status = String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  if (status.startsWith("no present")) return "no presentada";
   if (status.startsWith("aprob") || status.startsWith("acept")) return "aprobada";
   if (status.startsWith("rechaz") || status.startsWith("deneg") || status.startsWith("no aprob")) return "rechazada";
   if (status.startsWith("present")) return "presentada";
-  return null;
+  return "no presentada";
 }
 
 function featureName(feature: Feature) {

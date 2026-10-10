@@ -485,7 +485,7 @@ function pdTestimonios_() {
   var iDisplay = pdIdx_(h, function(x) { return x.indexOf("com vols apareixer") >= 0 || x.indexOf("como quieres aparecer") >= 0; });
   var iName = pdIdx_(h, pdHas_("nom nombre y dni"));
   if (iName < 0) iName = pdIdx_(h, pdHas_("nombre y dni"));
-  var iCcaa = pdIdx_(h, function(x) { return x === "autonomia" || x === "comunidad autonoma" || x === "comunitat autonoma" || x.indexOf("comunidad autonoma ") === 0 || x.indexOf("comunitat autonoma ") === 0; });
+  var iCcaa = pdIdx_(h, function(x) { return x === "autonomia" || x.indexOf("comunidad autonoma") >= 0 || x.indexOf("comunitat autonoma") >= 0 || x === "ccaa"; });
   var iCity = pdIdx_(h, pdHas_("ciudad en la que vives"));
   var iAuto = pdIdx_(h, pdHas_("que cosas deberian mejorar"));
   var iAsk = pdIdx_(h, pdHas_("que solicitasteis"));

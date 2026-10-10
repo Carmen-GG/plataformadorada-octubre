@@ -26,17 +26,23 @@ function Voluntariado() {
         eyebrow="Voluntariado"
         title="Hazte voluntario/a"
         lead="El movimiento lo sostienen personas voluntarias. Puedes ayudar desde tu casa, tu municipio o tu entidad, con el tiempo del que dispongas."
-      >
-        <a
-          href={SITE.volunteerFormUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-block rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground"
-        >
-          Quiero ser voluntario/a
-        </a>
-      </PageHeader>
-      <section className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6"><div className="ml-auto w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-right shadow-sm"><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Voluntariado</p><p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="voluntarios" /></p></div></section>
+        titleAside={
+          <div className="flex w-full max-w-xs flex-col items-end gap-4">
+            <div className="w-full rounded-3xl border border-border bg-card px-6 py-4 text-right shadow-sm">
+              <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Voluntarios y voluntarias</p>
+              <p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="voluntarios" /></p>
+            </div>
+            <a
+              href={SITE.volunteerFormUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground hover:bg-primary/90"
+            >
+              Quiero ser voluntario/a
+            </a>
+          </div>
+        }
+      />
 
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         <div className="grid gap-6 lg:grid-cols-12">
@@ -56,14 +62,6 @@ function Voluntariado() {
           </Panel>
 
           <div className="space-y-6 lg:col-span-5">
-            <Panel>
-              <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-                Voluntarios y voluntarias
-              </p>
-              <p className="mt-2 font-display text-4xl font-bold text-primary">
-                <LiveCount name="voluntarios" />
-              </p>
-            </Panel>
             <Panel>
               <h2 className="font-display text-xl font-semibold">Últimas incorporaciones</h2>
               {status ? (

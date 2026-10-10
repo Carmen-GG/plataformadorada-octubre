@@ -541,7 +541,7 @@ function pdTestimonios_() {
 function pdMociones_() {
   var t = pdReadTable_(
     pdOpen_(PD.MOCIONES_SPREADSHEET_ID),
-    "comunidad autonoma",
+    "nombre entidad local",
     PD.MOCIONES_SHEET_NAME,
   );
   if (!t) throw new Error("No encuentro la hoja de mociones.");
@@ -587,7 +587,7 @@ function pdMociones_() {
 
     // Cada registro de la hoja representa una moción. Exigimos al menos una
     // entidad/ayuntamiento o una fecha y una comunidad reconocible.
-    if (!ccaa || (!entidad && !fecha)) continue;
+    if (!entidad && !fecha) continue;
     res.total++;
     res.diag.filasConComunidad++;
     bump(ccaa, "mocionesPresentadas");

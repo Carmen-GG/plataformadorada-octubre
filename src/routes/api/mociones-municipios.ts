@@ -3,8 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 const DEFAULT_CMS_URL =
   "https://script.google.com/macros/s/AKfycbxKl68XDCa_Z7XAisrDDjYwrDz-1hHMGJ8JwnErWvB1s6aIwClitHKmpbbKON63D0KZ/exec";
 const CMS_URL = import.meta.env.VITE_ADHESION_COUNT_URL?.trim() || DEFAULT_CMS_URL;
-const INE_URL =
-  "https://www.ine.es/servergis/rest/services/Hosted/Viviendas_tur%C3%ADsticas_2026M05/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson&resultRecordCount=10000&geometryPrecision=5";
+const MUNICIPAL_URL =
+  "https://mapas.fomento.gob.es/arcgis/rest/services/SIU/ENTIDADES_TERRITORIALES_EGRN/MapServer/4/query";
 
 let cache: { at: number; data: unknown } = { at: 0, data: null };
 const CACHE_MS = 60 * 1000;
@@ -33,14 +33,33 @@ export const Route = createFileRoute("/api/mociones-municipios")({
       GET: async () => {
         if (cache.data && Date.now() - cache.at < CACHE_MS) return Response.json(cache.data);
         try {
-          const [cmsResponse, geoResponse] = await Promise.all([
-            fetch(`${CMS_URL}?action=public`, { cache: "no-store" }),
-            fetch(INE_URL, { cache: "no-store" }),
-          ]);
+          const cmsResponse = await fetch(`${CMS_URL}?action=public`, { cache: "no-store" });
           if (!cmsResponse.ok) throw new Error(`CMS ${cmsResponse.status}`);
-          if (!geoResponse.ok) throw new Error(`INE ${geoResponse.status}`);
           const cms = await cmsResponse.json();
-          const geo = await geoResponse.json();
+
+          // Descarga la capa oficial de municipios por bloques para respetar el límite
+          // de registros del servicio ArcGIS y no quedarse solo con una parte de España.
+          const allFeatures: any[] = [];
+          const pageSize = 2000;
+          for (let offset = 0; offset < 12000; offset += pageSize) {
+            const params = new URLSearchParams({
+              where: "1=1",
+              outFields: "*",
+              returnGeometry: "true",
+              outSR: "4326",
+              f: "geojson",
+              resultRecordCount: String(pageSize),
+              resultOffset: String(offset),
+              geometryPrecision: "5",
+            });
+            const response = await fetch(`${MUNICIPAL_URL}?${params.toString()}`, { cache: "no-store" });
+            if (!response.ok) throw new Error(`Cartografía municipal ${response.status}`);
+            const page = await response.json();
+            if (!Array.isArray(page.features)) throw new Error("La cartografía municipal no ha devuelto geometrías GeoJSON.");
+            allFeatures.push(...page.features);
+            if (page.features.length < pageSize) break;
+          }
+          const geo = { features: allFeatures };
           const motions = Array.isArray(cms.mocionesMunicipios) ? cms.mocionesMunicipios : [];
 
           const byName = new Map<string, any[]>();
@@ -67,7 +86,13 @@ export const Route = createFileRoute("/api/mociones-municipios")({
               properties: {
                 NAMEUNIT: name,
                 codigoIne: last5,
-                motionStatus: match ? norm(match.estado).replace(/\s+/g, "") : null,
+                motionStatus: match ? (() => {
+                  const status = norm(match.estado);
+                  if (status.startsWith("aprob") || status.startsWith("acept")) return "aprobada";
+                  if (status.startsWith("rechaz") || status.startsWith("deneg") || status.startsWith("no aprob")) return "rechazada";
+                  if (status.startsWith("present") || status.startsWith("sin resolucion") || status.startsWith("pendiente")) return "presentada";
+                  return "presentada";
+                })() : null,
                 motionCount: Number(match?.mociones || 0),
                 motionProvince: match?.provincia || "",
               },

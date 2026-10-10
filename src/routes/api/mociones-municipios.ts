@@ -20,6 +20,20 @@ function norm(v: unknown) {
     .trim();
 }
 
+function centroidOf(geometry: any): [number, number] | null {
+  if (!geometry) return null;
+  const rings = geometry.type === "Polygon" ? geometry.coordinates : geometry.type === "MultiPolygon" ? geometry.coordinates.flat() : [];
+  let x = 0, y = 0, n = 0;
+  for (const ring of rings) {
+    if (!Array.isArray(ring)) continue;
+    for (const point of ring) {
+      if (!Array.isArray(point) || point.length < 2) continue;
+      x += Number(point[0]); y += Number(point[1]); n++;
+    }
+  }
+  return n ? [x / n, y / n] : null;
+}
+
 function prop(feature: any, names: string[]) {
   const p = feature?.properties || {};
   for (const name of names) {
@@ -49,14 +63,14 @@ export const Route = createFileRoute("/api/mociones-municipios")({
           stage = "descarga de la cartografía municipal (bloque " + offset + ")";
           const params = new URLSearchParams({
             where: "1=1",
-            outFields: "NAMEUNIT,CODIGOINE",
+            outFields: "NAMEUNIT,CodINE,NATCODE",
             returnGeometry: "true",
-            returnCentroid: "true",
             outSR: "4326",
             f: "geojson",
             resultRecordCount: String(PAGE_SIZE),
             resultOffset: String(offset),
             geometryPrecision: "3",
+            maxAllowableOffset: "0.02",
             orderByFields: "OBJECTID",
           });
           const response = await fetch(MUNICIPAL_URL + "?" + params.toString(), { cache: "no-store" });
@@ -79,7 +93,7 @@ export const Route = createFileRoute("/api/mociones-municipios")({
 
           const features = page.features.map((feature: any) => {
             const name = prop(feature, ["NAMEUNIT", "name", "NOMBRE", "municipio"]);
-            const code = String(prop(feature, ["CODIGOINE", "CUMUN", "cumun", "codigo_ine", "NATCODE"]));
+            const code = String(prop(feature, ["CodINE", "CODINE", "CODIGOINE", "CUMUN", "cumun", "codigo_ine", "NATCODE"]));
             const last5 = code.match(/(\d{5})$/)?.[1] || "";
             const candidates = byName.get(norm(name)) || [];
             let match = candidates[0];
@@ -94,8 +108,10 @@ export const Route = createFileRoute("/api/mociones-municipios")({
               else if (status.startsWith("rechaz") || status.startsWith("deneg") || status.startsWith("no aprob")) motionStatus = "rechazada";
               else motionStatus = "presentada";
             }
+            const center = centroidOf(feature.geometry);
             return {
-              ...feature,
+              type: "Feature",
+              geometry: center ? { type: "Point", coordinates: center } : null,
               properties: {
                 NAMEUNIT: name,
                 codigoIne: last5,

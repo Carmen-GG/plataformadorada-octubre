@@ -75,14 +75,28 @@ export function MunicipalMotionsMap() {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/mociones-municipios", { cache: "no-store" })
-      .then(async (response) => {
-        const json = await response.json().catch(() => null);
-        if (!response.ok || !json?.ok) throw new Error(String(json?.error || `No se han podido obtener los datos del mapa (HTTP ${response.status}).`));
-        return json;
-      })
-      .then((json) => { if (active) setData(json); })
-      .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa."); });
+    (async () => {
+      try {
+        const allFeatures: Feature[] = [];
+        let offset = 0;
+        let total = 0;
+        const pageSize = 300;
+        while (true) {
+          const response = await fetch(`/api/mociones-municipios?offset=${offset}`, { cache: "no-store" });
+          const json = await response.json().catch(() => null);
+          if (!response.ok || !json?.ok) {
+            throw new Error(String(json?.error || `No se han podido obtener los datos del mapa (HTTP ${response.status}).`));
+          }
+          allFeatures.push(...(Array.isArray(json.features) ? json.features : []));
+          total = Number(json.total || total);
+          if (!json.hasMore || !json.features?.length) break;
+          offset += pageSize;
+        }
+        if (active) setData({ ok: true, total, features: allFeatures });
+      } catch (reason) {
+        if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa.");
+      }
+    })();
     return () => { active = false; };
   }, []);
 

@@ -96,6 +96,8 @@ export function MunicipalMotionsMap() {
 
   return (
     <div className="space-y-4">
+      {!data && <p className="text-sm text-muted-foreground" role="status">Cargando mapa…</p>}
+      {data && !data.ok && <p className="text-sm text-muted-foreground" role="status">{data.error || "No se ha podido cargar el mapa."}</p>}
       <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar mociones">
         <button type="button" onClick={() => setStatusFilter("todas")} className={`rounded-full px-4 py-2 text-sm font-semibold ${statusFilter === "todas" ? "bg-primary text-primary-foreground" : "glass-soft text-primary"}`}>Todas</button>
         {(Object.keys(STATUS) as MotionStatus[]).map((key) => <button key={key} type="button" onClick={() => setStatusFilter(key)} className={`rounded-full px-4 py-2 text-sm font-semibold ${statusFilter === key ? "text-white" : "glass-soft text-primary"}`} style={statusFilter === key ? { backgroundColor: STATUS[key].fill } : undefined}>{STATUS[key].label}</button>)}
@@ -133,8 +135,6 @@ export function MunicipalMotionsMap() {
           </div>
         </div>
       )}
-      {!data && <p className="text-sm text-muted-foreground" role="status">Cargando mapa…</p>}
-      {data && !data.ok && <p className="text-sm text-muted-foreground" role="status">{data.error || "No se ha podido cargar el mapa."}</p>}
     </div>
   );
 }

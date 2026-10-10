@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { formatCount } from "@/lib/public-stats";
 
-type MotionStatus = "presentada" | "aprobada" | "rechazada";
+type MotionStatus = "presentada" | "aprobada" | "rechazada" | "no presentada";
 type Feature = {
   type: "Feature";
   properties?: Record<string, unknown>;
@@ -13,6 +13,7 @@ const STATUS: Record<MotionStatus, { label: string; color: string }> = {
   presentada: { label: "Presentada", color: "#2586d8" },
   aprobada: { label: "Aprobada", color: "#39a34a" },
   rechazada: { label: "Rechazada", color: "#e53935" },
+  "no presentada": { label: "No presentada", color: "#ffffff" },
 };
 const NO_STATUS = "#ffffff";
 

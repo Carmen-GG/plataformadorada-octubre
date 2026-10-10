@@ -21,19 +21,22 @@ function Unete() {
   const state = usePublicStats();
   const recent = state.stats?.ultimasAdhesiones ?? [];
   const [recentIndex, setRecentIndex] = useState(0);
+  const [recentPaused, setRecentPaused] = useState(false);
 
   useEffect(() => {
     setRecentIndex(0);
   }, [recent.length]);
 
   useEffect(() => {
-    if (recent.length < 2) return;
+    if (recentPaused || recent.length < 2) return;
     const timer = window.setInterval(() => {
       setRecentIndex((current) => (current + 1) % recent.length);
-    }, 5000);
+    }, 7000);
     return () => window.clearInterval(timer);
-  }, [recent.length]);
+  }, [recent.length, recentPaused]);
 
+  const nextRecent = () => setRecentIndex((current) => (current + 1) % recent.length);
+  const previousRecent = () => setRecentIndex((current) => (current - 1 + recent.length) % recent.length);
   const currentRecent = recent[recentIndex] ?? recent[0];
   const recentStatus = listStatus(state, recent.length, "Todavía no hay adhesiones públicas autorizadas.");
   return (
@@ -92,16 +95,31 @@ function Unete() {
                 <p className="mt-4 text-sm text-muted-foreground" role="status">{recentStatus}</p>
               ) : (
                 <div className="mt-4" aria-roledescription="carrusel" aria-label="Últimas adhesiones públicas">
-                  <div className="flex min-h-28 flex-col justify-center rounded-2xl border border-border/70 bg-background/50 px-4 py-5">
-                    <p className="font-display text-2xl font-semibold">{currentRecent?.nombre}</p>
-                    {currentRecent?.municipio && <p className="mt-1 text-sm text-muted-foreground">{currentRecent.municipio}</p>}
-                    <p className="mt-3 text-xs text-muted-foreground">Adhesión {recentIndex + 1} de {recent.length}</p>
+                  <div
+                    key={recentIndex}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "ArrowLeft") previousRecent();
+                      if (e.key === "ArrowRight") nextRecent();
+                      if (e.key === " ") { e.preventDefault(); setRecentPaused((paused) => !paused); }
+                    }}
+                    className="glass-panel rounded-3xl p-7 sm:p-8"
+                  >
+                    <p className="text-sm font-semibold text-primary">Adhesión {recentIndex + 1} de {recent.length}</p>
+                    <p className="mt-4 text-xl font-semibold leading-relaxed">{currentRecent?.nombre}</p>
+                    {currentRecent?.municipio && <p className="mt-2 text-sm text-muted-foreground">{currentRecent.municipio}</p>}
                   </div>
                   {recent.length > 1 && (
-                    <div className="mt-3 flex justify-center gap-2">
-                      <button type="button" onClick={() => setRecentIndex((recentIndex - 1 + recent.length) % recent.length)} className="rounded-full border border-border px-3 py-1.5 text-sm">Anterior</button>
-                      <button type="button" onClick={() => setRecentIndex((recentIndex + 1) % recent.length)} className="rounded-full border border-border px-3 py-1.5 text-sm">Siguiente</button>
-                    </div>
+                    <>
+                      <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+                        <button type="button" className="rounded-full border border-border px-4 py-2 text-sm font-semibold" onClick={previousRecent} aria-label="Adhesión anterior">Anterior</button>
+                        <button type="button" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" onClick={() => setRecentPaused((paused) => !paused)} aria-pressed={recentPaused}>{recentPaused ? "Reanudar" : "Pausar"}</button>
+                        <button type="button" className="rounded-full border border-border px-4 py-2 text-sm font-semibold" onClick={nextRecent} aria-label="Siguiente adhesión">Siguiente</button>
+                      </div>
+                      <div className="mt-3 flex justify-center gap-1.5" aria-label="Seleccionar adhesión">
+                        {recent.map((_, i) => <button key={i} type="button" onClick={() => setRecentIndex(i)} aria-label={`Ir a la adhesión ${i + 1}`} aria-current={i === recentIndex} className={`h-2.5 w-2.5 rounded-full border ${i === recentIndex ? "bg-primary" : "bg-transparent"}`} />)}
+                      </div>
+                    </>
                   )}
                 </div>
               )}

@@ -15,7 +15,38 @@ function Testimonios() {
   const items = state.stats?.testimonios ?? [];
   const status = listStatus(state, items.length, "Todavía no hay testimonios publicados.");
   const counts = state.stats?.testimoniosPorComunidad ?? {};
-  const regionRows = regions.map((r) => ({ name: r.name, count: Number(counts[r.name] ?? 0) })).filter((r) => r.count > 0);
+  const normalizeRegion = (value: string) => value.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const aliases: Record<string, string[]> = {
+    "Cataluña": ["cataluna", "catalunya"],
+    "Comunitat Valenciana": ["comunitatvalenciana", "comunidadvalenciana", "valencia", "comunidadvalenciana"],
+    "Illes Balears": ["illesbalears", "islasbaleares", "baleares"],
+    "Madrid": ["madrid", "comunidaddemadrid"],
+    "País Vasco": ["paisvasco", "euskadi"],
+    "Navarra": ["navarra", "comunidadforaldenavarra"],
+    "Asturias": ["asturias", "principadodeasturias"],
+    "Murcia": ["murcia", "regiondemurcia"],
+    "Castilla-La Mancha": ["castillalamancha"],
+    "Castilla y León": ["castillayleon"],
+    "Canarias": ["canarias", "islascanarias"],
+    "Andalucía": ["andalucia"],
+    "Aragón": ["aragon"],
+    "Cantabria": ["cantabria"],
+    "Extremadura": ["extremadura"],
+    "Galicia": ["galicia"],
+    "La Rioja": ["larioja"],
+    "Ceuta": ["ceuta"],
+    "Melilla": ["melilla"],
+  };
+  const normalizedCounts = new Map<string, number>();
+  for (const [key, value] of Object.entries(counts)) {
+    const normalized = normalizeRegion(key);
+    normalizedCounts.set(normalized, (normalizedCounts.get(normalized) ?? 0) + Number(value ?? 0));
+  }
+  const countForRegion = (name: string) => {
+    const keys = aliases[name] ?? [normalizeRegion(name)];
+    return keys.reduce((sum, key) => sum + (normalizedCounts.get(normalizeRegion(key)) ?? 0), 0);
+  };
+  const regionRows = regions.map((r) => ({ name: r.name, count: countForRegion(r.name) })).filter((r) => r.count > 0);
   return (
     <>
       <PageHeader eyebrow="Voces reales" title="Testimonios" lead="Detrás de cada expediente hay una familia. Estos son los relatos de quienes esperan una valoración, una ayuda o un respiro."
@@ -34,7 +65,7 @@ function Testimonios() {
           <h2 className="font-display text-xl font-semibold">Testimonios por comunidad autónoma</h2>
           <p className="mt-2 text-sm text-muted-foreground">Mapa y resumen agregado. Nunca se muestran ubicaciones personales.</p>
           <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Testimonios por comunidad autónoma">
-            {regions.map((r) => <div key={r.name} className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm" role="listitem"><span>{r.name}</span><strong>{formatCount(Number(counts[r.name] ?? 0))}</strong></div>)}
+            {regions.map((r) => <div key={r.name} className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm" role="listitem"><span>{r.name}</span><strong>{formatCount(countForRegion(r.name))}</strong></div>)}
           </div>
           {regionRows.length === 0 && <p className="mt-4 text-sm text-muted-foreground">Aún no hay datos territoriales disponibles.</p>}
         </Panel>

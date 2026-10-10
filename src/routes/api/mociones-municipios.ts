@@ -32,10 +32,14 @@ export const Route = createFileRoute("/api/mociones-municipios")({
     handlers: {
       GET: async () => {
         if (cache.data && Date.now() - cache.at < CACHE_MS) return Response.json(cache.data);
+        let stage = "consulta de datos de mociones";
         try {
           const cmsResponse = await fetch(`${CMS_URL}?action=public`, { cache: "no-store" });
-          if (!cmsResponse.ok) throw new Error(`CMS ${cmsResponse.status}`);
+          if (!cmsResponse.ok) throw new Error(`El servicio de mociones ha respondido HTTP ${cmsResponse.status}`);
           const cms = await cmsResponse.json();
+          if (!cms || typeof cms !== "object") throw new Error("El servicio de mociones no ha devuelto un JSON válido.");
+          if (cms.ok === false) throw new Error(String(cms.error || "El servicio de mociones ha indicado un error."));
+          stage = "descarga de la cartografía municipal";
 
           // Descarga la capa oficial de municipios por bloques para respetar el límite
           // de registros del servicio ArcGIS y no quedarse solo con una parte de España.
@@ -55,10 +59,13 @@ export const Route = createFileRoute("/api/mociones-municipios")({
             const response = await fetch(`${MUNICIPAL_URL}?${params.toString()}`, { cache: "no-store" });
             if (!response.ok) throw new Error(`Cartografía municipal ${response.status}`);
             const page = await response.json();
-            if (!Array.isArray(page.features)) throw new Error("La cartografía municipal no ha devuelto geometrías GeoJSON.");
+            if (page?.error) throw new Error(`ArcGIS: ${String(page.error.message || page.error)}`);
+            if (!Array.isArray(page.features)) throw new Error("ArcGIS no ha devuelto una lista de geometrías GeoJSON.");
             allFeatures.push(...page.features);
             if (page.features.length < pageSize) break;
           }
+          if (!allFeatures.length) throw new Error("La cartografía municipal ha devuelto cero municipios.");
+          stage = "preparación de los datos del mapa";
           const geo = { features: allFeatures };
           const motions = Array.isArray(cms.mocionesMunicipios) ? cms.mocionesMunicipios : [];
 
@@ -105,7 +112,8 @@ export const Route = createFileRoute("/api/mociones-municipios")({
         } catch (error) {
           console.error("No se pudo cargar el mapa municipal de mociones", error);
           if (cache.data) return Response.json(cache.data);
-          return Response.json({ ok: false, total: 0, features: [], error: "No se ha podido cargar el mapa municipal de mociones." }, { status: 502 });
+          const detail = error instanceof Error ? error.message : String(error);
+          return Response.json({ ok: false, total: 0, features: [], error: `Error en ${stage}: ${detail}` }, { status: 502 });
         }
       },
     },

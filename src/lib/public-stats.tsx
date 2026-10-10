@@ -22,6 +22,7 @@ export type PublicStats = {
     testimoniosRecibidos: number | null;
     testimoniosAutorizados: number | null;
     testimoniosPublicados: number | null;
+    mocionesPresentadas: number | null;
   };
   tiposOrganizacion?: Record<string, number>;
   porComunidad: Record<string, { adhesiones: number; entidades: number }>;
@@ -100,6 +101,7 @@ function normalize(raw: PublicStats): PublicStats {
       testimoniosRecibidos: toNumber(rawContadores.testimoniosRecibidos),
       testimoniosAutorizados: toNumber(rawContadores.testimoniosAutorizados),
       testimoniosPublicados: toNumber(rawContadores.testimoniosPublicados),
+      mocionesPresentadas: toNumber(rawContadores.mocionesPresentadas),
     },
     tiposOrganizacion,
     porComunidad,

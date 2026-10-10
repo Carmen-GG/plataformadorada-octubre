@@ -546,7 +546,7 @@ function pdMociones_() {
   );
   if (!t) throw new Error("No encuentro la hoja de mociones.");
   var h = t.headers;
-  var iEntidad = pdIdx_(h, pdHas_("nombre entidad local o ayuntamiento"));
+  var iEntidad = pdIdx_(h, function(x) { return x.indexOf("nombre entidad local") >= 0 || x.indexOf("nombre del ayuntamiento") >= 0 || x.indexOf("ayuntamiento") >= 0; });
   var iCcaa = pdIdx_(h, pdHas_("comunidad autonoma"));
   var iFecha = pdIdx_(h, pdHas_("fecha en que se ha presentado la mocion"));
   var iResol = pdIdx_(h, pdHas_("resolucion del pleno"));

@@ -134,8 +134,26 @@ function Page() {
           ))}
         </div>
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
-          <Panel><p className="font-display text-3xl font-semibold">{stats ? formatCount(stats.contadores?.testimoniosRecibidos ?? 0) : "…"}</p><p className="mt-2 text-sm text-muted-foreground">Testimonios recibidos</p></Panel>
-          <Panel><p className="font-display text-3xl font-semibold">{stats ? formatCount(stats.contadores?.testimoniosPublicados ?? 0) : "…"}</p><p className="mt-2 text-sm text-muted-foreground">Testimonios publicados</p></Panel>
+          <Panel>
+            <p className="font-display text-3xl font-semibold">
+              {stats ? formatCount(Number(stats.contadores?.testimoniosRecibidos ?? (stats.contadores as any)?.testimoniosRecibidos ?? 0)) : (
+                <span className="inline-flex items-center gap-2 text-base font-sans font-normal" role="status" aria-live="polite">
+                  <span className="h-3 w-3 rounded-full border-2 border-primary/25 border-t-primary" aria-hidden="true" />Cargando…
+                </span>
+              )}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">Testimonios recibidos</p>
+          </Panel>
+          <Panel>
+            <p className="font-display text-3xl font-semibold">
+              {stats ? formatCount(Number(stats.contadores?.testimoniosPublicados ?? (stats.contadores as any)?.testimoniosPublicados ?? 0)) : (
+                <span className="inline-flex items-center gap-2 text-base font-sans font-normal" role="status" aria-live="polite">
+                  <span className="h-3 w-3 rounded-full border-2 border-primary/25 border-t-primary" aria-hidden="true" />Cargando…
+                </span>
+              )}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">Testimonios publicados</p>
+          </Panel>
         </div>
       </section>
 

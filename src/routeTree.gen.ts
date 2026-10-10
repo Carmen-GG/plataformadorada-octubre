@@ -31,6 +31,8 @@ import { Route as TestimoniosRouteImport } from './routes/testimonios'
 import { Route as UneteRouteImport } from './routes/unete'
 import { Route as VoluntariadoRouteImport } from './routes/voluntariado'
 import { Route as ApiCmsRouteImport } from './routes/api/cms'
+import { Route as MocionesAyuntamientosRouteImport } from './routes/mociones-ayuntamientos'
+import { Route as ApiMocionesMunicipiosRouteImport } from './routes/api/mociones-municipios'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -142,8 +144,20 @@ const ApiCmsRoute = ApiCmsRouteImport.update({
   path: '/api/cms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MocionesAyuntamientosRoute = MocionesAyuntamientosRouteImport.update({
+  id: '/mociones-ayuntamientos',
+  path: '/mociones-ayuntamientos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMocionesMunicipiosRoute = ApiMocionesMunicipiosRouteImport.update({
+  id: '/api/mociones-municipios',
+  path: '/api/mociones-municipios',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
+  '/mociones-ayuntamientos': typeof MocionesAyuntamientosRoute
+  '/api/mociones-municipios': typeof ApiMocionesMunicipiosRoute
   '/': typeof IndexRoute
   '/accesibilidad': typeof AccesibilidadRoute
   '/admin': typeof AdminRoute
@@ -168,6 +182,8 @@ export interface FileRoutesByFullPath {
   '/api/cms': typeof ApiCmsRoute
 }
 export interface FileRoutesByTo {
+  '/mociones-ayuntamientos': typeof MocionesAyuntamientosRoute
+  '/api/mociones-municipios': typeof ApiMocionesMunicipiosRoute
   '/': typeof IndexRoute
   '/accesibilidad': typeof AccesibilidadRoute
   '/admin': typeof AdminRoute
@@ -192,6 +208,8 @@ export interface FileRoutesByTo {
   '/api/cms': typeof ApiCmsRoute
 }
 export interface FileRoutesById {
+  '/mociones-ayuntamientos': typeof MocionesAyuntamientosRoute
+  '/api/mociones-municipios': typeof ApiMocionesMunicipiosRoute
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/accesibilidad': typeof AccesibilidadRoute
@@ -219,6 +237,8 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/mociones-ayuntamientos'
+    | '/api/mociones-municipios'
     | '/'
     | '/accesibilidad'
     | '/admin'
@@ -243,6 +263,8 @@ export interface FileRouteTypes {
     | '/api/cms'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/mociones-ayuntamientos'
+    | '/api/mociones-municipios'
     | '/'
     | '/accesibilidad'
     | '/admin'
@@ -266,6 +288,8 @@ export interface FileRouteTypes {
     | '/voluntariado'
     | '/api/cms'
   id:
+    | '/mociones-ayuntamientos'
+    | '/api/mociones-municipios'
     | '__root__'
     | '/'
     | '/accesibilidad'
@@ -314,7 +338,9 @@ export interface RootRouteChildren {
   UneteRoute: typeof UneteRoute
   VoluntariadoRoute: typeof VoluntariadoRoute
   ApiCmsRoute: typeof ApiCmsRoute
-}
+}  MocionesAyuntamientosRoute: typeof MocionesAyuntamientosRoute
+  ApiMocionesMunicipiosRoute: typeof ApiMocionesMunicipiosRoute
+
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -472,6 +498,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCmsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mociones-ayuntamientos': {
+      id: '/mociones-ayuntamientos'
+      path: '/mociones-ayuntamientos'
+      fullPath: '/mociones-ayuntamientos'
+      preLoaderRoute: typeof MocionesAyuntamientosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mociones-municipios': {
+      id: '/api/mociones-municipios'
+      path: '/api/mociones-municipios'
+      fullPath: '/api/mociones-municipios'
+      preLoaderRoute: typeof ApiMocionesMunicipiosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -498,7 +538,9 @@ const rootRouteChildren: RootRouteChildren = {
   UneteRoute: UneteRoute,
   VoluntariadoRoute: VoluntariadoRoute,
   ApiCmsRoute: ApiCmsRoute,
-}
+}  MocionesAyuntamientosRoute: MocionesAyuntamientosRoute,
+  ApiMocionesMunicipiosRoute: ApiMocionesMunicipiosRoute,
+
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

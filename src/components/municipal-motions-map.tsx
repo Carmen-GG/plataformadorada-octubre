@@ -48,7 +48,7 @@ function loadLeaflet(): Promise<any> {
   });
 }
 
-function normalizeStatus(value: unknown): MotionStatus | null {
+function normalizeStatus(value: unknown): MotionStatus {
   const status = String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
   if (status.startsWith("aprob") || status.startsWith("acept")) return "aprobada";
   if (status.startsWith("rechaz") || status.startsWith("deneg") || status.startsWith("no aprob")) return "rechazada";
@@ -61,7 +61,7 @@ function featureName(feature: Feature) {
   return String(p.NAMEUNIT ?? p.name ?? p.NOMBRE ?? p.municipio ?? "Municipio");
 }
 
-function featureStatus(feature: Feature): MotionStatus | null {
+function featureStatus(feature: Feature): MotionStatus {
   return normalizeStatus(feature.properties?.motionStatus);
 }
 

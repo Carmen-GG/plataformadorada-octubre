@@ -549,12 +549,14 @@ function pdMociones_() {
   var iCcaa = pdIdx_(h, pdHas_("comunidad autonoma"));
   var iFecha = pdIdx_(h, pdHas_("fecha en que se ha presentado la mocion"));
   var iResol = pdIdx_(h, pdHas_("resolucion del pleno"));
+  var iProvincia = pdIdx_(h, pdHas_("provincia"));
 
   var res = {
     total: 0,
     aceptadas: 0,
     municipiosAprobados: 0,
     porCcaa: {},
+    municipios: [],
     _municipiosAprobados: {},
     diag: {
       pestanaLeida: t.sheet.getName(),
@@ -580,6 +582,7 @@ function pdMociones_() {
     var ccaa = pdCcaa_(pdCell_(row, iCcaa));
     var fecha = pdCell_(row, iFecha);
     var resol = pdCell_(row, iResol);
+    var provincia = pdCell_(row, iProvincia);
 
     // Cada registro de la hoja representa una moción. Exigimos al menos una
     // entidad/ayuntamiento o una fecha y una comunidad reconocible.
@@ -592,7 +595,11 @@ function pdMociones_() {
     if (normalized) {
       res.diag.resoluciones[resol] = (res.diag.resoluciones[resol] || 0) + 1;
     }
-    if (/^(aprobada|aceptada)\b/.test(normalized)) {
+    var estado = "presentada";
+    if (/^(aprobada|aceptada)\b/.test(normalized)) estado = "aprobada";
+    else if (/^(rechazada|denegada|no aprobada)\b/.test(normalized)) estado = "rechazada";
+    if (entidad) res.municipios.push({ municipio: entidad, provincia: provincia, estado: estado, mociones: 1 });
+    if (estado === "aprobada") {
       res.aceptadas++;
       res.diag.aceptadas++;
       bump(ccaa, "mocionesAceptadas");
@@ -781,10 +788,12 @@ function buildPublicStats_() {
       testimoniosRecibidos: t ? t.recibidos : null,
       testimoniosAutorizados: t ? t.autorizados : null,
       testimoniosPublicados: t ? t.publicados : null,
+      mocionesPresentadas: m ? m.total : null,
     },
     tiposOrganizacion: a ? a.tipos : {},
     porComunidad: a ? a.porCcaa : {},
     mociones: m ? m.porCcaa : {},
+    mocionesMunicipios: m ? m.municipios : [],
     indicadores: pdIndicadoresPublic_(),
     ultimasAdhesiones: a ? a.ultimas : [],
     entidadesAdheridas: a ? a.entidadesLista : [],

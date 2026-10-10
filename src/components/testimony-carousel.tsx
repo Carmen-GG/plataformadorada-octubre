@@ -7,18 +7,25 @@ export function TestimonyCarousel({ items }: { items: PublicTestimony[] }) {
   const [paused, setPaused] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   useEffect(() => {
+    if (timer.current !== undefined) window.clearInterval(timer.current);
+    timer.current = undefined;
     if (paused || items.length < 2) return;
-    timer.current = window.setInterval(() => setIndex((i) => (i + 1) % items.length), 7000);
-    return () => { if (timer.current) window.clearInterval(timer.current); };
+    timer.current = window.setInterval(() => {
+      setIndex((current) => (current + 1) % items.length);
+    }, 7000);
+    return () => {
+      if (timer.current !== undefined) window.clearInterval(timer.current);
+      timer.current = undefined;
+    };
   }, [paused, items.length]);
   useEffect(() => { setIndex((i) => Math.min(i, Math.max(0, items.length - 1))); }, [items.length]);
   if (!items.length) return null;
   const item = items[index];
-  const next = () => setIndex((i) => (i + 1) % items.length);
-  const previous = () => setIndex((i) => (i - 1 + items.length) % items.length);
+  const next = () => setIndex((current) => (current + 1) % items.length);
+  const previous = () => setIndex((current) => (current - 1 + items.length) % items.length);
   return (
     <div className="mt-6" aria-roledescription="carrusel" aria-label="Voces del cuidado">
-      <div className="glass-panel rounded-3xl p-7 sm:p-10" tabIndex={0} onKeyDown={(e) => { if (e.key === "ArrowLeft") previous(); if (e.key === "ArrowRight") next(); if (e.key === " ") { e.preventDefault(); setPaused(v => !v); } }}>
+      <div key={index} className="glass-panel rounded-3xl p-7 sm:p-10" tabIndex={0} onKeyDown={(e) => { if (e.key === "ArrowLeft") previous(); if (e.key === "ArrowRight") next(); if (e.key === " ") { e.preventDefault(); setPaused(v => !v); } }}>
         <p className="text-sm font-semibold text-primary">Testimonio {index + 1} de {items.length}</p>
         <blockquote className="mt-4 text-base leading-relaxed italic whitespace-pre-wrap">“{item.texto}”</blockquote>
         <figcaption className="mt-6 text-sm font-semibold">{item.autor}{item.contexto && <span className="block font-normal text-muted-foreground">{item.contexto}</span>}</figcaption>

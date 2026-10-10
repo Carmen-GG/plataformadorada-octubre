@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { formatCount, type PublicStats } from "@/lib/public-stats";
 
 type MetricKey = "adhesiones" | "entidades" | "mocionesPresentadas" | "mocionesAceptadas" | "testimonios";
@@ -85,10 +85,12 @@ const LEGEND_STEPS = [
 export function TerritoryMap({ stats }: { stats: PublicStats | null }) {
   const [metric, setMetric] = useState<MetricKey>("adhesiones");
   const communities = Object.keys(POINTS);
-  const values = useMemo(
-    () => communities.map((community) => ({ community, value: stats ? valueFor(stats, community, metric) : 0 })),
-    [stats, metric],
-  );
+  // Recalcular directamente en cada render: evita conservar valores vacíos si la respuesta
+  // del CMS llega después del primer render y el mapa no se invalida como se espera.
+  const values = communities.map((community) => ({
+    community,
+    value: stats ? valueFor(stats, community, metric) : 0,
+  }));
   const max = Math.max(...values.map((x) => x.value), 1);
   const metricLabel = METRICS.find((x) => x.key === metric)?.label ?? metric;
   const sorted = [...values].sort((a, b) => b.value - a.value || displayName(a.community).localeCompare(displayName(b.community), "es"));

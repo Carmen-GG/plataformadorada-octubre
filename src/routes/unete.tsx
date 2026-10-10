@@ -3,7 +3,6 @@ import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";
 import { ShareButtons } from "@/components/share-buttons";
-import { AdhesionCount } from "@/lib/adhesions";
 import { listStatus, usePublicStats, LiveCount } from "@/lib/public-stats";
 
 export const Route = createFileRoute("/unete")({
@@ -28,17 +27,21 @@ function Unete() {
         title="Únete a Plataforma Dorada"
         lead="Adherirte es gratuito y no implica militancia en ningún partido. Cuantas más personas seamos, más fuerza tendrá la petición de un Pacto de Estado por la Dependencia y los Cuidados."
         titleAside={
-          <a
-            href={SITE.joinFormUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-block shrink-0 rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground"
-          >
-            Rellenar el formulario de adhesión
-          </a>
+          <div className="w-full max-w-xs rounded-3xl border border-border bg-card px-6 py-4 text-right shadow-sm">
+            <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Adhesiones</p>
+            <p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="adhesiones" /></p>
+          </div>
         }
-      />
-      <section className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6"><div className="ml-auto w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-right shadow-sm"><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Adhesiones</p><p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="adhesiones" /></p></div></section>
+      >
+        <a
+          href={SITE.joinFormUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-block rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground hover:bg-primary/90"
+        >
+          Adherirse
+        </a>
+      </PageHeader>
 
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         <div className="grid gap-6 lg:grid-cols-12">
@@ -66,14 +69,6 @@ function Unete() {
           </Panel>
 
           <div className="space-y-6 lg:col-span-5">
-            <Panel>
-              <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-                Personas adheridas
-              </p>
-              <p className="mt-2 font-display text-4xl font-bold text-primary">
-                <AdhesionCount />
-              </p>
-            </Panel>
             <Panel>
               <h2 className="font-display text-xl font-semibold">Últimas adhesiones públicas</h2>
               {status ? (

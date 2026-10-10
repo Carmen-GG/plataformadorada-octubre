@@ -27,21 +27,22 @@ function Unete() {
         title="Únete a Plataforma Dorada"
         lead="Adherirte es gratuito y no implica militancia en ningún partido. Cuantas más personas seamos, más fuerza tendrá la petición de un Pacto de Estado por la Dependencia y los Cuidados."
         titleAside={
-          <div className="w-full max-w-xs rounded-3xl border border-border bg-card px-6 py-4 text-right shadow-sm">
-            <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Adhesiones</p>
-            <p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="adhesiones" /></p>
+          <div className="flex w-full max-w-xs flex-col items-end gap-4">
+            <div className="w-full rounded-3xl border border-border bg-card px-6 py-4 text-right shadow-sm">
+              <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Adhesiones</p>
+              <p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="adhesiones" /></p>
+            </div>
+            <a
+              href={SITE.joinFormUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground hover:bg-primary/90"
+            >
+              Adherirse
+            </a>
           </div>
         }
-      >
-        <a
-          href={SITE.joinFormUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-block rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground hover:bg-primary/90"
-        >
-          Adherirse
-        </a>
-      </PageHeader>
+      />
 
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         <div className="grid gap-6 lg:grid-cols-12">

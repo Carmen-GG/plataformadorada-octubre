@@ -5,6 +5,8 @@ const DEFAULT_CMS_URL =
 const CMS_URL = import.meta.env.VITE_ADHESION_COUNT_URL?.trim() || DEFAULT_CMS_URL;
 const MUNICIPAL_URL =
   "https://mapas.fomento.gob.es/arcgis/rest/services/SIU/ENTIDADES_TERRITORIALES_EGRN/MapServer/4/query";
+const COMMUNITIES_URL =
+  "https://mapas.fomento.gob.es/arcgis/rest/services/SIU/ENTIDADES_TERRITORIALES_EGRN/MapServer/1/query";
 
 const cache = new Map<number, { at: number; data: unknown }>();
 const CACHE_MS = 5 * 60 * 1000;
@@ -96,8 +98,6 @@ export const Route = createFileRoute("/api/mociones-municipios")({
             }
             return {
               type: "Feature",
-              // Preserve the municipal Polygon/MultiPolygon geometry so the map can fill
-              // each municipality according to the recorded motion status.
               geometry: feature.geometry || null,
               properties: {
                 NAMEUNIT: name,
@@ -109,6 +109,26 @@ export const Route = createFileRoute("/api/mociones-municipios")({
             };
           });
 
+          let communities: any[] = [];
+          if (offset === 0) {
+            stage = "descarga de los límites de comunidades autónomas";
+            const communityParams = new URLSearchParams({
+              where: "1=1",
+              outFields: "NAMEUNIT,NATCODE",
+              returnGeometry: "true",
+              outSR: "4326",
+              f: "geojson",
+              resultRecordCount: "100",
+              geometryPrecision: "3",
+            });
+            const communityResponse = await fetch(COMMUNITIES_URL + "?" + communityParams.toString(), { cache: "no-store" });
+            if (!communityResponse.ok) throw new Error("Límites autonómicos HTTP " + communityResponse.status);
+            const communityPage = await communityResponse.json();
+            if (communityPage?.error) throw new Error("ArcGIS (límites autonómicos): " + String(communityPage.error.message || communityPage.error));
+            if (!Array.isArray(communityPage.features)) throw new Error("No se han podido obtener los límites de las comunidades autónomas.");
+            communities = communityPage.features;
+          }
+
           const out = {
             ok: true,
             offset,
@@ -116,6 +136,7 @@ export const Route = createFileRoute("/api/mociones-municipios")({
             hasMore: page.features.length === PAGE_SIZE,
             total: Number(cms.contadores?.mocionesPresentadas || motions.length || 0),
             features,
+            communities,
           };
           cache.set(offset, { at: Date.now(), data: out });
           return Response.json(out, { headers: { "Cache-Control": "public, max-age=300" } });

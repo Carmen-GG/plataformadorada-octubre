@@ -113,7 +113,7 @@ export function MunicipalMotionsMap() {
               if (!path) return null;
               const active = Boolean(status && (statusFilter === "todas" || statusFilter === status));
               const count = getCount(feature);
-              return <path key={`${getName(feature)}-${i}`} d={path} fill={active && status ? STATUS[status].fill : "#ffffff"} fillOpacity={active ? 1 : 1} stroke="#fffaf0" strokeWidth="0.5" vectorEffect="non-scaling-stroke" onClick={() => status && setSelected(feature)} onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && status) { e.preventDefault(); setSelected(feature); } }} tabIndex={status ? 0 : -1} aria-label={status ? `${getName(feature)}: ${STATUS[status].label}${count > 1 ? `, ${count} mociones` : ""}` : `${getName(feature)}: sin moción registrada`} />;
+              return <path key={`${getName(feature)}-${i}`} d={path} fill={active && status ? STATUS[status].fill : "#ffffff"} fillOpacity={1} stroke="#fffaf0" strokeWidth="0.5" vectorEffect="non-scaling-stroke" className="cursor-pointer focus:outline-none focus:stroke-primary" onClick={() => setSelected(feature)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(feature); } }} tabIndex={0} aria-label={`${getName(feature)}: ${status ? STATUS[status].label : "sin moción registrada"}${count > 1 ? `, ${count} mociones` : ""}`} />;
             })}
           </svg>
         </div>
@@ -123,13 +123,13 @@ export function MunicipalMotionsMap() {
           <span className="inline-flex items-center gap-2"><span className="size-4 rounded-sm border border-border bg-white" aria-hidden="true" />Moción no presentada</span>
         </div>
       </div>
-      {selected && getStatus(selected) && (
+      {selected && (
         <div className="rounded-2xl border border-border bg-card p-5" role="status">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Ayuntamiento</p>
               <h3 className="mt-1 font-display text-2xl font-semibold">{getName(selected)}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{STATUS[getStatus(selected)!].label} · {formatCount(getCount(selected))} {getCount(selected) === 1 ? "moción" : "mociones"}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{selected.properties?.motionProvince ? `${String(selected.properties.motionProvince)} · ` : ""}{getStatus(selected) ? STATUS[getStatus(selected)!].label : "Sin moción registrada"}{getStatus(selected) ? ` · ${formatCount(getCount(selected))} ${getCount(selected) === 1 ? "moción" : "mociones"}` : ""}</p>
             </div>
             <button type="button" className="rounded-full glass-soft px-4 py-2 text-sm font-semibold text-primary" onClick={() => setSelected(null)}>Cerrar</button>
           </div>

@@ -49,14 +49,14 @@ export const Route = createFileRoute("/api/mociones-municipios")({
           stage = "descarga de la cartografía municipal (bloque " + offset + ")";
           const params = new URLSearchParams({
             where: "1=1",
-            outFields: "*",
+            outFields: "NAMEUNIT,CODIGOINE",
             returnGeometry: "true",
+            returnCentroid: "true",
             outSR: "4326",
             f: "geojson",
             resultRecordCount: String(PAGE_SIZE),
             resultOffset: String(offset),
-            geometryPrecision: "2",
-            maxAllowableOffset: "0.02",
+            geometryPrecision: "3",
             orderByFields: "OBJECTID",
           });
           const response = await fetch(MUNICIPAL_URL + "?" + params.toString(), { cache: "no-store" });

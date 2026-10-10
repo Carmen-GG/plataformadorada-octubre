@@ -119,11 +119,11 @@ export function MunicipalMotionsMap() {
           const status = featureStatus(feature);
           const visible = statusFilter === "todas" || status === statusFilter;
           return L.circleMarker(latlng, {
-            radius: status ? 4 : 2.5,
-            color: status ? STATUS[status].color : "#7b8790",
+            radius: status === "no presentada" ? 2.5 : 4,
+            color: status === "no presentada" ? "#7b8790" : STATUS[status].color,
             weight: 1,
-            fillColor: status ? STATUS[status].color : NO_STATUS,
-            fillOpacity: visible && status ? 0.9 : 0.45,
+            fillColor: STATUS[status].color,
+            fillOpacity: visible ? 0.9 : 0.12,
           });
         },
         style: (feature: Feature) => {
@@ -195,12 +195,12 @@ export function MunicipalMotionsMap() {
               {(Object.keys(STATUS) as MotionStatus[]).map((key) => <button type="button" key={key} onClick={() => setStatusFilter(statusFilter === key ? "todas" : key)} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === key ? "font-bold" : ""}`} aria-pressed={statusFilter === key}><span className="size-3.5 shrink-0 rounded-full" style={{ backgroundColor: STATUS[key].color }} />{STATUS[key].label}</button>)}
               <button type="button" onClick={() => setStatusFilter("todas")} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === "todas" ? "font-bold" : ""}`} aria-pressed={statusFilter === "todas"}><span className="size-3.5 shrink-0 rounded-full border border-gray-400 bg-white" />No presentada</button>
             </div>
-            <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600">{data ? `${formatCount(data.features.filter((f) => featureStatus(f as Feature)).length)} municipios con estado registrado` : "Cargando municipios…"}</div>
+            <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600">{data ? `${formatCount(data.features.filter((f) => featureStatus(f as Feature)).length)} municipios con estado asignado` : "Cargando municipios…"}</div>
             <p className="mt-2 text-[10px] text-gray-500">Cartografía base: OpenStreetMap</p>
           </aside>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">El color indica el estado registrado de la moción. Los municipios sin registro aparecen en blanco. Cartografía base: OpenStreetMap.</p>
+      <p className="text-xs text-muted-foreground">El color indica el estado registrado de la moción. Todos los municipios tienen un estado; los que no tienen moción registrada aparecen en blanco. Cartografía base: OpenStreetMap.</p>
     </div>
   );
 }

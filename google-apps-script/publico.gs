@@ -20,7 +20,7 @@ var PD = {
   // contenga «¿Cómo quieres adherirte…?». Con varias pestañas parecidas conviene fijarla.
   ADHESIONES_SHEET_NAME: "Firmantes",
   // ID de las otras dos hojas (lo que hay entre /d/ y /edit en la URL de la hoja).
-  VOLUNTARIOS_SPREADSHEET_ID: "PEGAR_AQUI_EL_ID_DE_LA_HOJA_DE_VOLUNTARIOS",
+  VOLUNTARIOS_SPREADSHEET_ID: "1fB7XESa1pxdmJYduwqibFV4mK2yWTe0JhAmPoZRuMek",
   TESTIMONIOS_SPREADSHEET_ID: "1dg5REsWA6xb0jVcEH5VSkpOI94ih9rbkqWLSYHf4pbU",
   // Registro de mociones presentado por el equipo.
   MOCIONES_SPREADSHEET_ID: "15HvL9Mu5r9iSGq4sJ2vYTlrkDY3SubfEOxYCmGL10Kg",

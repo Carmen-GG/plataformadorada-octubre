@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { formatCount } from "@/lib/public-stats";
 
 type MotionStatus = "presentada" | "aprobada" | "rechazada";
@@ -7,134 +7,171 @@ type Feature = {
   properties?: Record<string, unknown>;
   geometry?: { type: string; coordinates: any };
 };
-type MotionMapData = {
-  ok: boolean;
-  total: number;
-  features: Feature[];
-  error?: string;
+type MotionMapData = { ok: boolean; total: number; features: Feature[]; error?: string };
+
+const STATUS: Record<MotionStatus, { label: string; color: string }> = {
+  presentada: { label: "Presentada", color: "#2586d8" },
+  aprobada: { label: "Aprobada", color: "#39a34a" },
+  rechazada: { label: "Rechazada", color: "#e53935" },
 };
+const NO_STATUS = "#ffffff";
 
-const STATUS = {
-  presentada: { label: "Moción presentada", fill: "#B8792A", text: "#fff" },
-  aprobada: { label: "Moción aprobada", fill: "#6D7F35", text: "#fff" },
-  rechazada: { label: "Moción rechazada", fill: "#8A4F2A", text: "#fff" },
-} as const;
-
-function project(lon: number, lat: number, box: { minX: number; maxX: number; minY: number; maxY: number }) {
-  const width = 1100;
-  const height = 620;
-  const pad = 26;
-  const scale = Math.min((width - pad * 2) / (box.maxX - box.minX), (height - pad * 2) / (box.maxY - box.minY));
-  return [pad + (lon - box.minX) * scale, height - pad - (lat - box.minY) * scale] as const;
+declare global {
+  interface Window { L?: any }
 }
 
-function coordinatesToPath(coords: any, box: { minX: number; maxX: number; minY: number; maxY: number }) {
-  if (!Array.isArray(coords)) return "";
-  if (typeof coords[0] === "number") {
-    const [x, y] = project(Number(coords[0]), Number(coords[1]), box);
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }
-  return coords.map((part: any) => {
-    if (Array.isArray(part) && part.length && typeof part[0]?.[0] === "number") {
-      const points = part.map((p: any) => coordinatesToPath(p, box)).join(" ");
-      return points ? `M ${points.replace(/ /g, " L ")} Z` : "";
+function loadLeaflet(): Promise<any> {
+  if (window.L) return Promise.resolve(window.L);
+  return new Promise((resolve, reject) => {
+    const cssId = "pd-leaflet-css";
+    if (!document.getElementById(cssId)) {
+      const link = document.createElement("link");
+      link.id = cssId;
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(link);
     }
-    return coordinatesToPath(part, box);
-  }).join(" ");
+    const existing = document.getElementById("pd-leaflet-js") as HTMLScriptElement | null;
+    const finish = () => window.L ? resolve(window.L) : reject(new Error("No se ha podido cargar la librería cartográfica."));
+    if (existing) {
+      existing.addEventListener("load", finish, { once: true });
+      existing.addEventListener("error", () => reject(new Error("Error al cargar Leaflet.")), { once: true });
+      if (window.L) resolve(window.L);
+      return;
+    }
+    const script = document.createElement("script");
+    script.id = "pd-leaflet-js";
+    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    script.onload = finish;
+    script.onerror = () => reject(new Error("Error al cargar Leaflet."));
+    document.body.appendChild(script);
+  });
 }
 
-function geometryPath(feature: Feature, box: { minX: number; maxX: number; minY: number; maxY: number }) {
-  const g = feature.geometry;
-  if (!g) return "";
-  if (g.type === "Polygon") return coordinatesToPath(g.coordinates, box);
-  if (g.type === "MultiPolygon") return (g.coordinates || []).map((p: any) => coordinatesToPath(p, box)).join(" ");
-  return "";
+function normalizeStatus(value: unknown): MotionStatus | null {
+  const status = String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  if (status.startsWith("aprob") || status.startsWith("acept")) return "aprobada";
+  if (status.startsWith("rechaz") || status.startsWith("deneg") || status.startsWith("no aprob")) return "rechazada";
+  if (status.startsWith("present")) return "presentada";
+  return null;
 }
 
-function getName(feature: Feature) {
+function featureName(feature: Feature) {
   const p = feature.properties || {};
   return String(p.NAMEUNIT ?? p.name ?? p.NOMBRE ?? p.municipio ?? "Municipio");
 }
 
-function getStatus(feature: Feature): MotionStatus | null {
-  const p = feature.properties || {};
-  const s = String(p.motionStatus ?? "").toLowerCase();
-  return s === "aprobada" || s === "rechazada" || s === "presentada" ? s : null;
-}
-
-function getCount(feature: Feature) {
-  return Number(feature.properties?.motionCount ?? 0);
+function featureStatus(feature: Feature): MotionStatus | null {
+  return normalizeStatus(feature.properties?.motionStatus);
 }
 
 export function MunicipalMotionsMap() {
+  const mapElement = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<any>(null);
+  const layerRef = useRef<any>(null);
   const [data, setData] = useState<MotionMapData | null>(null);
-  const [selected, setSelected] = useState<Feature | null>(null);
   const [statusFilter, setStatusFilter] = useState<MotionStatus | "todas">("todas");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
     fetch("/api/mociones-municipios", { cache: "no-store" })
-      .then((r) => r.json())
+      .then((response) => { if (!response.ok) throw new Error("No se han podido obtener los datos del mapa."); return response.json(); })
       .then((json) => { if (active) setData(json); })
-      .catch(() => { if (active) setData({ ok: false, total: 0, features: [], error: "No se ha podido cargar el mapa." }); });
+      .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa."); });
     return () => { active = false; };
   }, []);
 
-  const features = useMemo(() => data?.features ?? [], [data]);
-  const box = useMemo(() => {
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    const visit = (c: any) => {
-      if (Array.isArray(c) && typeof c[0] === "number") { minX = Math.min(minX, c[0]); maxX = Math.max(maxX, c[0]); minY = Math.min(minY, c[1]); maxY = Math.max(maxY, c[1]); return; }
-      if (Array.isArray(c)) c.forEach(visit);
-    };
-    features.forEach((f) => visit(f.geometry?.coordinates));
-    if (!Number.isFinite(minX)) return { minX: -10, maxX: 4.5, minY: 27, maxY: 44.5 };
-    return { minX, maxX, minY, maxY };
-  }, [features]);
+  useEffect(() => {
+    if (!mapElement.current || !data?.ok || !data.features.length) return;
+    let active = true;
+    let map: any;
+    loadLeaflet().then((L) => {
+      if (!active || !mapElement.current) return;
+      map = L.map(mapElement.current, { zoomControl: true, scrollWheelZoom: true, preferCanvas: true });
+      mapRef.current = map;
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
 
-  const visible = useMemo(() => features.filter((f) => statusFilter === "todas" || getStatus(f) === statusFilter), [features, statusFilter]);
+      const geoJson = { type: "FeatureCollection", features: data.features };
+      const layer = L.geoJSON(geoJson, {
+        style: (feature: Feature) => {
+          const status = featureStatus(feature);
+          const visible = statusFilter === "todas" || status === statusFilter;
+          return {
+            color: "#ffffff",
+            weight: 0.6,
+            opacity: 0.95,
+            fillColor: status ? STATUS[status].color : NO_STATUS,
+            fillOpacity: visible && status ? 0.78 : 0.18,
+          };
+        },
+        onEachFeature: (feature: Feature, leafletLayer: any) => {
+          const status = featureStatus(feature);
+          const statusLabel = status ? STATUS[status].label : "No presentada";
+          const province = String(feature.properties?.motionProvince ?? "");
+          const count = Number(feature.properties?.motionCount ?? 0);
+          const detail = status
+            ? `<div style="font-size:12px;color:#666;margin-top:8px">Estado de la moción</div><div style="font-size:16px;margin-top:4px">${statusLabel}</div>${province ? `<div style="font-size:12px;color:#666;margin-top:8px">${province}</div>` : ""}${count > 1 ? `<div style="font-size:12px;margin-top:6px">${formatCount(count)} mociones</div>` : ""}`
+            : '<div style="font-size:12px;color:#666;margin-top:8px">Estado de la moción</div><div style="font-size:16px;margin-top:4px">No presentada</div><div style="font-size:12px;color:#666;margin-top:6px">No consta ninguna moción registrada.</div>';
+          const safeName = featureName(feature).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] || char);
+          leafletLayer.bindPopup(`<div style="min-width:180px"><strong style="font-size:18px">${safeName}</strong>${detail}</div>`);
+          leafletLayer.on("mouseover", () => leafletLayer.setStyle({ weight: 2, color: "#333" }));
+          leafletLayer.on("mouseout", () => layer.resetStyle(leafletLayer));
+        },
+      }).addTo(map);
+      layerRef.current = layer;
+      const bounds = layer.getBounds();
+      if (bounds.isValid()) map.fitBounds(bounds, { padding: [12, 12] });
+    }).catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa interactivo."); });
+
+    return () => {
+      active = false;
+      if (map) map.remove();
+      mapRef.current = null;
+      layerRef.current = null;
+    };
+  }, [data]);
+
+  useEffect(() => {
+    const L = window.L;
+    const map = mapRef.current;
+    const layer = layerRef.current;
+    if (!L || !map || !layer) return;
+    layer.eachLayer((item: any) => {
+      const status = featureStatus(item.feature as Feature);
+      const visible = statusFilter === "todas" || status === statusFilter;
+      item.setStyle({
+        color: "#ffffff",
+        weight: 0.6,
+        fillColor: status ? STATUS[status].color : NO_STATUS,
+        fillOpacity: visible && status ? 0.78 : 0.18,
+      });
+    });
+  }, [statusFilter]);
 
   return (
     <div className="space-y-4">
-      {!data && <p className="text-sm text-muted-foreground" role="status">Cargando mapa…</p>}
+      {!data && !error && <p className="text-sm text-muted-foreground" role="status">Cargando mapa municipal…</p>}
+      {error && <p className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm" role="alert">{error}</p>}
       {data && !data.ok && <p className="text-sm text-muted-foreground" role="status">{data.error || "No se ha podido cargar el mapa."}</p>}
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar mociones">
-        <button type="button" onClick={() => setStatusFilter("todas")} className={`rounded-full px-4 py-2 text-sm font-semibold ${statusFilter === "todas" ? "bg-primary text-primary-foreground" : "glass-soft text-primary"}`}>Todas</button>
-        {(Object.keys(STATUS) as MotionStatus[]).map((key) => <button key={key} type="button" onClick={() => setStatusFilter(key)} className={`rounded-full px-4 py-2 text-sm font-semibold ${statusFilter === key ? "text-white" : "glass-soft text-primary"}`} style={statusFilter === key ? { backgroundColor: STATUS[key].fill } : undefined}>{STATUS[key].label}</button>)}
-      </div>
       <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
-        <div className="overflow-x-auto">
-          <svg viewBox="0 0 1100 620" role="img" aria-label="Mapa de mociones presentadas en ayuntamientos de España" className="block min-w-[760px] w-full h-auto bg-[#f4ead8]">
-            <title>Mapa de mociones en ayuntamientos</title>
-            <desc>Los municipios con una moción registrada se colorean según su situación: presentada, aprobada o rechazada. Los demás municipios quedan sin color.</desc>
-            {features.map((feature, i) => {
-              const status = getStatus(feature);
-              const path = geometryPath(feature, box);
-              if (!path) return null;
-              const active = Boolean(status && (statusFilter === "todas" || statusFilter === status));
-              const count = getCount(feature);
-              return <path key={`${getName(feature)}-${i}`} d={path} fill={active && status ? STATUS[status].fill : "#ffffff"} fillOpacity={1} stroke="#fffaf0" strokeWidth="0.5" vectorEffect="non-scaling-stroke" className="cursor-pointer focus:outline-none focus:stroke-primary" onClick={() => setSelected(feature)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(feature); } }} tabIndex={0} aria-label={`${getName(feature)}: ${status ? STATUS[status].label : "sin moción registrada"}${count > 1 ? `, ${count} mociones` : ""}`} />;
-            })}
-          </svg>
-        </div>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border bg-card px-5 py-4 text-sm">
-          <strong>Leyenda</strong>
-          {(Object.keys(STATUS) as MotionStatus[]).map((key) => <span key={key} className="inline-flex items-center gap-2"><span className="size-4 rounded-sm" style={{ backgroundColor: STATUS[key].fill }} aria-hidden="true" />{STATUS[key].label}</span>)}
-          <span className="inline-flex items-center gap-2"><span className="size-4 rounded-sm border border-border bg-white" aria-hidden="true" />Moción no presentada</span>
+        <div className="relative">
+          <div ref={mapElement} className="h-[68vh] min-h-[480px] w-full bg-[#e7edf0]" role="application" aria-label="Mapa interactivo de mociones por municipio" />
+          <aside className="absolute right-3 top-3 z-[500] max-h-[calc(100%-24px)] w-56 overflow-y-auto rounded-xl border border-black/10 bg-white/95 p-4 shadow-lg sm:right-5 sm:top-5" aria-label="Leyenda del mapa">
+            <h3 className="mb-3 font-semibold text-gray-900">Estado de las mociones</h3>
+            <div className="space-y-3 text-sm text-gray-800">
+              {(Object.keys(STATUS) as MotionStatus[]).map((key) => <button type="button" key={key} onClick={() => setStatusFilter(statusFilter === key ? "todas" : key)} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === key ? "font-bold" : ""}`} aria-pressed={statusFilter === key}><span className="size-3.5 shrink-0 rounded-full" style={{ backgroundColor: STATUS[key].color }} />{STATUS[key].label}</button>)}
+              <button type="button" onClick={() => setStatusFilter("todas")} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === "todas" ? "font-bold" : ""}`} aria-pressed={statusFilter === "todas"}><span className="size-3.5 shrink-0 rounded-full border border-gray-400 bg-white" />No presentada</button>
+            </div>
+            <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600">{data ? `${formatCount(data.features.filter((f) => featureStatus(f as Feature)).length)} municipios con estado registrado` : "Cargando municipios…"}</div>
+            <p className="mt-2 text-[10px] text-gray-500">Cartografía base: OpenStreetMap</p>
+          </aside>
         </div>
       </div>
-      {selected && (
-        <div className="rounded-2xl border border-border bg-card p-5" role="status">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Ayuntamiento</p>
-              <h3 className="mt-1 font-display text-2xl font-semibold">{getName(selected)}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{selected.properties?.motionProvince ? `${String(selected.properties.motionProvince)} · ` : ""}{getStatus(selected) ? STATUS[getStatus(selected)!].label : "Sin moción registrada"}{getStatus(selected) ? ` · ${formatCount(getCount(selected))} ${getCount(selected) === 1 ? "moción" : "mociones"}` : ""}</p>
-            </div>
-            <button type="button" className="rounded-full glass-soft px-4 py-2 text-sm font-semibold text-primary" onClick={() => setSelected(null)}>Cerrar</button>
-          </div>
-        </div>
-      )}
+      <p className="text-xs text-muted-foreground">El color indica el estado registrado de la moción. Los municipios sin registro aparecen en blanco. Cartografía base: OpenStreetMap.</p>
     </div>
   );
 }

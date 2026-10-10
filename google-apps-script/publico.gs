@@ -415,7 +415,7 @@ function pdVoluntarios_() {
   if (!t) throw new Error("No encuentro la hoja de voluntarios.");
   var h = t.headers;
   var iCode = pdIdx_(h, pdHas_("codigo etico"));
-  var iCcaa = pdIdx_(h, pdEq_("autonomia"));
+  var iCcaa = pdIdx_(h, function(x) { return x === "autonomia" || x === "comunidad autonoma" || x === "comunitat autonoma"; });
   var iCity = pdIdx_(h, pdHas_("ciudad en la que vives"));
   var iName = pdIdx_(h, pdEq_("nombre y apellidos"));
   var iConsent = pdIdx_(h, pdHas_(PD.CONSENT_HEADER_TEXT), true);

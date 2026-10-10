@@ -115,6 +115,17 @@ export function MunicipalMotionsMap() {
 
       const geoJson = { type: "FeatureCollection", features: data.features };
       const layer = L.geoJSON(geoJson, {
+        pointToLayer: (feature: Feature, latlng: any) => {
+          const status = featureStatus(feature);
+          const visible = statusFilter === "todas" || status === statusFilter;
+          return L.circleMarker(latlng, {
+            radius: status ? 4 : 2.5,
+            color: status ? STATUS[status].color : "#7b8790",
+            weight: 1,
+            fillColor: status ? STATUS[status].color : NO_STATUS,
+            fillOpacity: visible && status ? 0.9 : 0.45,
+          });
+        },
         style: (feature: Feature) => {
           const status = featureStatus(feature);
           const visible = statusFilter === "todas" || status === statusFilter;

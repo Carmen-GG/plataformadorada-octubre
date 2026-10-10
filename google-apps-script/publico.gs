@@ -34,7 +34,7 @@ var PD = {
   // en la web. Si cambias el texto de la pregunta en el formulario, mantén esta frase o cámbiala aquí.
   CONSENT_HEADER_TEXT: "aparezcan publicamente",
 
-  LIST_ADHESIONES: 8,
+  LIST_ADHESIONES: 10,
   LIST_VOLUNTARIOS: 6,
   LIST_TESTIMONIOS: 12,
   // Máximo de entidades que se publican en la página «Entidades adheridas».

@@ -92,31 +92,35 @@ type AppsScriptContentResponse = {
 };
 
 function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
-  const declared = String(item.tipo ?? item.type ?? "").trim().toLowerCase()
-    .normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
-  // Acepta valores de listas desplegables y variantes como "Audio / podcast".
-  if (/video|youtube|facebook/.test(declared)) return "video";
-  if (/audio|podcast|ivoox/.test(declared)) return "audio";
+  const declared = String(item.tipo ?? item.type ?? "").trim().toLowerCase();
+  if (declared.includes("video") || declared.includes("vídeo") || declared.includes("youtube") || declared.includes("facebook")) return "video";
 
-  const multimedia = String(item.urlMultimedia ?? item.mediaUrl ?? "").trim();
-  const candidates = [multimedia, String(item.url ?? "").trim()].filter(Boolean);
-  for (const candidate of candidates) {
-    try {
-      const u = new URL(candidate);
-      const host = u.hostname.toLowerCase();
-      const path = u.pathname.toLowerCase();
-      if (host === "youtu.be" || host === "youtube.com" || host.endsWith(".youtube.com") || host === "vimeo.com" || host.endsWith(".vimeo.com")) return "video";
-      if (host === "open.spotify.com" || host === "soundcloud.com" || host === "www.soundcloud.com" ||
-          host === "ivoox.com" || host.endsWith(".ivoox.com") ||
-          host.endsWith("ondacero.es") || host.endsWith("rtve.es") || host.endsWith("cope.es") ||
-          host.endsWith("rac1.cat") || host.endsWith("cadenaser.com") ||
-          /\\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(path) ||
-          path.includes("/play/audio") || path.includes("/play/audios") || path.includes("/podcast/") || path.includes("/audio/")) return "audio";
-    } catch {
-      // Un enlace incompleto no se considera un reproductor.
-    }
-    if (/\\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(candidate) || /ivoox\\.com/i.test(candidate)) return "audio";
-  }
+  // La columna tipo de NoticiasWeb es la fuente principal, pero si llega vacía
+  // o con un valor inesperado, reconocemos también el servicio por sus enlaces.
+  const candidates = [
+    item.urlMultimedia, item.mediaUrl, item.url,
+    item.resumen, item.summary
+  ].map((value) => String(value ?? "").trim().toLowerCase()).filter(Boolean);
+
+  if (declared.includes("audio") || declared.includes("podcast") || declared.includes("pódcast") || declared.includes("ivoox")) return "audio";
+  if (candidates.some((value) =>
+    value.includes("ivoox.com") ||
+    value.includes("open.spotify.com") ||
+    value.includes("soundcloud.com") ||
+    value.includes("ondacero.es") ||
+    value.includes("rtve.es") ||
+    value.includes("cope.es") ||
+    value.includes("rac1.cat") ||
+    value.includes("cadenaser.com") ||
+    /\\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/.test(value) ||
+    value.includes("/play/audio") ||
+    value.includes("/podcast/") ||
+    value.includes("/audio/")
+  )) return "audio";
+
+  if (candidates.some((value) =>
+    value.includes("youtube.com") || value.includes("youtu.be") || value.includes("vimeo.com")
+  )) return "video";
 
   return "texto";
 }

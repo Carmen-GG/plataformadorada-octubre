@@ -12,16 +12,22 @@ const cache = new Map<number, { at: number; data: unknown }>();
 const CACHE_MS = 5 * 60 * 1000;
 const PAGE_SIZE = 1000;
 let cachedCms: { at: number; data: any } | null = null;
+let cmsRequest: Promise<any> | null = null;
 
 async function getCmsData() {
   if (cachedCms && Date.now() - cachedCms.at < CACHE_MS) return cachedCms.data;
-  const response = await fetch(CMS_URL + "?action=public", { cache: "no-store" });
-  if (!response.ok) throw new Error("El servicio de mociones ha respondido HTTP " + response.status);
-  const cms = await response.json();
-  if (!cms || typeof cms !== "object") throw new Error("El servicio de mociones no ha devuelto un JSON válido.");
-  if (cms.ok === false) throw new Error(String(cms.error || "El servicio de mociones ha indicado un error."));
-  cachedCms = { at: Date.now(), data: cms };
-  return cms;
+  if (!cmsRequest) {
+    cmsRequest = (async () => {
+      const response = await fetch(CMS_URL + "?action=public", { cache: "no-store" });
+      if (!response.ok) throw new Error("El servicio de mociones ha respondido HTTP " + response.status);
+      const cms = await response.json();
+      if (!cms || typeof cms !== "object") throw new Error("El servicio de mociones no ha devuelto un JSON válido.");
+      if (cms.ok === false) throw new Error(String(cms.error || "El servicio de mociones ha indicado un error."));
+      cachedCms = { at: Date.now(), data: cms };
+      return cms;
+    })().finally(() => { cmsRequest = null; });
+  }
+  return cmsRequest;
 }
 
 function norm(v: unknown) {

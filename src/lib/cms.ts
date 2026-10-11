@@ -120,16 +120,13 @@ function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
 }
 
 function normalizeNewsFields(item: AppsScriptNews) {
-  const rawTitle = String(item.titulo ?? item.title ?? "").trim();
-  const rawMedia = String(item.medio ?? item.media ?? "").trim();
-  // Compatibilidad defensiva si el endpoint antiguo devuelve los dos campos
-  // intercambiados: los medios suelen ser nombres cortos de emisoras/periódicos,
-  // mientras que los titulares suelen ser frases más largas.
-  const knownOutlet = /^(onda cero|la vanguardia|el país|el pais|tele 5|telecinco|radio 4|catalunya ràdio|catalunya radio|agencia efe|efe|elpais)$/i;
-  if (knownOutlet.test(rawTitle) && rawMedia.length > rawTitle.length + 12) {
-    return { title: rawMedia, media: rawTitle };
-  }
-  return { title: rawTitle, media: rawMedia };
+  // En la respuesta pública activa del Apps Script, titulo y medio llegan
+  // intercambiados respecto a las columnas de NoticiasWeb. La hoja guarda
+  // el titular en "titulo" y la emisora/periódico en "medio", pero el endpoint
+  // devuelve el nombre del medio en titulo. Normalizamos aquí la respuesta.
+  const headline = String(item.medio ?? item.media ?? "").trim();
+  const outlet = String(item.titulo ?? item.title ?? "").trim();
+  return { title: headline, media: outlet };
 }
 
 let data: CmsPayload | null = null;

@@ -109,10 +109,14 @@ export const Route = createFileRoute("/api/cms")({
             return Response.json({ error: "Indica la frase o cita" }, { status: 400 });
           }
           const response = await fetchCmsPost(CMS_URL, payload);
-          if (response && typeof response === "object" && "ok" in response && response.ok === false) {
-            const message = "error" in response ? String(response.error) : "Google Apps Script no ha guardado el lema.";
-            return Response.json({ error: message }, { status: 502, headers: { "Cache-Control": "no-store" } });
+          if (response && typeof response === "object" && "ok" in response && response.ok !== true) {
+            const message = "error" in response ? String(response.error) : "Google Apps Script no ha confirmado el guardado.";
+            return Response.json({ ok: false, error: message }, { status: 502, headers: { "Cache-Control": "no-store" } });
           }
+
+          // El siguiente GET debe leer de nuevo Google Sheets para que el lema
+          // recién guardado pueda aparecer en el carrusel sin esperar la caché.
+          cache.delete("content");
           return Response.json(response, { headers: { "Cache-Control": "no-store" } });
         } catch (error) {
           console.error("Error enviando propuesta:", error);

@@ -160,7 +160,10 @@ function Page() {
   const pageCount = Math.max(1, Math.ceil(news.length / NEWS_PER_PAGE));
   const visibleNews = news.slice((newsPage - 1) * NEWS_PER_PAGE, newsPage * NEWS_PER_PAGE);
   const [selectedNewsKey, setSelectedNewsKey] = useState<string>("");
-  const selectedNews = visibleNews.find((item, index) => newsKey(item, news.indexOf(item)) === selectedNewsKey) ?? visibleNews[0] ?? null;
+  // El reproductor permanece vacío hasta que la persona elija una noticia.
+  const selectedNews = selectedNewsKey
+    ? visibleNews.find((item) => newsKey(item, news.indexOf(item)) === selectedNewsKey) ?? null
+    : null;
 
   useEffect(() => {
     if (newsPage > pageCount) setNewsPage(pageCount);

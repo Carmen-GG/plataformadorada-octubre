@@ -193,8 +193,8 @@ function Home() {
         aria-labelledby="situacion-actual"
         className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6"
       >
-        <div className="grid items-start gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-7">
+        <div className="grid items-start gap-8 lg:grid-cols-[7fr_3fr]">
+          <div>
             <h2
               id="situacion-actual"
               className="font-display text-3xl font-semibold"
@@ -236,7 +236,7 @@ function Home() {
             </div>
           </div>
 
-          <div className="lg:col-span-5">
+          <div>
             <Panel as="section">
               <h2 className="font-display text-2xl font-semibold">
                 Último vídeo de Instagram

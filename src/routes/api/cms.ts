@@ -52,7 +52,7 @@ export const Route = createFileRoute("/api/cms")({
       POST: async ({ request }) => {
         try {
           const body = (await request.json()) as Record<string, unknown>;
-          const type = body.type === "cancion" ? "cancion" : body.type === "frase" ? "frase" : "";
+          const type = body.type === "cancion" ? "cancion" : body.type === "frase" ? "frase" : body.type === "lema" ? "lema" : "";
           if (!type) return Response.json({ error: "Tipo de propuesta no válido" }, { status: 400 });
           const payload = {
             action: "proposal",
@@ -65,7 +65,7 @@ export const Route = createFileRoute("/api/cms")({
           if (type === "cancion" && (!payload.title || !payload.artist)) {
             return Response.json({ error: "Indica canción y artista" }, { status: 400 });
           }
-          if (type === "frase" && !payload.text) {
+          if ((type === "frase" || type === "lema") && !payload.text) {
             return Response.json({ error: "Indica la frase o cita" }, { status: 400 });
           }
           const response = await fetchCmsPost(CMS_URL, payload);

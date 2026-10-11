@@ -80,20 +80,34 @@ export function MunicipalMotionsMap() {
       try {
         const allFeatures: Feature[] = [];
         let communities: Feature[] = [];
-        let offset = 0;
         let total = 0;
-        const pageSize = 300;
-        while (true) {
-          const response = await fetch(`/api/mociones-municipios?offset=${offset}`, { cache: "no-store" });
+        const pageSize = 1000;
+
+        const fetchPage = async (offset: number) => {
+          const response = await fetch(`/api/mociones-municipios?offset=${offset}`, { cache: "default" });
           const json = await response.json().catch(() => null);
           if (!response.ok || !json?.ok) {
             throw new Error(String(json?.error || `No se han podido obtener los datos del mapa (HTTP ${response.status}).`));
           }
-          allFeatures.push(...(Array.isArray(json.features) ? json.features : []));
-          if (offset === 0) communities = Array.isArray(json.communities) ? json.communities : [];
-          total = Number(json.total || total);
-          if (!json.hasMore || !json.features?.length) break;
-          offset += pageSize;
+          return json;
+        };
+
+        const first = await fetchPage(0);
+        allFeatures.push(...(Array.isArray(first.features) ? first.features : []));
+        communities = Array.isArray(first.communities) ? first.communities : [];
+        total = Number(first.total || 0);
+
+        let offset = pageSize;
+        let hasMore = Boolean(first.hasMore && first.features?.length);
+        // Descarga varias páginas en paralelo para no esperar una petición por bloque.
+        while (hasMore) {
+          const offsets = [0, 1, 2, 3].map((page) => offset + page * pageSize);
+          const pages = await Promise.all(offsets.map(fetchPage));
+          for (const json of pages) {
+            if (Array.isArray(json.features)) allFeatures.push(...json.features);
+          }
+          hasMore = pages.some((json) => Boolean(json.hasMore && json.features?.length));
+          offset += offsets.length * pageSize;
         }
         if (active) setData({ ok: true, total, features: allFeatures, communities });
       } catch (reason) {

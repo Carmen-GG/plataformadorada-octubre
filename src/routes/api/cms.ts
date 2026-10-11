@@ -51,13 +51,30 @@ async function fetchCmsPost(url: string, payload: Record<string, unknown>) {
       redirect: "manual",
       signal: controller.signal,
     });
+    let finalResponse = response;
+
+    // Apps Script devuelve el resultado de ContentService mediante una redirección.
+    // No damos el guardado por correcto solo por recibir un 302: leemos el JSON real.
     if (response.status >= 300 && response.status < 400) {
-      // La ejecución de doPost ya ha sido aceptada por Apps Script; ContentService
-      // entrega su salida a través de una URL temporal redirigida.
-      return { ok: true, message: "Petición recibida por Google Apps Script." };
+      const location = response.headers.get("location");
+      if (!location) {
+        throw new Error(`Google Apps Script redirigió con estado ${response.status}, pero no devolvió la URL del resultado.`);
+      }
+      finalResponse = await fetch(new URL(location, url).toString(), {
+        method: "GET",
+        cache: "no-store",
+        signal: controller.signal,
+      });
     }
-    if (!response.ok) throw new Error(`Google Apps Script respondió ${response.status}`);
-    const data = await response.json();
+
+    if (!finalResponse.ok) {
+      throw new Error(`Google Apps Script respondió ${finalResponse.status} al devolver el resultado.`);
+    }
+
+    const data = await finalResponse.json();
+    if (!data || typeof data !== "object" || !("ok" in data)) {
+      throw new Error("Google Apps Script no devolvió una confirmación válida del guardado.");
+    }
     return data;
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {

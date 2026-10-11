@@ -104,15 +104,15 @@ function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsConten
 
   return (
     <div className="space-y-5">
-      <section className="overflow-hidden rounded-3xl border border-border bg-slate-950 p-3 text-white shadow-sm sm:p-5">
-        <div className="mb-3 flex items-center gap-2"><Tv aria-hidden="true" /><h2 className="font-display text-lg font-semibold">Visor de vídeo</h2></div>
-        {videoItem ? (
-          <>
-            {embed ? <div className="aspect-video overflow-hidden rounded-xl bg-black"><iframe className="h-full w-full" src={embed} title={`Vídeo: ${videoItem.title}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" /></div> : <div className="rounded-xl bg-slate-800 p-5"><p className="text-sm text-slate-200">Este proveedor no permite insertar automáticamente el vídeo. Puedes abrirlo en su página original.</p><a className="mt-3 inline-flex rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900" href={videoUrl} target="_blank" rel="noreferrer">Ver vídeo externo</a></div>}
-            <h3 className="mt-3 font-semibold">{videoItem.title}</h3>
-            {videoItem.summary && <p className="mt-1 text-sm text-slate-200">{videoItem.summary}</p>}
-          </>
-        ) : <div className="flex aspect-video flex-col items-center justify-center rounded-xl bg-slate-800 px-5 text-center text-slate-200"><Tv size={32} aria-hidden="true" /><p className="mt-3 font-semibold">{item ? "Esta noticia no es un vídeo" : "Selecciona una noticia"}</p><p className="mt-1 text-sm text-slate-300">Los vídeos seleccionados aparecerán aquí.</p></div>}
+      <section className="overflow-hidden rounded-[2rem] border-4 border-primary/80 bg-accent/25 p-3 shadow-xl sm:p-5">
+        <div className="mb-3 flex items-center justify-between gap-3 px-2"><div className="flex items-center gap-2 text-primary"><Tv aria-hidden="true" /><h2 className="font-display text-sm font-semibold tracking-wide">PLATAFORMA DORADA · TELEVISIÓN</h2></div><span className="size-3 rounded-full bg-primary/70 shadow-inner" aria-hidden="true" /></div>
+        <div className="rounded-[1.4rem] border-[7px] border-foreground/80 bg-foreground p-2 shadow-inner sm:border-[10px] sm:p-3">
+          <div className="relative aspect-video overflow-hidden rounded-lg bg-primary">
+            {videoItem && embed ? <iframe key={embed} className="absolute inset-0 h-full w-full border-0" src={embed} title={`Vídeo: ${videoItem.title}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen loading="lazy" /> : <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center text-primary-foreground">{videoItem ? <><Tv size={36} className="mb-3 text-accent" aria-hidden="true" /><p className="font-display text-xl">Vídeo externo</p><p className="mt-2 text-sm text-primary-foreground/80">Este proveedor no permite la reproducción incrustada.</p><a className="mt-3 inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground" href={videoUrl} target="_blank" rel="noreferrer">Abrir vídeo</a></> : <><Tv size={42} className="mb-3 text-accent" aria-hidden="true" /><p className="font-display text-xl sm:text-2xl">{item ? "Esta noticia no es un vídeo" : "Tu ventana a los cuidados"}</p><p className="mt-2 max-w-sm text-xs leading-relaxed text-primary-foreground/75 sm:text-sm">{item ? "Selecciona una noticia de vídeo para reproducirla aquí." : "Selecciona una noticia de vídeo para reproducirla aquí."}</p></>}</div>}
+          </div>
+        </div>
+        <div className="mt-3 flex items-center justify-between gap-3 px-2 text-xs font-semibold text-primary"><span className="truncate">{videoItem?.title ?? "ARCHIVO AUDIOVISUAL"}</span><span aria-hidden="true">● ━━━ ◉</span></div>
+        {videoItem?.url && <a className="mt-2 inline-block px-2 text-xs font-semibold text-primary underline" href={videoItem.url} target="_blank" rel="noreferrer">Abrir vídeo original si no se reproduce</a>}
       </section>
 
       <section className="rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
@@ -186,12 +186,17 @@ function Page() {
                   const itemKey = newsKey(item, news.indexOf(item));
                   const active = selectedNews ? newsKey(selectedNews, news.indexOf(selectedNews)) === itemKey : false;
                   const type = item.type || "texto";
-                  return <button key={itemKey} type="button" onClick={() => setSelectedNewsKey(itemKey)} aria-pressed={active} className={active ? "w-full rounded-2xl border-2 border-primary bg-primary/5 p-4 text-left shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" : "w-full rounded-2xl border border-border bg-card p-4 text-left transition hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"}>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold uppercase"><span aria-hidden="true">{type === "video" ? "▶" : type === "audio" ? "♫" : "▤"}</span>{type === "video" ? "Vídeo" : type === "audio" ? "Audio / podcast" : "Texto"}</span>
-                    <span className="mt-2 block font-display text-lg font-semibold">{item.title}</span>
-                    <span className="mt-1 block text-xs text-muted-foreground">{[item.media,item.date].filter(Boolean).join(" · ")}</span>
-                    {item.summary && <span className="mt-2 block text-sm leading-relaxed text-muted-foreground">{item.summary}</span>}
-                  </button>;
+                  return <article key={itemKey} className={active ? "w-full rounded-2xl border-2 border-primary bg-primary/5 p-4 text-left shadow-sm" : "w-full rounded-2xl border border-border bg-card p-4 text-left transition hover:border-primary/50"}>
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-muted-foreground">
+                      {item.date && <span>{item.date}</span>}
+                      {item.date && item.media && <span aria-hidden="true">·</span>}
+                      {item.media && <span>{item.media}</span>}
+                      <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[10px] font-semibold uppercase text-foreground"><span aria-hidden="true">{type === "video" ? "▶" : type === "audio" ? "♫" : "▤"}</span>{type === "video" ? "Vídeo" : type === "audio" ? "Audio / podcast" : "Texto"}</span>
+                    </div>
+                    <button type="button" onClick={() => setSelectedNewsKey(itemKey)} aria-pressed={active} className="mt-2 block w-full text-left font-display text-xl font-semibold leading-snug hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{item.title}</button>
+                    {item.summary && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>}
+                    <button type="button" onClick={() => setSelectedNewsKey(itemKey)} className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary underline underline-offset-4 hover:text-primary/80">Abrir en el reproductor <span aria-hidden="true">→</span></button>
+                  </article>;
                 })}
               </div>
               <div className="min-w-0 lg:sticky lg:top-6"><MediaStage item={selectedNews} /></div>

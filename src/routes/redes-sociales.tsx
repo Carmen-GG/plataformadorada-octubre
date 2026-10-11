@@ -58,12 +58,12 @@ function ProposalForm({ type }: { type: "cancion" | "frase" | "lema" }) {
   </form>;
 }
 
-function PhraseCarousel({ phrases }: { phrases: string[] }) {
+function PhraseCarousel({ phrases }: { phrases: Array<{ text: string; name: string }> }) {
   const [index,setIndex]=useState(0);
   const [paused,setPaused]=useState(false);
-  const phraseSignature = phrases.join("|~|");
+  const phraseSignature = phrases.map(p => p.text + "|~|" + p.name).join("|~~|");
   const currentIndex = phrases.length ? index % phrases.length : 0;
-  const currentPhrase = phrases[currentIndex] ?? "";
+  const currentPhrase = phrases[currentIndex] ?? { text: "", name: "Anónimo" };
   useEffect(() => { setIndex(0); }, [phraseSignature]);
   useEffect(() => {
     if (paused || phrases.length < 2) return;
@@ -83,7 +83,8 @@ function PhraseCarousel({ phrases }: { phrases: string[] }) {
   return <div className="mt-5 rounded-3xl bg-accent/15 p-7 sm:p-9" aria-roledescription="carrusel" aria-label="Lemas de Plataforma Dorada">
     <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Lema destacado</p>
     <div className="relative flex min-h-44 flex-col justify-center">
-      <blockquote key={currentIndex + ":" + currentPhrase} className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{currentPhrase}”</blockquote>
+      <blockquote key={currentIndex + ":" + currentPhrase} className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{currentPhrase.text}”</blockquote>
+      <p className="mt-5 text-sm font-semibold text-muted-foreground" aria-live="polite">— {currentPhrase.name.trim() || "Anónimo"}</p>
     </div>
     <div className="mt-4 flex items-center justify-between gap-3">
       <span className="text-sm text-muted-foreground" aria-live="polite">{currentIndex + 1} de {phrases.length}</span>
@@ -103,9 +104,9 @@ export const Route = createFileRoute("/redes-sociales")({ head:()=>pageHead({pat
 
 function RedesSociales(){
   const cms=useCmsContent();
-  const cmsLemas=(cms?.lemas??[]).filter(x=>x.published && x.text.trim()).sort((a,b)=>a.order-b.order).map(x=>x.text.trim());
-  const phrases=(cmsLemas.length?cmsLemas:(cms?.frases??[]).map(x=>x.text).filter(Boolean));
-  const visiblePhrases=phrases.length?phrases:fallbackPhrases;
+  const cmsLemas=(cms?.lemas??[]).filter(x=>x.published && x.text.trim()).sort((a,b)=>a.order-b.order).map(x=>({text:x.text.trim(),name:x.name.trim() || "Anónimo"}));
+  const phrases=(cmsLemas.length?cmsLemas:(cms?.frases??[]).filter(x=>x.text.trim()).map(x=>({text:x.text.trim(),name:x.name.trim() || "Anónimo"})));
+  const visiblePhrases=phrases.length?phrases:fallbackPhrases.map(text=>({text,name:"Anónimo"}));
   const [activeTab, setActiveTab] = useState<SocialTab>("instagram");
   const locationHash = useLocation({ select: (location) => location.hash });
 

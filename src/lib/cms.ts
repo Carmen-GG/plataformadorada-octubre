@@ -77,7 +77,7 @@ type AppsScriptResource = {
   filename?: string;
 };
 
-type AppsScriptEvent = { id?:string; titulo?:string; fecha?:string; hora?:string; lugar?:string; ciudad?:string; descripcion?:string; url?:string; documentoUrl?:string; documentoNombre?:string; previewUrl?:string };
+type AppsScriptEvent = { id?:string; titulo?:string; fecha?:string; hora?:string; lugar?:string; ciudad?:string; descripcion?:string; url?:string; documentoUrl?:string; documentoNombre?:string; previewUrl?:string; title?:string; date?:string; time?:string; place?:string; city?:string; description?:string; documentUrl?:string; documentName?:string };
 
 type AppsScriptContentResponse = {
   noticias?: AppsScriptNews[];
@@ -168,9 +168,27 @@ async function refresh() {
       canciones: (raw.canciones ?? []).map((item) => ({ x:String(item.x??""), artist:String(item.artist??"") })),
       frases: (raw.frases ?? []).map((item) => ({ text:String(item.text??""), name:String(item.name??"") })),
 
-      eventos: (raw.eventos ?? []).map((item) => ({
-        id: String(item.id ?? ""), title: String(item.titulo ?? ""), date: String(item.fecha ?? ""), time: String(item.hora ?? ""), place: String(item.lugar ?? ""), city: String(item.ciudad ?? ""), description: String(item.descripcion ?? ""), url: String(item.url ?? ""), documentUrl: String(item.documentoUrl ?? ""), documentName: String(item.documentoNombre ?? ""), previewUrl: String(item.previewUrl ?? ""),
-      })),
+      eventos: (raw.eventos ?? []).map((item) => {
+        const rawDate = String(item.fecha ?? item.date ?? "").trim();
+        // Normaliza fechas DD/MM/AAAA o DD-MM-AAAA para que el filtro de próximos eventos funcione.
+        const dateMatch = rawDate.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+        const date = dateMatch
+          ? `${dateMatch[3]}-${dateMatch[2].padStart(2, "0")}-${dateMatch[1].padStart(2, "0")}`
+          : rawDate;
+        return {
+          id: String(item.id ?? ""),
+          title: String(item.titulo ?? item.title ?? ""),
+          date,
+          time: String(item.hora ?? item.time ?? ""),
+          place: String(item.lugar ?? item.place ?? ""),
+          city: String(item.ciudad ?? item.city ?? ""),
+          description: String(item.descripcion ?? item.description ?? ""),
+          url: String(item.url ?? ""),
+          documentUrl: String(item.documentoUrl ?? item.documentUrl ?? ""),
+          documentName: String(item.documentoNombre ?? item.documentName ?? ""),
+          previewUrl: String(item.previewUrl ?? ""),
+        };
+      }),
 
       recursos: (raw.recursos ?? []).map((item) => ({
         id: String(item.id ?? ""),

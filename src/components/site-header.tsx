@@ -46,16 +46,18 @@ export function SiteHeader() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
-            <div role="group" aria-label={t("nav.language")} className="glass-soft hidden rounded-full p-1 text-xs font-semibold sm:flex">
+          <div className="flex flex-col items-end gap-1.5">
+            <div className="flex items-center gap-2">
+              <Link to="/unete" className="rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground hover:bg-accent/85">{t("cta.join")}</Link>
+              <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="menu-completo" className="glass-soft rounded-full px-4 py-2.5 text-sm font-semibold text-primary lg:hidden">☰ <span className="sr-only">{t("nav.menu")}</span></button>
+            </div>
+            <div role="group" aria-label={t("nav.language")} className="glass-soft flex rounded-full p-1 text-xs font-semibold">
               {LOCALES.map((code) => (
-                <button key={code} type="button" lang={code} aria-pressed={locale === code} onClick={() => setLocale(code)} className={locale === code ? "rounded-full bg-primary px-3 py-1 text-primary-foreground" : "rounded-full px-3 py-1 text-muted-foreground hover:text-primary"}>
+                <button key={code} type="button" lang={code} aria-pressed={locale === code} onClick={() => setLocale(code)} className={locale === code ? "rounded-full bg-primary px-2.5 py-1 text-primary-foreground" : "rounded-full px-2.5 py-1 text-muted-foreground hover:text-primary"}>
                   <span className="sr-only">{LOCALE_NAMES[code]}</span><span aria-hidden="true">{LOCALE_LABELS[code]}</span>
                 </button>
               ))}
             </div>
-            <Link to="/unete" className="rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground hover:bg-accent/85">{t("cta.join")}</Link>
-            <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="menu-completo" className="glass-soft rounded-full px-4 py-2.5 text-sm font-semibold text-primary lg:hidden">☰ <span className="sr-only">{t("nav.menu")}</span></button>
           </div>
         </div>
 
@@ -69,9 +71,6 @@ export function SiteHeader() {
                 </div>
               </details>
             ))}
-            <div className="mt-3 flex gap-2 sm:hidden">
-              {LOCALES.map((code) => <button key={code} type="button" aria-pressed={locale === code} onClick={() => setLocale(code)} className={locale === code ? "rounded-full bg-primary px-3 py-1 text-sm text-primary-foreground" : "glass-soft rounded-full px-3 py-1 text-sm text-muted-foreground"}>{LOCALE_NAMES[code]}</button>)}
-            </div>
           </div>
         )}
       </nav>

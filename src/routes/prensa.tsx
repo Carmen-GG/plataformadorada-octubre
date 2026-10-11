@@ -129,7 +129,7 @@ function Page() {
   const [selectedNewsKey, setSelectedNewsKey] = useState<string>("");
   // El reproductor permanece vacío hasta que la persona elija una noticia.
   const selectedNews = selectedNewsKey
-    ? visibleNews.find((item) => newsKey(item, news.indexOf(item)) === selectedNewsKey) ?? null
+    ? news.find((item) => newsKey(item, news.indexOf(item)) === selectedNewsKey) ?? null
     : null;
 
   useEffect(() => {

@@ -188,14 +188,14 @@ function Page() {
                   const type = item.type || "texto";
                   return <article key={itemKey} className={active ? "w-full rounded-2xl border-2 border-primary bg-primary/5 p-4 text-left shadow-sm" : "w-full rounded-2xl border border-border bg-card p-4 text-left transition hover:border-primary/50"}>
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-muted-foreground">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[10px] font-semibold uppercase text-foreground"><span aria-hidden="true">{type === "video" ? "▶" : type === "audio" ? "♫" : "▤"}</span>{type === "video" ? "Vídeo" : type === "audio" ? "Audio / podcast" : "Texto"}</span>
                       {item.date && <span>{item.date}</span>}
                       {item.date && item.media && <span aria-hidden="true">·</span>}
                       {item.media && <span>{item.media}</span>}
-                      <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[10px] font-semibold uppercase text-foreground"><span aria-hidden="true">{type === "video" ? "▶" : type === "audio" ? "♫" : "▤"}</span>{type === "video" ? "Vídeo" : type === "audio" ? "Audio / podcast" : "Texto"}</span>
                     </div>
                     <button type="button" onClick={() => setSelectedNewsKey(itemKey)} aria-pressed={active} className="mt-2 block w-full text-left font-display text-xl font-semibold leading-snug hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{item.title}</button>
                     {item.summary && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>}
-                    <button type="button" onClick={() => setSelectedNewsKey(itemKey)} className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary underline underline-offset-4 hover:text-primary/80">Abrir en el reproductor <span aria-hidden="true">→</span></button>
+                    {item.url && <a href={item.url} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary underline underline-offset-4 hover:text-primary/80">Abrir noticia original <span aria-hidden="true">→</span></a>}
                   </article>;
                 })}
               </div>

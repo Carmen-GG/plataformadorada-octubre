@@ -168,18 +168,9 @@ async function refresh() {
   loading = true;
 
   try {
-    const controller = new AbortController();
-
-    const timeout = window.setTimeout(() => {
-      controller.abort();
-    }, TIMEOUT_MS);
-
     const response = await fetch("/api/cms?action=content", {
       cache: "no-store",
-      signal: controller.signal,
     });
-
-    window.clearTimeout(timeout);
 
     if (!response.ok) {
       throw new Error("CMS no disponible");

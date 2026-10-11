@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-let cache: { at: number; permalink: string | null } = { at: 0, permalink: null };
+const FALLBACK_PERMALINK = "https://www.instagram.com/p/Db-5IrtMEKB/";
+let cache: { at: number; permalink: string | null } = { at: 0, permalink: FALLBACK_PERMALINK };
 const CACHE_MS = 10 * 60 * 1000;
 
 function extractLatestVideo(html: string): string | null {
@@ -58,13 +59,13 @@ export const Route = createFileRoute("/api/instagram/latest")({
           });
           if (!response.ok) throw new Error(`Instagram respondió ${response.status}`);
           const html = await response.text();
-          const permalink = extractLatestVideo(html);
+          const permalink = extractLatestVideo(html) ?? FALLBACK_PERMALINK;
           cache = { at: Date.now(), permalink };
           return Response.json({ permalink });
         } catch (error) {
           console.error("No se pudo obtener el último vídeo de Instagram", error);
           return Response.json({
-            permalink: cache.permalink,
+            permalink: cache.permalink ?? FALLBACK_PERMALINK,
             error: "Instagram no disponible temporalmente",
           });
         }

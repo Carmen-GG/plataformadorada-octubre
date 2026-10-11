@@ -12,7 +12,7 @@ var PD_CMS = {
 
 var NEWS_HEADERS = ["id","titulo","medio","fecha","url","resumen","publicada","creada","tipo","urlMultimedia","contenidoTexto"];
 var RESOURCE_HEADERS = ["id","titulo","categoria","descripcion","archivo","url","creado","archivoId"];
-var EVENT_HEADERS = ["id","titulo","fecha","hora","lugar","ciudad","descripcion","url","documentoNombre","documentoUrl","documentoId","publicada","creada"];
+var EVENT_HEADERS = ["id","titulo","fecha","hora","lugar","ciudad","descripcion","url","publicada","creada"];
 var PROPOSAL_HEADERS = ["id","tipo","titulo","artista","texto","proponente","publicada","creada"];
 var TIMELINE_HEADERS = ["id","fecha","titulo","descripcion","imagenNombre","imagenUrl","imagenId","orden","activa","creada"];
 var ROADMAP_HEADERS = ["id","fase","titulo","detalle","fecha","orden","activa","creada"];
@@ -147,32 +147,26 @@ function readEvents_(){
   var headers = sh.getRange(1,1,1,lastCol).getDisplayValues()[0].map(function(x) {
     return String(x||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
   });
-  var titleIdx = headers.findIndex(function(x) { return x === "titulo" || x === "title"; });
-  var dateIdx = headers.findIndex(function(x) { return x === "fecha" || x.indexOf("fecha") === 0; });
+  var idx = function(name) { return headers.indexOf(name); };
+  var idIdx=idx("id"), titleIdx=idx("titulo"), dateIdx=idx("fecha"), timeIdx=idx("hora"),
+      placeIdx=idx("lugar"), cityIdx=idx("ciudad"), descIdx=idx("descripcion"),
+      urlIdx=idx("url"), pubIdx=idx("publicada");
   if (titleIdx < 0 || dateIdx < 0) return [];
-  var idx = function(names, fallback) {
-    var i = headers.findIndex(function(h) { return names.some(function(n) { return h === n || h.indexOf(n) >= 0; }); });
-    return i >= 0 ? i : fallback;
-  };
-  var timeIdx=idx(["hora"],3), placeIdx=idx(["lugar"],4), cityIdx=idx(["ciudad"],5),
-      descIdx=idx(["descripcion","detalle"],6), urlIdx=idx(["url","enlace"],7),
-      docNameIdx=idx(["documentonombre","nombredocumento","archivo"],8),
-      docUrlIdx=idx(["documentourl","urldocumento"],9), docIdIdx=idx(["documentoid","idarchivo"],10),
-      pubIdx=idx(["publicada","publicado"],11), idIdx=idx(["id"],0);
   var rows=sh.getRange(2,1,lastRow-1,lastCol).getDisplayValues(), all=[];
   rows.forEach(function(r,i) {
     var title=String(r[titleIdx]||"").trim(), date=String(r[dateIdx]||"").trim();
     if (!title || !date) return;
-    if (pubIdx < r.length && /^(no|false|0)$/i.test(String(r[pubIdx]||"").trim())) return;
-    var docId=String(r[docIdIdx]||"").trim();
-    var docUrl=String(r[docUrlIdx]||"").trim() || (docId ? driveDownloadUrl_(docId) : "");
+    if (pubIdx >= 0 && /^(no|false|0)$/i.test(String(r[pubIdx]||"").trim())) return;
     all.push({
-      id:String(r[idIdx]|| (sh.getName()+"-"+(i+2))),
-      title:cleanPublicText_(title,300), date:date, time:String(r[timeIdx]||"").trim(),
-      place:cleanPublicText_(r[placeIdx],200), city:cleanPublicText_(r[cityIdx],120),
-      description:cleanPublicText_(r[descIdx],1500), url:String(r[urlIdx]||"").trim(),
-      documentName:String(r[docNameIdx]||"").trim(), documentUrl:docUrl, documentId:docId,
-      previewUrl:docId?drivePreviewUrl_(docId):"", sourceSheet:sh.getName()
+      id:String(idIdx >= 0 ? r[idIdx]||"" : "") || (sh.getName()+"-"+(i+2)),
+      title:cleanPublicText_(title,300),
+      date:date,
+      time:timeIdx >= 0 ? String(r[timeIdx]||"").trim() : "",
+      place:cleanPublicText_(placeIdx >= 0 ? r[placeIdx] : "",200),
+      city:cleanPublicText_(cityIdx >= 0 ? r[cityIdx] : "",120),
+      description:cleanPublicText_(descIdx >= 0 ? r[descIdx] : "",1500),
+      url:urlIdx >= 0 ? String(r[urlIdx]||"").trim() : "",
+      published:pubIdx < 0 || !/^(no|false|0)$/i.test(String(r[pubIdx]||"").trim())
     });
   });
   return all.sort(function(a,b) { return String(a.date).localeCompare(String(b.date)) || String(a.id).localeCompare(String(b.id)); });
@@ -245,45 +239,22 @@ function saveEvent(data){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw new Error("La fecha del evento no es válida.");
   var s=getEventsSheet_(),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;
   if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
-  var oldId=row<=s.getLastRow()?String(s.getRange(row,11).getDisplayValue()||""):"";
-  var documentName=String(data.documentName||"").trim(),documentUrl=String(data.documentUrl||"").trim(),documentId=oldId,newFile=null;
-  if(data.base64&&data.fileName){
-    var bytes=Utilities.base64Decode(data.base64);
-    if(bytes.length>10*1024*1024)throw new Error("El documento supera 10 MB.");
-    newFile=getDriveFolder_().createFile(Utilities.newBlob(bytes,data.mimeType||"application/octet-stream",data.fileName));
-    newFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
-    documentId=newFile.getId();documentName=data.fileName;documentUrl=driveDownloadUrl_(documentId);
-  }
-  var created=row<=s.getLastRow()?String(s.getRange(row,13).getDisplayValue()||""):"";
-  if(!created)created=new Date().toISOString();
-  s.getRange(row,1,1,13).setValues([[id,title,date,String(data.time||"").trim(),cleanPublicText_(data.place,200),cleanPublicText_(data.city,120),cleanPublicText_(data.description,1500),String(data.url||"").trim(),documentName,documentUrl,documentId,data.published===false?"No":"Sí",created]]);
-  if(newFile && oldId && oldId!==newFile.getId()){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}
-  return{ok:true,id:id};
-}
-function saveTimeline(data){
-  assertAdmin_(data&&data.password);
-  var s=cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;
-  if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
-  var oldId=row<=s.getLastRow()?String(s.getRange(row,7).getDisplayValue()||""):"";
-  var imageName=String(data.imageName||"").trim(),imageUrl=String(data.imageUrl||"").trim(),imageId=oldId,newFile=null;
-  if(data.base64&&data.fileName){
-    var bytes=Utilities.base64Decode(data.base64);
-    if(bytes.length>10*1024*1024)throw new Error("La imagen supera 10 MB.");
-    newFile=getDriveFolder_().createFile(Utilities.newBlob(bytes,data.mimeType||"image/*",data.fileName));
-    newFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
-    imageId=newFile.getId();imageName=data.fileName;imageUrl=driveDownloadUrl_(imageId);
-  }
   var created=row<=s.getLastRow()?String(s.getRange(row,10).getDisplayValue()||""):"";
   if(!created)created=new Date().toISOString();
-  s.getRange(row,1,1,10).setValues([[id,String(data.date||"").trim(),cleanPublicText_(data.title,300),cleanPublicText_(data.description,1500),imageName,imageUrl,imageId,Number(data.order)||0,data.active===false?"No":"Sí",created]]);
-  if(newFile && oldId && oldId!==newFile.getId()){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}
+  s.getRange(row,1,1,10).setValues([[
+    id,title,date,String(data.time||"").trim(),cleanPublicText_(data.place,200),
+    cleanPublicText_(data.city,120),cleanPublicText_(data.description,1500),
+    String(data.url||"").trim(),data.published===false?"No":"Sí",created
+  ]]);
   return{ok:true,id:id};
 }
-function saveRoadmap(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}var created=row<=s.getLastRow()?String(s.getRange(row,8).getDisplayValue()||""):"";if(!created)created=new Date().toISOString();s.getRange(row,1,1,8).setValues([[id,cleanPublicText_(data.phase,100),cleanPublicText_(data.title,300),cleanPublicText_(data.detail,1500),String(data.date||"").trim(),Number(data.order)||0,data.active===false?"No":"Sí",created]]);return{ok:true,id:id};}
-
-function deleteNews(data){assertAdmin_(data&&data.password);return deleteRowById_("NoticiasWeb",data.id);}
-function deleteEvent(data){assertAdmin_(data&&data.password);var s=getEventsSheet_(),row=findRowById_(s,data.id);if(row<0)throw new Error("Evento no encontrado.");var fid=String(s.getRange(row,11).getDisplayValue()||"");if(fid){try{DriveApp.getFileById(fid).setTrashed(true);}catch(e){}}s.deleteRow(row);return{ok:true};}
-function deleteResource(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Recurso no encontrado.");var fid=String(s.getRange(row,8).getDisplayValue()||"");if(!fid){var m=String(s.getRange(row,6).getDisplayValue()||"").match(/[?&]id=([^&]+)/);if(m)fid=m[1];}if(fid){try{DriveApp.getFileById(fid).setTrashed(true);}catch(e){}}s.deleteRow(row);return{ok:true};}
+function deleteEvent(data){
+  assertAdmin_(data&&data.password);
+  var s=getEventsSheet_(),row=findRowById_(s,data.id);
+  if(row<0)throw new Error("Evento no encontrado.");
+  s.deleteRow(row);
+  return{ok:true};
+}function deleteResource(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Recurso no encontrado.");var fid=String(s.getRange(row,8).getDisplayValue()||"");if(!fid){var m=String(s.getRange(row,6).getDisplayValue()||"").match(/[?&]id=([^&]+)/);if(m)fid=m[1];}if(fid){try{DriveApp.getFileById(fid).setTrashed(true);}catch(e){}}s.deleteRow(row);return{ok:true};}
 function deleteTimeline(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Hito no encontrado.");var fid=String(s.getRange(row,7).getDisplayValue()||"");if(fid){try{DriveApp.getFileById(fid).setTrashed(true);}catch(e){}}s.deleteRow(row);return{ok:true};}
 function deleteRoadmap(data){assertAdmin_(data&&data.password);return deleteRowById_("HojaRutaWeb",data.id);}
 function deleteRowById_(name,id){var s=cmsGetOrCreateSheet_(name,[]),row=findRowById_(s,id);if(row<0)throw new Error("Registro no encontrado.");s.deleteRow(row);return{ok:true};}

@@ -419,7 +419,17 @@ function pdVoluntarios_() {
   var iCcaa = pdIdx_(h, function(x) { return x === "autonomia" || x === "comunidad autonoma" || x === "comunitat autonoma"; });
   var iCity = pdIdx_(h, pdHas_("ciudad en la que vives"));
   var iName = pdIdx_(h, pdEq_("nombre y apellidos"));
+  // Localiza la pregunta de consentimiento aunque el formulario haya cambiado ligeramente
+  // su redacción. Nunca se publica a nadie si no se identifica una columna de autorización.
   var iConsent = pdIdx_(h, pdHas_(PD.CONSENT_HEADER_TEXT), true);
+  if (iConsent < 0) {
+    iConsent = pdIdx_(h, function(x) {
+      return x.indexOf("public") >= 0 &&
+        (x.indexOf("aparec") >= 0 || x.indexOf("publicar") >= 0 ||
+         x.indexOf("dato") >= 0 || x.indexOf("autoriza") >= 0 ||
+         x.indexOf("consent") >= 0);
+    }, true);
+  }
 
   var res = {
     total: 0,

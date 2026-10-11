@@ -474,11 +474,18 @@ function pdPublicFullName_(given, surnames) {
 }
 
 function pdTestimonios_() {
+  var ss = pdOpen_(PD.TESTIMONIOS_SPREADSHEET_ID);
+  // No dependemos de que el encabezado de consentimiento siga escrito exactamente
+  // igual que en el formulario original. Para el recuento territorial basta con
+  // localizar la tabla de testimonios por su columna de comunidad autónoma.
   var t = pdReadTable_(
-    pdOpen_(PD.TESTIMONIOS_SPREADSHEET_ID),
+    ss,
     "quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos",
   );
-  if (!t) throw new Error("No encuentro la hoja de testimonios.");
+  if (!t) t = pdReadTable_(ss, "comunidad autonoma");
+  if (!t) t = pdReadTable_(ss, "comunitat autonoma");
+  if (!t) t = pdReadTable_(ss, "autonomia");
+  if (!t) throw new Error("No encuentro la hoja de testimonios ni una columna territorial reconocible.");
 
   var h = t.headers;
   var iUse = pdIdx_(h, pdHas_("quieres que tu testimonio se pueda utilizar en medios de comunicacion o documentos publicos"));

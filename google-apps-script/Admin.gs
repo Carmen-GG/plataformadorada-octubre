@@ -16,6 +16,7 @@ var EVENT_HEADERS = ["id","titulo","fecha","hora","lugar","ciudad","descripcion"
 var PROPOSAL_HEADERS = ["id","tipo","titulo","artista","texto","proponente","publicada","creada"];
 var TIMELINE_HEADERS = ["id","fecha","titulo","descripcion","imagenNombre","imagenUrl","imagenId","orden","activa","creada"];
 var ROADMAP_HEADERS = ["id","fase","titulo","detalle","fecha","orden","activa","creada"];
+var LEMAS_HEADERS = ["id","texto","autor","orden","publicada","creada"];
 
 function checkBackofficePassword(password) {
   var expected = PropertiesService.getScriptProperties().getProperty("BACKOFFICE_PASSWORD");
@@ -188,15 +189,30 @@ function readRoadmap_(){
   var s=cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS), rows=rowValues_(s,ROADMAP_HEADERS.length);
   return rows.filter(function(r){return !/^(no|false|0)$/i.test(String(r[6]||"").trim());}).map(function(r){return{id:r[0],fase:cleanPublicText_(r[1],100),titulo:cleanPublicText_(r[2],300),detalle:cleanPublicText_(r[3],1500),fecha:r[4],orden:Number(r[5])||0,activa:!/^(no|false|0)$/i.test(String(r[6]||"").trim())};}).sort(function(a,b){return a.orden-b.orden;});
 }
+function readLemas_(includeUnpublished){
+  var s=cmsGetOrCreateSheet_("LemasWeb",LEMAS_HEADERS), rows=rowValues_(s,LEMAS_HEADERS.length);
+  return rows.filter(function(r){return includeUnpublished || !/^(no|false|0)$/i.test(String(r[4]||"").trim());}).map(function(r){return {id:String(r[0]||""),text:cleanPublicText_(r[1],500),name:cleanPublicText_(r[2],160),order:Number(r[3])||0,published:!/^(no|false|0)$/i.test(String(r[4]||"").trim()),created:String(r[5]||"")};}).sort(function(a,b){return a.order-b.order || a.text.localeCompare(b.text);});
+}
+function saveLema(data){
+  assertAdmin_(data&&data.password);
+  var s=cmsGetOrCreateSheet_("LemasWeb",LEMAS_HEADERS), id=String(data.id||"").trim(), row=id?findRowById_(s,id):-1;
+  if(!String(data.text||"").trim()) throw new Error("Escribe el lema o la cita.");
+  if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
+  var created=row<=s.getLastRow()?String(s.getRange(row,6).getDisplayValue()||""):""; if(!created)created=new Date().toISOString();
+  s.getRange(row,1,1,6).setValues([[id,cleanPublicText_(data.text,500),cleanPublicText_(data.name,160),Number(data.order)||0,data.published===false?"No":"Sí",created]]);
+  return {ok:true,id:id};
+}
+function deleteLema(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("LemasWeb",LEMAS_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Lema no encontrado.");s.deleteRow(row);return {ok:true};}
+
 function getPublicContent_(){
   var p=readProposals_();
-  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),videos:readVideos_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,actualizado:new Date().toISOString()};
+  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),videos:readVideos_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,lemas:readLemas_(),actualizado:new Date().toISOString()};
 }
 function getPublicContent(){return getPublicContent_();}
 function obtenerContenidoPublico(){return getPublicContent_();}
-function getBackofficeContent(){var c=getPublicContent_();c.noticias=readNews_(true);c.propuestas=readProposals_().todas;return c;}
+function getBackofficeContent(){var c=getPublicContent_();c.noticias=readNews_(true);c.propuestas=readProposals_().todas;c.lemas=readLemas_(true);return c;}
 
-function setupBackoffice(){cmsGetOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);getDriveFolder_();return "Backoffice preparado en la base CMS configurada";}
+function setupBackoffice(){cmsGetOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);cmsGetOrCreateSheet_("LemasWeb",LEMAS_HEADERS);getDriveFolder_();return "Backoffice preparado en la base CMS configurada";}
 
 // Nombre exclusivo para evitar conflictos con funciones antiguas de otros archivos del proyecto.
 function saveNewsToCmsSpreadsheet(data) {

@@ -111,7 +111,7 @@ function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
           host.endsWith("ondacero.es") || host.endsWith("rtve.es") || host.endsWith("cope.es") ||
           host.endsWith("rac1.cat") || host.endsWith("cadenaser.com") ||
           /\\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(path) ||
-          /\\/play\\/audios?\\//.test(path) || /\\/podcast\\//.test(path) || /\\/audio\\//.test(path)) return "audio";
+          path.includes("/play/audio") || path.includes("/play/audios") || path.includes("/podcast/") || path.includes("/audio/")) return "audio";
     } catch {
       // Un enlace incompleto no se considera un reproductor.
     }

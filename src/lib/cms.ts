@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 
 const REFRESH_MS = 15_000;
-const TIMEOUT_MS = 7_000;
+const TIMEOUT_MS = 20_000;
 
 export type CmsNews = {
   id: string;

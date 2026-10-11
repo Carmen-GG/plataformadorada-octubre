@@ -92,11 +92,11 @@ type AppsScriptContentResponse = {
 };
 
 function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
-  const declared = String(item.tipo ?? item.type ?? "").trim().toLowerCase();
-  // Los tipos explícitos vídeo/audio tienen prioridad. "texto" no debe bloquear
-  // la detección de enlaces de audio cuando la hoja conserva un valor por defecto.
-  if (["video", "vídeo", "youtube", "facebook"].includes(declared)) return "video";
-  if (["audio", "podcast", "pódcast"].includes(declared)) return "audio";
+  const declared = String(item.tipo ?? item.type ?? "").trim().toLowerCase()
+    .normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
+  // Acepta valores de listas desplegables y variantes como "Audio / podcast".
+  if (/video|youtube|facebook/.test(declared)) return "video";
+  if (/audio|podcast|ivoox/.test(declared)) return "audio";
 
   const multimedia = String(item.urlMultimedia ?? item.mediaUrl ?? "").trim();
   const candidates = [multimedia, String(item.url ?? "").trim()].filter(Boolean);
@@ -107,16 +107,18 @@ function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
       const path = u.pathname.toLowerCase();
       if (host === "youtu.be" || host === "youtube.com" || host.endsWith(".youtube.com") || host === "vimeo.com" || host.endsWith(".vimeo.com")) return "video";
       if (host === "open.spotify.com" || host === "soundcloud.com" || host === "www.soundcloud.com" ||
+          host === "ivoox.com" || host.endsWith(".ivoox.com") ||
           host.endsWith("ondacero.es") || host.endsWith("rtve.es") || host.endsWith("cope.es") ||
           host.endsWith("rac1.cat") || host.endsWith("cadenaser.com") ||
-          /\/play\/audios?\//.test(path) || /\/podcast\//.test(path) || /\/audio\//.test(path)) return "audio";
+          /\\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(path) ||
+          /\\/play\\/audios?\\//.test(path) || /\\/podcast\\//.test(path) || /\\/audio\\//.test(path)) return "audio";
     } catch {
       // Un enlace incompleto no se considera un reproductor.
     }
-    if (/\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(candidate)) return "audio";
+    if (/\\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(candidate) || /ivoox\\.com/i.test(candidate)) return "audio";
   }
 
-  return ["texto", "text", "noticia"].includes(declared) || !declared ? "texto" : "texto";
+  return "texto";
 }
 
 function normalizeNewsFields(item: AppsScriptNews) {

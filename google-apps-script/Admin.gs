@@ -83,6 +83,12 @@ function cmsGetOrCreateSheet_(name, headers) {
   return sheet;
 }
 
+// Compatibilidad con módulos antiguos (por ejemplo, el gestor de vídeos).
+// Delegamos en la función CMS actual para no duplicar lógica de hojas.
+function getOrCreateSheet_(name, headers) {
+  return cmsGetOrCreateSheet_(name, headers);
+}
+
 function ensureHeaders_(sheet, headers) {
   if (!headers || !headers.length) return sheet;
   if (sheet.getLastRow() === 0) {

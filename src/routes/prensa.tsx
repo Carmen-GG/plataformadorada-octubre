@@ -155,8 +155,16 @@ function Page() {
     window.addEventListener("hashchange", syncTabFromHash);
     return () => window.removeEventListener("hashchange", syncTabFromHash);
   }, []);
+  const NEWS_PER_PAGE = 8;
+  const [newsPage, setNewsPage] = useState(1);
+  const pageCount = Math.max(1, Math.ceil(news.length / NEWS_PER_PAGE));
+  const visibleNews = news.slice((newsPage - 1) * NEWS_PER_PAGE, newsPage * NEWS_PER_PAGE);
   const [selectedNewsKey, setSelectedNewsKey] = useState<string>("");
-  const selectedNews = news.find((item, index) => newsKey(item, index) === selectedNewsKey) ?? news[0] ?? null;
+  const selectedNews = visibleNews.find((item, index) => newsKey(item, news.indexOf(item)) === selectedNewsKey) ?? visibleNews[0] ?? null;
+
+  useEffect(() => {
+    if (newsPage > pageCount) setNewsPage(pageCount);
+  }, [newsPage, pageCount]);
   const categories = useMemo(() => ["Todos", ...Array.from(new Set(resources.map(categoryFor)))], [resources]);
   const [selected, setSelected] = useState("Todos");
   const visible = selected === "Todos" ? resources : resources.filter((resource) => categoryFor(resource) === selected);
@@ -182,7 +190,7 @@ function Page() {
             <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
               <div className="space-y-3" aria-label="Listado de noticias">
                 <h2 className="font-display text-xl font-semibold">Noticias</h2>
-                {news.map((item) => {
+                {visibleNews.map((item) => {
                   const itemKey = newsKey(item, news.indexOf(item));
                   const active = selectedNews ? newsKey(selectedNews, news.indexOf(selectedNews)) === itemKey : false;
                   const type = item.type || "texto";
@@ -198,6 +206,13 @@ function Page() {
                     <button type="button" onClick={() => setSelectedNewsKey(itemKey)} className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary underline underline-offset-4 hover:text-primary/80">Abrir en el reproductor <span aria-hidden="true">→</span></button>
                   </article>;
                 })}
+                {pageCount > 1 && <nav className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4" aria-label="Paginación de noticias">
+                  <span className="text-xs text-muted-foreground">Página {newsPage} de {pageCount} · {news.length} noticias</span>
+                  <div className="flex items-center gap-2">
+                    <button type="button" disabled={newsPage === 1} onClick={() => { const next = newsPage - 1; setNewsPage(next); setSelectedNewsKey(""); }} className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-primary disabled:cursor-not-allowed disabled:opacity-40">Anterior</button>
+                    <button type="button" disabled={newsPage === pageCount} onClick={() => { const next = newsPage + 1; setNewsPage(next); setSelectedNewsKey(""); }} className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-40">Siguiente</button>
+                  </div>
+                </nav>}
               </div>
               <div className="min-w-0 lg:sticky lg:top-6"><MediaStage item={selectedNews} /></div>
             </div>

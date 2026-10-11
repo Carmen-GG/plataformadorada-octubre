@@ -26,7 +26,30 @@ type SocialTab = (typeof socialTabs)[number]["id"];
 
 function ProposalForm({ type }: { type: "cancion" | "frase" | "lema" }) {
   const [title, setTitle] = useState(""); const [artist, setArtist] = useState(""); const [text, setText] = useState(""); const [proposer, setProposer] = useState(""); const [status, setStatus] = useState("");
-  const submit = async (e: FormEvent) => { e.preventDefault(); setStatus("Enviando…"); try { const r = await fetch("/api/cms", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({type,title,artist,text,proposer}) }); const d=await r.json(); if(!r.ok || d?.ok === false) throw new Error(d.error || "No se ha podido guardar el contenido."); setTitle("");setArtist("");setText("");setProposer("");setStatus(type === "lema" ? "Lema añadido correctamente." : "Gracias. La propuesta queda pendiente de revisión."); } catch(err){setStatus(err instanceof Error?err.message:"No se ha podido enviar la propuesta.");} };
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    setStatus("Enviando…");
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15_000);
+    try {
+      const r = await fetch("/api/cms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, title, artist, text, proposer }),
+        signal: controller.signal,
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || d?.ok === false || d?.error) throw new Error(d.error || "No se ha podido guardar el contenido.");
+      setTitle(""); setArtist(""); setText(""); setProposer("");
+      setStatus(type === "lema" ? "Lema añadido correctamente. Actualiza el carrusel en unos segundos." : "Gracias. La propuesta queda pendiente de revisión.");
+    } catch (err) {
+      setStatus(err instanceof Error && err.name === "AbortError"
+        ? "La web no ha recibido respuesta en 15 segundos. El lema no se ha podido confirmar; revisa LemasWeb antes de volver a enviarlo."
+        : err instanceof Error ? err.message : "No se ha podido enviar la propuesta.");
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  };
   return <form onSubmit={submit} className="mt-5 space-y-3 rounded-2xl border border-border bg-background/60 p-4">
     {type === "cancion" ? <><label className="block text-sm font-semibold">Canción<input required value={title} onChange={e=>setTitle(e.target.value)} className="mt-1 w-full rounded-xl border border-input bg-card px-3 py-2" /></label><label className="block text-sm font-semibold">Artista<input required value={artist} onChange={e=>setArtist(e.target.value)} className="mt-1 w-full rounded-xl border border-input bg-card px-3 py-2" /></label></> : <label className="block text-sm font-semibold">Frase o cita<textarea required value={text} onChange={e=>setText(e.target.value)} className="mt-1 w-full rounded-xl border border-input bg-card px-3 py-2" /></label>}
     <label className="block text-sm font-semibold">Tu nombre (opcional)<input value={proposer} onChange={e=>setProposer(e.target.value)} className="mt-1 w-full rounded-xl border border-input bg-card px-3 py-2" /></label>

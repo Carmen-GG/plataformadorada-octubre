@@ -36,9 +36,8 @@ function Page() {
   return (
     <>
       <PageHeader eyebrow="Red de apoyo" title="Entidades adheridas" lead="Organizaciones que se suman a la petición de un Pacto de Estado."
-        titleAside={<div className="rounded-2xl border border-border bg-card px-5 py-3 text-right shadow-sm"><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Entidades adheridas</p><p className="font-display text-3xl font-bold text-primary" aria-live="polite"><LiveCount name="entidades" /></p></div>}
+        titleAside={<div className="flex flex-col items-end gap-3"><div className="rounded-2xl border border-border bg-card px-5 py-3 text-right shadow-sm"><p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Entidades adheridas</p><p className="font-display text-3xl font-bold text-primary" aria-live="polite"><LiveCount name="entidades" /></p></div><a href={SITE.entityFormUrl} target="_blank" rel="noreferrer" className="rounded-full bg-primary px-7 py-3.5 text-center font-semibold text-primary-foreground transition-colors hover:bg-primary/90">Adherir mi entidad</a></div>}
       >
-        <a href={SITE.entityFormUrl} target="_blank" rel="noreferrer" className="rounded-full bg-primary px-7 py-3.5 font-semibold text-primary-foreground">Adherir mi entidad</a>
       </PageHeader>
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
         {status ? (

@@ -9,15 +9,16 @@ import {
   type ReactNode,
 } from "react";
 
-export const LOCALES = ["es", "ca", "eu", "gl"] as const;
+export const LOCALES = ["es", "ca", "eu", "gl", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "es";
-export const LOCALE_LABELS: Record<Locale, string> = { es: "ES", ca: "CA", eu: "EU", gl: "GL" };
+export const LOCALE_LABELS: Record<Locale, string> = { es: "ES", ca: "CA", eu: "EU", gl: "GL", en: "EN" };
 export const LOCALE_NAMES: Record<Locale, string> = {
   es: "Castellano",
   ca: "Català",
   eu: "Euskara",
   gl: "Galego",
+  en: "English",
 };
 type Dictionary = Record<string, string>;
 
@@ -155,7 +156,38 @@ const gl: Dictionary = {
   "common.placeholderNote": "Contido de exemplo. Os datos reais cargaranse desde o backoffice.",
 };
 
-const dictionaries: Record<Locale, Dictionary> = { es, ca, eu, gl };
+const en: Dictionary = {
+  "nav.home": "Home",
+  "nav.about": "About the Platform",
+  "nav.social": "Social media",
+  "nav.dependency": "Dependency care",
+  "nav.join": "Join us",
+  "nav.volunteer": "Volunteering",
+  "nav.testimonials": "Testimonials",
+  "nav.events": "Events",
+  "nav.data": "Data and indicators",
+  "nav.entities": "Supporting organisations",
+  "nav.news": "News",
+  "nav.press": "Press resources",
+  "nav.contact": "Contact",
+  "nav.menu": "Menu",
+  "nav.close": "Close",
+  "nav.language": "Language",
+  "nav.skip": "Skip to main content",
+  "cta.join": "Join the initiative",
+  "cta.joinNow": "Join now",
+  "cta.collaborate": "I want to help",
+  "cta.share": "Share this page",
+  "home.badge": "Civic movement · non-partisan",
+  "home.title": "Plataforma Dorada: For a State Pact on Dependency and Care",
+  "home.lead": "Dependency care cannot wait. Thousands of families wait months or years for an assessment, support or a place in a care facility. We call for a stable, non-partisan and properly funded commitment to both people who provide care and those who receive it.",
+  "home.countersTitle": "Live pledges",
+  "home.goal": "Goal",
+  "common.updated": "Updated",
+  "common.viewAll": "View all",
+  "common.placeholderNote": "Sample content. Live data will be loaded from the back office.",
+};
+const dictionaries: Record<Locale, Dictionary> = { es, ca, eu, gl, en };
 
 // Textos visibles del sitio. Se mantienen fuera de los componentes para que el cambio de idioma
 // afecte también al contenido que todavía procede de componentes existentes del proyecto.
@@ -164,6 +196,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Per un Pacte d'Estat per la Dependència i les Cures",
     eu: "Mendekotasunaren eta Zaintzen aldeko Estatu Itun baten alde",
     gl: "Por un Pacto de Estado pola Dependencia e os Coidados",
+    en: "For a State Pact on Dependency and Care",
   },
   dependencia: { ca: "dependència", eu: "mendekotasuna", gl: "dependencia" },
   "y los cuidados": { ca: "i les cures", eu: "eta zaintzak", gl: "e os coidados" },
@@ -171,16 +204,19 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Dades agregades. Mai no es publiquen dades personals ni ubicacions individuals.",
     eu: "Datu agregatuak. Ez dira inoiz datu pertsonalik edo banakako kokapenik argitaratzen.",
     gl: "Datos agregados. Nunca se publican datos persoais nin localizacións individuais.",
+    en: "dependency care",
   },
   "Cifras del movimiento": {
     ca: "Xifres del moviment",
     eu: "Mugimenduaren zifrak",
     gl: "Cifras do movemento",
+    en: "The movement in numbers",
   },
   "¿Qué está pasando?": {
     ca: "Què està passant?",
     eu: "Zer gertatzen ari da?",
     gl: "Que está a pasar?",
+    en: "What is happening?",
   },
   "Indicadores del sistema de atención a la dependencia. Se ampliarán con nuevas fuentes verificadas desde el backoffice.":
     {
@@ -192,80 +228,95 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Veure totes les dades i indicadors",
     eu: "Ikusi datu eta adierazle guztiak",
     gl: "Ver todos os datos e indicadores",
+    en: "View all data and indicators",
   },
   "Mapa de adhesiones": {
     ca: "Mapa d'adhesions",
     eu: "Atxikimenduen mapa",
     gl: "Mapa de adhesións",
+    en: "Pledge map",
   },
   "Datos agregados por territorio": {
     ca: "Dades agregades per territori",
     eu: "Lurraldeka agregatutako datuak",
     gl: "Datos agregados por territorio",
+    en: "Aggregated data by region",
   },
   adhesiones: { ca: "adhesions", eu: "atxikimendu", gl: "adhesións" },
   "Ver el mapa completo por comunidad autónoma": {
     ca: "Veure el mapa complet per comunitat autònoma",
     eu: "Ikusi mapa osoa autonomia-erkidegoka",
     gl: "Ver o mapa completo por comunidade autónoma",
+    en: "pledges",
   },
   Hitos: { ca: "Fites", eu: "Mugarriak", gl: "Fitos" },
   "Últimas adhesiones": {
     ca: "Últimes adhesions",
     eu: "Azken atxikimenduak",
     gl: "Últimas adhesións",
+    en: "Milestones",
   },
   "Solo se publican las personas que han autorizado expresamente aparecer, con nombre, inicial del primer apellido y ciudad.":
     {
       ca: "Només es publiquen les persones que han autoritzat expressament aparèixer, amb nom, inicial del primer cognom i ciutat.",
       eu: "Berariaz baimendu duten pertsonak bakarrik argitaratzen dira, izenarekin, lehen abizenaren inizialarekin eta hiriarekin.",
       gl: "Só se publican as persoas que autorizaron expresamente aparecer, co nome, a inicial do primeiro apelido e a cidade.",
+    en: "Only people who have explicitly consented to appear are published, with their name, first surname initial and city.",
     },
   "Voces del cuidado": {
     ca: "Veus de les cures",
     eu: "Zaintzaren ahotsak",
     gl: "Voces dos coidados",
+    en: "Voices of care",
   },
   "Leer y compartir testimonios": {
     ca: "Llegir i compartir testimonis",
     eu: "Testigantzak irakurri eta partekatu",
     gl: "Ler e compartir testemuños",
+    en: "Read and share testimonials",
   },
   "Próximos eventos": {
     ca: "Propers esdeveniments",
     eu: "Datozen ekitaldiak",
     gl: "Próximos eventos",
+    en: "Upcoming events",
   },
   "Entidades adheridas": {
     ca: "Entitats adherides",
     eu: "Atxikitako erakundeak",
     gl: "Entidades adheridas",
+    en: "Supporting organisations",
   },
   "Ver todas las entidades": {
     ca: "Veure totes les entitats",
     eu: "Erakunde guztiak ikusi",
     gl: "Ver todas as entidades",
+    en: "View all organisations",
   },
   "Redes sociales": { ca: "Xarxes socials", eu: "Sare sozialak", gl: "Redes sociais" },
   "Síguenos y mira las últimas publicaciones": {
     ca: "Segueix-nos i mira les darreres publicacions",
     eu: "Jarraitu gaitzazu eta ikusi azken argitalpenak",
     gl: "Síguenos e mira as últimas publicacións",
+    en: "Social media",
   },
   "Aquí encontrarás las publicaciones más recientes de nuestras redes sociales.": {
     ca: "Aquí trobaràs les publicacions més recents de les nostres xarxes socials.",
     eu: "Hemen aurkituko dituzu gure sare sozialetako azken argitalpenak.",
     gl: "Aquí atoparás as publicacións máis recentes das nosas redes sociais.",
+    en: "Here you will find our latest social media posts.",
   },
   "Últimas publicaciones de Instagram": {
     ca: "Darreres publicacions d'Instagram",
     eu: "Instagrameko azken argitalpenak",
     gl: "Últimas publicacións de Instagram",
+    en: "Latest Instagram posts",
   },
   "Últimos vídeos de TikTok": {
     ca: "Darrers vídeos de TikTok",
     eu: "TikTokeko azken bideoak",
     gl: "Últimos vídeos de TikTok",
+    en: "Latest TikTok videos",
   },
   "Ver Instagram": { ca: "Veure Instagram", eu: "Ikusi Instagram", gl: "Ver Instagram" },
   "Ver TikTok": { ca: "Veure TikTok", eu: "Ikusi TikTok", gl: "Ver TikTok" },
@@ -274,11 +325,13 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Premsa i recursos",
     eu: "Prentsa eta baliabideak",
     gl: "Prensa e recursos",
+    en: "View Instagram",
   },
   "Logotipos, dossier de prensa y materiales para difundir el movimiento.": {
     ca: "Logotips, dossier de premsa i materials per difondre el moviment.",
     eu: "Logotipoak, prentsa-dosierra eta mugimendua zabaltzeko materialak.",
     gl: "Logotipos, dossier de prensa e materiais para difundir o movemento.",
+    en: "Logos, press kit and materials to promote the movement.",
   },
   "Ir a recursos": { ca: "Anar als recursos", eu: "Baliabideetara joan", gl: "Ir aos recursos" },
   Contacto: { ca: "Contacte", eu: "Harremana", gl: "Contacto" },
@@ -286,6 +339,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Ets periodista, entitat o ajuntament? Escriu-nos.",
     eu: "Kazetaria, erakundea edo udala zara? Idatzi.",
     gl: "Es xornalista, entidade ou concello? Escríbenos.",
+    en: "Go to resources",
   },
   Escríbenos: { ca: "Escriu-nos", eu: "Idatzi", gl: "Escríbenos" },
   "Quiénes somos": { ca: "Qui som", eu: "Nor gara", gl: "Quen somos" },
@@ -294,28 +348,33 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "La nostra trajectòria",
     eu: "Gure ibilbidea",
     gl: "A nosa traxectoria",
+    en: "Contact us",
   },
   "Hoja de ruta": { ca: "Full de ruta", eu: "Ibilbide-orria", gl: "Folla de ruta" },
   "Únete al movimiento": {
     ca: "Uneix-te al moviment",
     eu: "Bat egin mugimenduarekin",
     gl: "Únete ao movemento",
+    en: "Roadmap",
   },
   "Entender el problema": {
     ca: "Entendre el problema",
     eu: "Arazoa ulertzea",
     gl: "Entender o problema",
+    en: "Understanding the issue",
   },
   "La Dependencia": { ca: "La Dependència", eu: "Mendekotasuna", gl: "A Dependencia" },
   "¿Qué es la dependencia?": {
     ca: "Què és la dependència?",
     eu: "Zer da mendekotasuna?",
     gl: "Que é a dependencia?",
+    en: "Dependency care",
   },
   "¿Cómo funciona el sistema?": {
     ca: "Com funciona el sistema?",
     eu: "Nola funtzionatzen du sistemak?",
     gl: "Como funciona o sistema?",
+    en: "How does the system work?",
   },
   "El problema": { ca: "El problema", eu: "Arazoa", gl: "O problema" },
   "La propuesta": { ca: "La proposta", eu: "Proposamena", gl: "A proposta" },
@@ -323,53 +382,63 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Dades i indicadors",
     eu: "Datuak eta adierazleak",
     gl: "Datos e indicadores",
+    en: "The problem",
   },
   Adhesión: { ca: "Adhesió", eu: "Atxikimendua", gl: "Adhesión" },
   "Únete a Plataforma Dorada": {
     ca: "Uneix-te a Plataforma Dorada",
     eu: "Egin bat Plataforma Doradarekin",
     gl: "Únete a Plataforma Dorada",
+    en: "Join Plataforma Dorada",
   },
   "Rellenar el formulario de adhesión": {
     ca: "Omplir el formulari d'adhesió",
     eu: "Atxikimendu-inprimakia bete",
     gl: "Cubrir o formulario de adhesión",
+    en: "Complete the pledge form",
   },
   "Por qué adherirte": {
     ca: "Per què adherir-t'hi",
     eu: "Zergatik egin bat",
     gl: "Por que adherirte",
+    en: "Why join",
   },
   "Qué datos pedimos": {
     ca: "Quines dades demanem",
     eu: "Zer datu eskatzen ditugu",
     gl: "Que datos pedimos",
+    en: "What information we ask for",
   },
   "política de privacidad": {
     ca: "política de privacitat",
     eu: "pribatutasun-politika",
     gl: "política de privacidade",
+    en: "privacy policy",
   },
   "Últimas adhesiones públicas": {
     ca: "Últimes adhesions públiques",
     eu: "Azken atxikimendu publikoak",
     gl: "Últimas adhesións públicas",
+    en: "Latest public pledges",
   },
   Comparte: { ca: "Comparteix", eu: "Partekatu", gl: "Comparte" },
   "Hazte voluntario/a": {
     ca: "Fes-te voluntari/ària",
     eu: "Egin zaitez boluntario/a",
     gl: "Faite voluntario/a",
+    en: "Share",
   },
   "Formas de colaborar": {
     ca: "Maneres de col·laborar",
     eu: "Laguntzeko moduak",
     gl: "Formas de colaborar",
+    en: "Ways to help",
   },
   "Últimas incorporaciones": {
     ca: "Últimes incorporacions",
     eu: "Azken txertatzeak",
     gl: "Últimas incorporacións",
+    en: "Latest additions",
   },
   Testimonios: { ca: "Testimonis", eu: "Testigantzak", gl: "Testemuños" },
   "Voces reales": { ca: "Veus reals", eu: "Benetako ahotsak", gl: "Voces reais" },
@@ -377,22 +446,26 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Comparteix el teu testimoni",
     eu: "Partekatu zure testigantza",
     gl: "Comparte o teu testemuño",
+    en: "Testimonials",
   },
   "Publicación y consentimiento": {
     ca: "Publicació i consentiment",
     eu: "Argitalpena eta baimena",
     gl: "Publicación e consentimento",
+    en: "Publication and consent",
   },
   "Red de apoyo": { ca: "Xarxa de suport", eu: "Laguntza-sarea", gl: "Rede de apoio" },
   "Adherir mi entidad": {
     ca: "Adherir la meva entitat",
     eu: "Nire erakundea atxikitzea",
     gl: "Adherir a miña entidade",
+    en: "Support network",
   },
   "Filtrar por tipo": {
     ca: "Filtrar per tipus",
     eu: "Motaren arabera iragazi",
     gl: "Filtrar por tipo",
+    en: "Filter by type",
   },
   Todas: { ca: "Totes", eu: "Guztiak", gl: "Todas" },
   Agenda: { ca: "Agenda", eu: "Agenda", gl: "Axenda" },
@@ -401,12 +474,14 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Esdeveniments realitzats",
     eu: "Egindako ekitaldiak",
     gl: "Eventos realizados",
+    en: "All",
   },
   Transparencia: { ca: "Transparència", eu: "Gardentasuna", gl: "Transparencia" },
   "El movimiento en cifras": {
     ca: "El moviment en xifres",
     eu: "Mugimendua zifretan",
     gl: "O movemento en cifras",
+    en: "Transparency",
   },
   "Por territorio": { ca: "Per territori", eu: "Lurraldeka", gl: "Por territorio" },
   Comunidad: { ca: "Comunitat", eu: "Erkidegoa", gl: "Comunidade" },
@@ -416,26 +491,31 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Per a mitjans i difusió",
     eu: "Hedabideentzat eta zabalkunderako",
     gl: "Para medios e difusión",
+    en: "By region",
   },
   "Descarga disponible próximamente": {
     ca: "Descàrrega disponible pròximament",
     eu: "Deskarga laster egongo da eskuragarri",
     gl: "Descarga dispoñible proximamente",
+    en: "Download available soon",
   },
   "Imagen de perfil solidaria": {
     ca: "Imatge de perfil solidària",
     eu: "Elkartasuneko profileko irudia",
     gl: "Imaxe de perfil solidaria",
+    en: "Solidarity profile picture",
   },
   "Añade el marco dorado a tu foto y compártela en redes.": {
     ca: "Afegeix el marc daurat a la teva foto i comparteix-la a les xarxes.",
     eu: "Gehitu urrezko markoa zure argazkiari eta partekatu sareetan.",
     gl: "Engade o marco dourado á túa foto e compártea nas redes.",
+    en: "Add the golden frame to your photo and share it on social media.",
   },
   "Crear mi imagen": {
     ca: "Crear la meva imatge",
     eu: "Nire irudia sortu",
     gl: "Crear a miña imaxe",
+    en: "Create my image",
   },
   Hablemos: { ca: "Parlem", eu: "Hitz egin dezagun", gl: "Falemos" },
   Enviar: { ca: "Enviar", eu: "Bidali", gl: "Enviar" },
@@ -444,51 +524,61 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Correu electrònic",
     eu: "Posta elektronikoa",
     gl: "Correo electrónico",
+    en: "Let's talk",
   },
   Mensaje: { ca: "Missatge", eu: "Mezua", gl: "Mensaxe" },
   "He leído y acepto la política de privacidad.": {
     ca: "He llegit i accepto la política de privacitat.",
     eu: "Pribatutasun-politika irakurri eta onartzen dut.",
     gl: "Lin e acepto a política de privacidade.",
+    en: "Message",
   },
   "Gracias. Hemos recibido tu mensaje.": {
     ca: "Gràcies. Hem rebut el teu missatge.",
     eu: "Eskerrik asko. Zure mezua jaso dugu.",
     gl: "Grazas. Recibimos a túa mensaxe.",
+    en: "Thank you. We have received your message.",
   },
   Difunde: { ca: "Difon", eu: "Zabaldu", gl: "Difunde" },
   "Tu imagen de perfil": {
     ca: "La teva imatge de perfil",
     eu: "Zure profileko irudia",
     gl: "A túa imaxe de perfil",
+    en: "Spread the word",
   },
   "Sube una foto. Se procesa solo en tu dispositivo: no la enviamos a ningún servidor.": {
     ca: "Puja una foto. Es processa només al teu dispositiu: no l'enviem a cap servidor.",
     eu: "Kargatu argazki bat. Zure gailuan bakarrik prozesatzen da: ez dugu zerbitzarira bidaltzen.",
     gl: "Sube unha foto. Procésase só no teu dispositivo: non a enviamos a ningún servidor.",
+    en: "Upload a photo. It is processed on your device only; we do not send it to any server.",
   },
   "Elige tu foto": {
     ca: "Tria la teva foto",
     eu: "Aukeratu zure argazkia",
     gl: "Escolle a túa foto",
+    en: "Choose your photo",
   },
   "Descargar imagen": { ca: "Descarregar imatge", eu: "Irudia deskargatu", gl: "Descargar imaxe" },
   "Declaración de accesibilidad": {
     ca: "Declaració d'accessibilitat",
     eu: "Irisgarritasun-adierazpena",
     gl: "Declaración de accesibilidade",
+    en: "Download image",
   },
   "Política de privacidad": {
     ca: "Política de privacitat",
     eu: "Pribatutasun-politika",
     gl: "Política de privacidade",
+    en: "Privacy policy",
   },
   "Política de cookies": {
     ca: "Política de cookies",
     eu: "Cookie-en politika",
     gl: "Política de cookies",
+    en: "Cookie policy",
   },
   "Aviso legal": { ca: "Avís legal", eu: "Lege-oharra", gl: "Aviso legal" },
+    en: "Legal notice",
 };
 
 Object.assign(pageTranslations, {
@@ -496,11 +586,13 @@ Object.assign(pageTranslations, {
     ca: "Persones adherides",
     eu: "Atxikitako pertsonak",
     gl: "Persoas adheridas",
+    en: "Supporting individuals",
   },
   "Voluntarios y voluntarias": {
     ca: "Voluntaris i voluntàries",
     eu: "Boluntarioak",
     gl: "Voluntarios e voluntarias",
+    en: "Volunteers",
   },
   Ayuntamientos: { ca: "Ajuntaments", eu: "Udalak", gl: "Concellos" },
   Municipios: { ca: "Municipis", eu: "Udalerriak", gl: "Municipios" },
@@ -511,51 +603,61 @@ Object.assign(pageTranslations, {
     ca: "Temps mitjà d'espera des de la sol·licitud fins a la resolució",
     eu: "Eskaeratik ebazpenera arteko batez besteko itxaronaldia",
     gl: "Tempo medio de espera desde a solicitude ata a resolución",
+    en: "Local councils",
   },
   "Personas en lista de espera de servicios de dependencia": {
     ca: "Persones en llista d'espera de serveis de dependència",
     eu: "Mendekotasun-zerbitzuen itxaron-zerrendan dauden pertsonak",
     gl: "Persoas en lista de espera de servizos de dependencia",
+    en: "People on the waiting list for dependency care services",
   },
   "Cuidadores no profesionales con convenio especial de Seguridad Social": {
     ca: "Cuidadors i cuidadores no professionals amb conveni especial de la Seguretat Social",
     eu: "Gizarte Segurantzako hitzarmen berezia duten zaintzaile ez-profesionalak",
     gl: "Coidadores e coidadores non profesionais con convenio especial da Seguridade Social",
+    en: "Non-professional carers with a special Social Security agreement",
   },
   "Municipios con mociones aprobadas a favor del Pacto": {
     ca: "Municipis amb mocions aprovades a favor del Pacte",
     eu: "Itunaren aldeko mozioak onartu dituzten udalerriak",
     gl: "Municipios con mocións aprobadas a favor do Pacto",
+    en: "Municipalities that have approved motions in support of the Pact",
   },
   "Fuente pendiente de verificación": {
     ca: "Font pendent de verificació",
     eu: "Egiaztatzeko dagoen iturria",
     gl: "Fonte pendente de verificación",
+    en: "Source awaiting verification",
   },
   "Nace Plataforma Dorada": {
     ca: "Neix Plataforma Dorada",
     eu: "Plataforma Dorada sortzen da",
     gl: "Nace Plataforma Dorada",
+    en: "Plataforma Dorada is launched",
   },
   "Primeras adhesiones": {
     ca: "Primeres adhesions",
     eu: "Lehen atxikimenduak",
     gl: "Primeiras adhesións",
+    en: "First pledges",
   },
   "Primera entidad adherida": {
     ca: "Primera entitat adherida",
     eu: "Lehen erakunde atxikia",
     gl: "Primeira entidade adherida",
+    en: "First supporting organisation",
   },
   "Cuidadora familiar": {
     ca: "Cuidadora familiar",
     eu: "Familiako zaintzailea",
     gl: "Coidadora familiar",
+    en: "Family carer",
   },
   "Profesional del cuidado": {
     ca: "Professional de les cures",
     eu: "Zaintzako profesionala",
     gl: "Profesional dos coidados",
+    en: "Care professional",
   },
   Familiar: { ca: "Familiar", eu: "Senidea", gl: "Familiar" },
   "[NÚMERO] meses": { ca: "[NÚMERO] mesos", eu: "[ZENBAKIA] hilabete", gl: "[NÚMERO] meses" },
@@ -564,6 +666,7 @@ Object.assign(pageTranslations, {
     ca: "[NOM] G. · [CIUTAT]",
     eu: "[IZENA] G. · [HIRIA]",
     gl: "[NOME] G. · [CIDADE]",
+    en: "Family member",
   },
   "[NOMBRE] L. · [CIUDAD]": {
     ca: "[NOM] L. · [CIUTAT]",
@@ -624,16 +727,19 @@ Object.assign(pageTranslations, {
     ca: "Cartells i bàners",
     eu: "Kartelak eta banner-ak",
     gl: "Cartaces e banners",
+    en: "Association",
   },
   "Material para redes": {
     ca: "Material per a xarxes",
     eu: "Sareetarako materiala",
     gl: "Material para redes",
+    en: "Social media materials",
   },
   "La dependencia no puede esperar.": {
     ca: "La dependència no pot esperar.",
     eu: "Mendekotasunak ezin du itxaron.",
     gl: "A dependencia non pode esperar.",
+    en: "Dependency care cannot wait.",
   },
   "Quiénes somos: un movimiento ciudadano y apartidista que reclama un Pacto de Estado por la Dependencia y los Cuidados.":
     {
@@ -655,6 +761,7 @@ Object.assign(pageTranslations, {
       ca: "Aconseguir un Pacte d'Estat que garanteixi una atenció a la dependència digna, àgil i suficient.",
       eu: "Mendekotasunari arreta duina, arina eta nahikoa bermatuko dion Estatu Ituna lortzea.",
       gl: "Conseguir un Pacto de Estado que garanta unha atención á dependencia digna, áxil e suficiente.",
+    en: "Mission",
     },
   "Independencia política, transparencia, respeto a las personas y rigor en los datos.": {
     ca: "Independència política, transparència, respecte a les persones i rigor en les dades.",
@@ -724,37 +831,44 @@ Object.assign(pageTranslations, {
       ca: "Propers trobades, concentracions i actes de Plataforma Dorada, i esdeveniments ja realitzats.",
       eu: "Plataforma Doradaren datozen topaketak, elkarretaratzeak eta ekitaldiak, eta dagoeneko egindako ekitaldiak.",
       gl: "Próximos encontros, concentracións e actos de Plataforma Dorada, e eventos xa realizados.",
+    en: "Upcoming meetings, gatherings and Plataforma Dorada events, as well as past events.",
     },
   "Asociaciones, fundaciones, empresas y ayuntamientos que apoyan el Pacto de Estado por la Dependencia y los Cuidados.":
     {
       ca: "Associacions, fundacions, empreses i ajuntaments que donen suport al Pacte d'Estat per la Dependència i les Cures.",
       eu: "Mendekotasunaren eta Zaintzen aldeko Estatu Itunaren alde dauden elkarteak, fundazioak, enpresak eta udalak.",
       gl: "Asociacións, fundacións, empresas e concellos que apoian o Pacto de Estado pola Dependencia e os Coidados.",
+    en: "Associations, foundations, companies and local councils supporting the State Pact on Dependency and Care.",
     },
   "Organizaciones que se suman a la petición de un Pacto de Estado.": {
     ca: "Organitzacions que se sumen a la petició d'un Pacte d'Estat.",
     eu: "Estatu Itunaren eskaerarekin bat egiten duten erakundeak.",
     gl: "Organizacións que se suman á petición dun Pacto de Estado.",
+    en: "Organisations joining the call for a State Pact.",
   },
   "Últimas noticias y apariciones en medios de la Plataforma Dorada.": {
     ca: "Últimes notícies i aparicions als mitjans de Plataforma Dorada.",
     eu: "Plataforma Doradaren azken albisteak eta hedabideetako agerraldiak.",
     gl: "Últimas noticias e aparicións nos medios de Plataforma Dorada.",
+    en: "Latest news and media coverage of Plataforma Dorada.",
   },
   "Dossier de prensa, logotipos, carteles y material para redes de la Plataforma Dorada.": {
     ca: "Dossier de premsa, logotips, cartells i material per a xarxes de Plataforma Dorada.",
     eu: "Plataforma Doradaren prentsa-dosierra, logotipoak, kartelak eta sareetarako materiala.",
     gl: "Dossier de prensa, logotipos, carteis e material para redes de Plataforma Dorada.",
+    en: "Plataforma Dorada press kit, logos, posters and social media materials.",
   },
   "Escribe a la Plataforma Dorada: dudas, propuestas, prensa o colaboración.": {
     ca: "Escriu a Plataforma Dorada: dubtes, propostes, premsa o col·laboració.",
     eu: "Idatzi Plataforma Doradari: zalantzak, proposamenak, prentsa edo lankidetza.",
     gl: "Escribe a Plataforma Dorada: dúbidas, propostas, prensa ou colaboración.",
+    en: "Contact Plataforma Dorada with questions, proposals, press enquiries or collaboration offers.",
   },
   "También puedes escribirnos a": {
     ca: "També pots escriure'ns a",
     eu: "Honako helbide honetara ere idatz diezagukezu",
     gl: "Tamén podes escribirnos a",
+    en: "You can also email us at",
   },
   "Detrás de cada expediente hay una familia. Estos son los relatos de quienes esperan una valoración, una ayuda o un respiro.":
     {
@@ -772,32 +886,38 @@ Object.assign(pageTranslations, {
     ca: "Testimonis publicats:",
     eu: "Argitaratutako testigantzak:",
     gl: "Testemuños publicados:",
+    en: "Published testimonials:",
   },
   "Adherirte es gratuito y no implica militancia en ningún partido. Cuantas más personas seamos, más fuerza tendrá la petición de un Pacto de Estado por la Dependencia y los Cuidados.":
     {
       ca: "Adherir-t'hi és gratuït i no implica militància en cap partit. Com més persones siguem, més força tindrà la petició d'un Pacte d'Estat per la Dependència i les Cures.",
       eu: "Bat egitea doakoa da eta ez dakar inongo alderditan militante izatea. Zenbat eta pertsona gehiago izan, orduan eta indar handiagoa izango du Mendekotasunaren eta Zaintzen aldeko Estatu Itunaren eskaerak.",
       gl: "Adherirte é gratuíto e non implica militancia en ningún partido. Cantas máis persoas sexamos, máis forza terá a petición dun Pacto de Estado pola Dependencia e os Coidados.",
+    en: "Joining is free and does not involve membership of any political party. The more people we are, the stronger the call for a State Pact on Dependency and Care will be.",
     },
   "Para pedir plazos razonables en las valoraciones y concesiones de ayudas.": {
     ca: "Per demanar terminis raonables en les valoracions i concessions d'ajudes.",
     eu: "Balorazio eta laguntzen emakidetarako epe arrazoizkoak eskatzeko.",
     gl: "Para pedir prazos razoables nas valoracións e concesións de axudas.",
+    en: "To call for reasonable time limits for assessments and support decisions.",
   },
   "Para visibilizar los retrasos y las dificultades administrativas.": {
     ca: "Per visibilitzar els retards i les dificultats administratives.",
     eu: "Atzerapenak eta zailtasun administratiboak ikusarazteko.",
     gl: "Para visibilizar os atrasos e as dificultades administrativas.",
+    en: "To raise awareness of delays and administrative difficulties.",
   },
   "Para reconocer y apoyar a quienes cuidan.": {
     ca: "Per reconèixer i donar suport a qui cuida.",
     eu: "Zaintzen dutenak aitortu eta babesteko.",
     gl: "Para recoñecer e apoiar a quen coida.",
+    en: "To recognise and support carers.",
   },
   "Para reclamar un acuerdo estable y apartidista entre administraciones.": {
     ca: "Per reclamar un acord estable i apartidista entre administracions.",
     eu: "Administrazioen arteko akordio egonkor eta alderdikeriarik gabea eskatzeko.",
     gl: "Para reclamar un acordo estable e apartidista entre administracións.",
+    en: "To call for a stable, non-partisan agreement between public administrations.",
   },
   "Solo los datos mínimos necesarios. En el formulario se solicita por separado el consentimiento para tratar tu adhesión y el consentimiento, opcional, para aparecer públicamente en la web con tu nombre, la inicial de tu primer apellido y tu ciudad.":
     {
@@ -821,6 +941,7 @@ Object.assign(pageTranslations, {
     ca: "Vull ser voluntari/ària",
     eu: "Boluntarioa izan nahi dut",
     gl: "Quero ser voluntario/a",
+    en: "I want to volunteer",
   },
   "Difundir el movimiento en tu entorno y en redes sociales.": {
     ca: "Difondre el moviment al teu entorn i a les xarxes socials.",
@@ -852,20 +973,22 @@ Object.assign(pageTranslations, {
       ca: "De moment no existeix una àrea privada de voluntariat. La coordinació es fa per correu electrònic.",
       eu: "Oraingoz ez dago boluntariotzako eremu pribaturik. Koordinazioa posta elektronikoz egiten da.",
       gl: "De momento non existe unha área privada de voluntariado. A coordinación faise por correo electrónico.",
+    en: "There is currently no private volunteer area. Coordination takes place by email.",
     },
   "Solo aparecen quienes lo han autorizado expresamente.": {
     ca: "Només hi apareixen les persones que ho han autoritzat expressament.",
     eu: "Berariaz baimendu dutenak bakarrik agertzen dira.",
     gl: "Só aparecen quen o autorizou expresamente.",
+    en: "Only people who have explicitly given permission appear here.",
   },
 });
 
 Object.assign(pageTranslations, extraTranslations);
 
-const dictionariesWithPageText: Record<Locale, Dictionary> = { es, ca, eu, gl };
+const dictionariesWithPageText: Record<Locale, Dictionary> = { es, ca, eu, gl, en };
 for (const [source, variants] of Object.entries(pageTranslations)) {
   dictionariesWithPageText.es[source] = source;
-  for (const locale of ["ca", "eu", "gl"] as Locale[])
+  for (const locale of ["ca", "eu", "gl", "en"] as Locale[])
     if (variants[locale]) dictionariesWithPageText[locale][source] = variants[locale]!;
 }
 

@@ -69,6 +69,10 @@ export const Route = createFileRoute("/api/cms")({
             return Response.json({ error: "Indica la frase o cita" }, { status: 400 });
           }
           const response = await fetchCmsPost(CMS_URL, payload);
+          if (response && typeof response === "object" && "ok" in response && response.ok === false) {
+            const message = "error" in response ? String(response.error) : "Google Apps Script no ha guardado el lema.";
+            return Response.json({ error: message }, { status: 502, headers: { "Cache-Control": "no-store" } });
+          }
           return Response.json(response, { headers: { "Cache-Control": "no-store" } });
         } catch (error) {
           console.error("Error enviando propuesta:", error);

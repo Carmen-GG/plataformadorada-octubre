@@ -201,7 +201,7 @@ async function refresh() {
 
       canciones: (raw.canciones ?? []).map((item) => ({ x:String(item.x??""), artist:String(item.artist??"") })),
       frases: (raw.frases ?? []).map((item) => ({ text:String(item.text??""), name:String(item.name??"") })),
-      lemas: (raw.lemas ?? []).map((item) => ({ id:String(item.id??""), text:String(item.text??""), name:String(item.name??item.autor??item.author??item.proponente??""), order:Number(item.order??0), published:item.published !== false && !/^(no|false|0)$/i.test(String(item.published??"Sí")) })),
+      lemas: (raw.lemas ?? []).map((item) => ({ id:String(item.id??""), text:String(item.text??""), name:[item.name,item.autor,item.author,item.proponente].map((value)=>String(value??"").trim()).find((value)=>value.length>0) ?? "", order:Number(item.order??0), published:item.published !== false && !/^(no|false|0)$/i.test(String(item.published??"Sí")) })),
 
       eventos: (raw.eventos ?? []).map((item) => {
         const rawDate = String(item.fecha ?? item.date ?? "").trim();

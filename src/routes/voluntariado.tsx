@@ -3,6 +3,7 @@ import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";
 import { ShareButtons } from "@/components/share-buttons";
+import { AdhesionCarousel, type PublicAdhesion } from "@/components/adhesion-carousel";
 import { LiveCount, listStatus, usePublicStats } from "@/lib/public-stats";
 
 export const Route = createFileRoute("/voluntariado")({
@@ -18,8 +19,12 @@ export const Route = createFileRoute("/voluntariado")({
 
 function Voluntariado() {
   const state = usePublicStats();
-  const recent = state.stats?.ultimosVoluntarios ?? [];
+  const recent: PublicAdhesion[] = (state.stats?.ultimosVoluntarios ?? []).map((entry) => {
+    const [nombre, ...place] = String(entry).split(" · ");
+    return { nombre: nombre.trim(), municipio: place.join(" · ").trim() };
+  }).filter((entry) => entry.nombre);
   const status = listStatus(state, recent.length, "Todavía no hay incorporaciones públicas.");
+
   return (
     <>
       <PageHeader
@@ -65,20 +70,12 @@ function Voluntariado() {
             <Panel>
               <h2 className="font-display text-xl font-semibold">Últimas incorporaciones</h2>
               {status ? (
-                <p className="mt-4 text-sm text-muted-foreground" role="status">
-                  {status}
-                </p>
+                <p className="mt-4 text-sm text-muted-foreground" role="status">{status}</p>
               ) : (
-                <ul className="mt-4 space-y-2 text-sm">
-                  {recent.map((n, i) => (
-                    <li key={i} className="border-b border-border pb-2 last:border-0">
-                      {n}
-                    </li>
-                  ))}
-                </ul>
+                <AdhesionCarousel items={recent} itemLabel="Voluntario/a" />
               )}
               <p className="mt-3 text-xs text-muted-foreground">
-                Solo aparecen quienes lo han autorizado expresamente.
+                Solo aparecen las personas que han autorizado expresamente que se publiquen sus datos.
               </p>
             </Panel>
             <Panel>

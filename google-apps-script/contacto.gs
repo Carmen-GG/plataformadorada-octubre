@@ -11,8 +11,8 @@
 
 const CONTACT_EMAIL = "plataformadoradaes@gmail.com";
 
-function doPost(e) {
-  const params = e && e.parameter ? e.parameter : {};
+function procesarContactoPost_(params) {
+  params = params || {};
   const nombre = String(params.nombre || "").trim();
   const email = String(params.email || "").trim();
   const mensaje = String(params.mensaje || "").trim();

@@ -104,7 +104,7 @@ export const Route = createFileRoute("/redes-sociales")({ head:()=>pageHead({pat
 
 function RedesSociales(){
   const cms=useCmsContent();
-  const cmsLemas=(cms?.lemas??[]).filter(x=>x.published && x.text.trim()).sort((a,b)=>a.order-b.order).map(x=>({text:x.text.trim(),name:x.name.trim() || "Anónimo"}));
+  const cmsLemas=(cms?.lemas??[]).filter(x=>x.published && x.text.trim()).sort((a,b)=>a.order-b.order).map(x=>({text:String(x.text??"").trim(),name:String(x.name??"").trim() || "Anónimo"}));
   const phrases=(cmsLemas.length?cmsLemas:(cms?.frases??[]).filter(x=>x.text.trim()).map(x=>({text:x.text.trim(),name:x.name.trim() || "Anónimo"})));
   const visiblePhrases=phrases.length?phrases:fallbackPhrases.map(text=>({text,name:"Anónimo"}));
   const [activeTab, setActiveTab] = useState<SocialTab>("instagram");

@@ -93,14 +93,11 @@ type AppsScriptContentResponse = {
 
 function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
   const declared = String(item.tipo ?? item.type ?? "").trim().toLowerCase();
-  // La columna "tipo" de NoticiasWeb es la fuente principal y puede contener
-  // "Vídeo", "Audio" o "Texto", además de sus variantes sin tilde.
+  // Los tipos explícitos vídeo/audio tienen prioridad. "texto" no debe bloquear
+  // la detección de enlaces de audio cuando la hoja conserva un valor por defecto.
   if (["video", "vídeo", "youtube", "facebook"].includes(declared)) return "video";
   if (["audio", "podcast", "pódcast"].includes(declared)) return "audio";
-  if (["texto", "text", "noticia"].includes(declared)) return "texto";
 
-  // Solo si la celda tipo está vacía o contiene un valor desconocido, inferimos
-  // a partir de la URL original o del enlace multimedia.
   const multimedia = String(item.urlMultimedia ?? item.mediaUrl ?? "").trim();
   const candidates = [multimedia, String(item.url ?? "").trim()].filter(Boolean);
   for (const candidate of candidates) {
@@ -119,7 +116,20 @@ function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
     if (/\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(candidate)) return "audio";
   }
 
-  return "texto";
+  return ["texto", "text", "noticia"].includes(declared) || !declared ? "texto" : "texto";
+}
+
+function normalizeNewsFields(item: AppsScriptNews) {
+  const rawTitle = String(item.titulo ?? item.title ?? "").trim();
+  const rawMedia = String(item.medio ?? item.media ?? "").trim();
+  // Compatibilidad defensiva si el endpoint antiguo devuelve los dos campos
+  // intercambiados: los medios suelen ser nombres cortos de emisoras/periódicos,
+  // mientras que los titulares suelen ser frases más largas.
+  const knownOutlet = /^(onda cero|la vanguardia|el país|el pais|tele 5|telecinco|radio 4|catalunya ràdio|catalunya radio|agencia efe|efe|elpais)$/i;
+  if (knownOutlet.test(rawTitle) && rawMedia.length > rawTitle.length + 12) {
+    return { title: rawMedia, media: rawTitle };
+  }
+  return { title: rawTitle, media: rawMedia };
 }
 
 let data: CmsPayload | null = null;
@@ -162,8 +172,7 @@ async function refresh() {
     data = {
       noticias: (raw.noticias ?? []).map((item) => ({
         id: String(item.id ?? ""),
-        title: String(item.titulo ?? item.title ?? ""),
-        media: String(item.medio ?? item.media ?? ""),
+        ...normalizeNewsFields(item),
         date: String(item.fecha ?? item.date ?? ""),
         url: String(item.url ?? ""),
         summary: String(item.resumen ?? item.summary ?? ""),

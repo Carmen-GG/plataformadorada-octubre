@@ -120,13 +120,25 @@ function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
 }
 
 function normalizeNewsFields(item: AppsScriptNews) {
-  // En la respuesta pública activa del Apps Script, titulo y medio llegan
-  // intercambiados respecto a las columnas de NoticiasWeb. La hoja guarda
-  // el titular en "titulo" y la emisora/periódico en "medio", pero el endpoint
-  // devuelve el nombre del medio en titulo. Normalizamos aquí la respuesta.
-  const headline = String(item.medio ?? item.media ?? "").trim();
-  const outlet = String(item.titulo ?? item.title ?? "").trim();
-  return { title: headline, media: outlet };
+  const rawTitle = String(item.titulo ?? item.title ?? "").trim();
+  const rawMedia = String(item.medio ?? item.media ?? "").trim();
+  const rawDate = String(item.fecha ?? item.date ?? "").trim();
+
+  // La respuesta actual del endpoint llega con estos tres valores desplazados:
+  // titulo contiene el medio, medio contiene la fecha y fecha contiene el titular.
+  // Lo detectamos por el formato de fecha para no alterar respuestas ya correctas.
+  const looksLikeDate = (value: string) => /^\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}(?:\s+\d{1,2}:\d{2})?$/.test(value);
+  if (looksLikeDate(rawMedia) && !looksLikeDate(rawDate)) {
+    return { title: rawDate, media: rawTitle, date: rawMedia };
+  }
+
+  // Compatibilidad con la variante en la que solo titulo y medio estaban intercambiados.
+  const knownOutlet = /^(onda cero|la vanguardia|el país|el pais|tele 5|telecinco|radio 4|catalunya ràdio|catalunya radio|agencia efe|efe|elpais)$/i;
+  if (knownOutlet.test(rawTitle) && rawMedia.length > rawTitle.length + 12) {
+    return { title: rawMedia, media: rawTitle, date: rawDate };
+  }
+
+  return { title: rawTitle, media: rawMedia, date: rawDate };
 }
 
 let data: CmsPayload | null = null;
@@ -170,7 +182,6 @@ async function refresh() {
       noticias: (raw.noticias ?? []).map((item) => ({
         id: String(item.id ?? ""),
         ...normalizeNewsFields(item),
-        date: String(item.fecha ?? item.date ?? ""),
         url: String(item.url ?? ""),
         summary: String(item.resumen ?? item.summary ?? ""),
         type: inferNewsType(item),

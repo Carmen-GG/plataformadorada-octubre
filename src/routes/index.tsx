@@ -11,13 +11,13 @@ import {
   type CounterKey,
 } from "@/lib/public-stats";
 import { useCmsContent } from "@/lib/cms";
+import { EventList } from "@/routes/eventos";
 import { LatestInstagramVideo } from "@/components/social-feeds";
 import { TestimonyCarousel } from "@/components/testimony-carousel";
 import { AdhesionCarousel } from "@/components/adhesion-carousel";
 import { pageHead } from "@/lib/seo";
 import {
   counters,
-  events,
   indicators,
   regions,
 } from "@/lib/content";
@@ -75,13 +75,6 @@ function Home() {
     voices.length,
     "Todavía no hay testimonios publicados.",
   );
-
-  const liveEvents = cms?.eventos?.length ? cms.eventos : events;
-  const upcomingEvents = liveEvents.filter((e: any) => {
-    if (!e.date) return !e.past;
-    const parsed = new Date(`${e.date}T23:59:59`).getTime();
-    return Number.isFinite(parsed) && parsed >= Date.now();
-  });
 
   return (
     <>
@@ -373,38 +366,7 @@ function Home() {
               <h2 className="font-display text-2xl font-semibold">
                 Próximos eventos
               </h2>
-              <ul className="mt-5 space-y-4">
-                {upcomingEvents.map((e, i) => (
-                    <li
-                      key={i}
-                      className="glass-soft flex items-center gap-4 rounded-2xl p-4"
-                    >
-                      <span className="shrink-0 text-center">
-                        <span className="block font-display text-2xl font-bold text-primary">
-                          {e.date
-                            ? new Date(`${e.date}T12:00:00`).getDate()
-                            : e.day}
-                        </span>
-                        <span className="block text-[10px] tracking-widest text-muted-foreground uppercase">
-                          {e.date
-                            ? new Date(`${e.date}T12:00:00`)
-                                .toLocaleDateString("es-ES", {
-                                  month: "short",
-                                })
-                                .replace(".", "")
-                                .toUpperCase()
-                            : e.month}
-                        </span>
-                      </span>
-                      <span>
-                        <span className="block font-semibold">{e.title}</span>
-                        <span className="block text-sm text-muted-foreground">
-                          {e.place}
-                        </span>
-                      </span>
-                    </li>
-                  ))}
-              </ul>
+              <EventList past={false} events={cms?.eventos ?? []} limit={2} />
             </Panel>
 
             <Panel as="section">

@@ -161,7 +161,7 @@ function Page() {
         <h2 className="font-display text-3xl">Por territorio</h2>
         <p className="mt-2 max-w-3xl text-sm text-muted-foreground">Selecciona un indicador para ver cómo se distribuye por comunidad autónoma. También incluimos testimonios, además de adhesiones, entidades y mociones.</p>
         <div className="mt-6">
-          <TerritoryMap stats={stats} />
+          <TerritoryMap key={stats?.actualizado ?? (stats ? "loaded" : "loading")} stats={stats} />
         </div>
       </section>
     </>

@@ -155,7 +155,7 @@ function Page() {
     window.addEventListener("hashchange", syncTabFromHash);
     return () => window.removeEventListener("hashchange", syncTabFromHash);
   }, []);
-  const NEWS_PER_PAGE = 8;
+  const NEWS_PER_PAGE = 5;
   const [newsPage, setNewsPage] = useState(1);
   const pageCount = Math.max(1, Math.ceil(news.length / NEWS_PER_PAGE));
   const visibleNews = news.slice((newsPage - 1) * NEWS_PER_PAGE, newsPage * NEWS_PER_PAGE);

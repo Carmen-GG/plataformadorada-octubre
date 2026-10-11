@@ -122,48 +122,50 @@ function normalize(raw: PublicStats): PublicStats {
   };
 }
 
+let sharedResult: State = { stats: null, failed: false };
+const sharedListeners = new Set<(state: State) => void>();
+let sharedLoading = false;
+let sharedTimer: number | null = null;
+
+function publishSharedResult(next: State) {
+  sharedResult = next;
+  sharedListeners.forEach((listener) => listener(sharedResult));
+}
+
+async function loadSharedStats() {
+  if (sharedLoading) return;
+  sharedLoading = true;
+  try {
+    const response = await fetch(`/api/public-stats?_=${Date.now()}`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const raw: unknown = await response.json();
+    if (!isStats(raw)) throw new Error("Respuesta inesperada de /api/public-stats");
+    publishSharedResult({ stats: normalize(raw), failed: false });
+  } catch (error) {
+    console.error("[public-stats] Error al cargar /api/public-stats:", error);
+    publishSharedResult({ stats: sharedResult.stats, failed: sharedResult.stats === null });
+  } finally {
+    sharedLoading = false;
+  }
+}
+
 export function usePublicStats(): State {
-  const [result, setResult] = useState<State>({ stats: null, failed: false });
-
+  const [result, setResult] = useState<State>(sharedResult);
   useEffect(() => {
-    let active = true;
-    let loading = false;
-
-    const load = async () => {
-      if (loading) return;
-      loading = true;
-      const controller = new AbortController();
-      const timeout = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-      try {
-        const response = await fetch(`/api/public-stats?_=${Date.now()}`, {
-          cache: "no-store",
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const raw: unknown = await response.json();
-        if (!isStats(raw)) throw new Error("Respuesta inesperada de /api/public-stats");
-        if (active) setResult({ stats: normalize(raw), failed: false });
-      } catch (error) {
-        if (active) {
-          console.error("[public-stats] Error al cargar /api/public-stats:", error);
-          setResult((previous) => ({ stats: previous.stats, failed: previous.stats === null }));
-        }
-      } finally {
-        window.clearTimeout(timeout);
-        loading = false;
+    sharedListeners.add(setResult);
+    setResult(sharedResult);
+    void loadSharedStats();
+    if (sharedTimer === null) {
+      sharedTimer = window.setInterval(() => void loadSharedStats(), REFRESH_MS);
+    }
+    return () => {
+      sharedListeners.delete(setResult);
+      if (sharedListeners.size === 0 && sharedTimer !== null) {
+        window.clearInterval(sharedTimer);
+        sharedTimer = null;
       }
     };
-
-    void load();
-    const interval = window.setInterval(() => void load(), REFRESH_MS);
-
-    return () => {
-      active = false;
-      window.clearInterval(interval);
-    };
   }, []);
-
   return result;
 }
 

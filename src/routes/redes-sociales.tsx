@@ -59,29 +59,31 @@ function ProposalForm({ type }: { type: "cancion" | "frase" | "lema" }) {
 }
 
 function PhraseCarousel({ phrases }: { phrases: string[] }) {
-  const [index,setIndex]=useState(0); const [paused,setPaused]=useState(false);
+  const [index,setIndex]=useState(0);
+  const [paused,setPaused]=useState(false);
   useEffect(() => { setIndex(0); }, [phrases.join("\\u0000")]);
-  useEffect(()=>{if(paused||phrases.length<2)return;const id=window.setInterval(()=>setIndex(i=>(i+1)%phrases.length),6500);return()=>window.clearInterval(id)},[paused,phrases.length]);
-  if(!phrases.length)return <p className="mt-5 text-sm text-muted-foreground">Todavía no hay lemas publicados.</p>;
-  const goTo = (nextIndex: number) => setIndex((nextIndex + phrases.length) % phrases.length);
-  return <div className="mt-5 rounded-3xl bg-accent/15 p-7 sm:p-9" aria-roledescription="carrusel" aria-label="Lemas publicados de Plataforma Dorada">
+  useEffect(() => {
+    if (paused || phrases.length < 2) return;
+    const id = window.setInterval(() => setIndex(i => (i + 1) % phrases.length), 6500);
+    return () => window.clearInterval(id);
+  }, [paused, phrases.length]);
+  if (!phrases.length) return <p className="mt-5 text-sm text-muted-foreground">Todavía no hay lemas publicados.</p>;
+  const move = (amount: number) => setIndex(i => (i + amount + phrases.length) % phrases.length);
+  return <div className="mt-5 rounded-3xl bg-accent/15 p-7 sm:p-9" aria-roledescription="carrusel" aria-label="Lemas de Plataforma Dorada">
     <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Lema destacado</p>
-    <blockquote className="mt-4 min-h-24 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{phrases[index]}”</blockquote>
-    <p className="mt-3 text-sm font-medium text-muted-foreground" aria-live="polite">Lema {index + 1} de {phrases.length}</p>
-    <div className="mt-6 flex flex-wrap gap-3">
-      <button type="button" className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-background" onClick={()=>goTo(index-1)} disabled={phrases.length < 2}>← Anterior</button>
-      <button type="button" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" onClick={()=>setPaused(v=>!v)} aria-pressed={paused} disabled={phrases.length < 2}>{paused?"Reanudar":"Pausar"}</button>
-      <button type="button" className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-background" onClick={()=>goTo(index+1)} disabled={phrases.length < 2}>Siguiente →</button>
+    <div className="relative flex min-h-44 flex-col justify-center">
+      <blockquote className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{phrases[index]}”</blockquote>
     </div>
-    <div className="mt-7 border-t border-border/70 pt-5">
-      <h3 className="mb-3 text-sm font-semibold">Todos los lemas publicados</h3>
-      <ol className="grid gap-2 sm:grid-cols-2">
-        {phrases.map((phrase, i) => <li key={i}>
-          <button type="button" onClick={()=>{goTo(i);setPaused(true);}} aria-current={index===i?"true":undefined} className={"h-full w-full rounded-xl border px-4 py-3 text-left text-sm transition-colors " + (index===i ? "border-primary bg-background font-semibold" : "border-border bg-background/50 hover:bg-background")}>
-            <span className="mr-2 text-primary">{i+1}.</span>{phrase}
-          </button>
-        </li>)}
-      </ol>
+    <div className="mt-4 flex items-center justify-between gap-3">
+      <span className="text-sm text-muted-foreground" aria-live="polite">{index + 1} de {phrases.length}</span>
+      <div className="flex flex-wrap gap-2">
+        <button type="button" aria-label="Lema anterior" className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-background disabled:opacity-40" onClick={() => move(-1)} disabled={phrases.length < 2}>← Anterior</button>
+        <button type="button" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-40" onClick={() => setPaused(v => !v)} aria-pressed={paused} disabled={phrases.length < 2}>{paused ? "Reanudar" : "Pausar"}</button>
+        <button type="button" aria-label="Siguiente lema" className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-background disabled:opacity-40" onClick={() => move(1)} disabled={phrases.length < 2}>Siguiente →</button>
+      </div>
+    </div>
+    <div className="mt-5 flex justify-center gap-2" aria-label="Posición del lema">
+      {phrases.map((phrase, i) => <button key={i} type="button" aria-label={`Mostrar lema ${i + 1}`} aria-current={index === i ? "true" : undefined} onClick={() => { setIndex(i); setPaused(true); }} className={"h-2.5 rounded-full transition-all " + (index === i ? "w-7 bg-primary" : "w-2.5 bg-primary/30 hover:bg-primary/60")} />)}
     </div>
   </div>;
 }

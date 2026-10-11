@@ -136,16 +136,19 @@ function Page() {
   const resources = cms?.recursos ?? [];
   const news = cms?.noticias ?? [];
   const [activeTab, setActiveTab] = useState<"prensa" | "recursos">(() => {
-    if (typeof window === "undefined") return "recursos";
-    return window.location.hash === "#prensa" || window.location.hash === "#tab-prensa" ? "prensa" : "recursos";
+    if (typeof window === "undefined") return "prensa";
+    const hash = window.location.hash.toLowerCase();
+    if (hash.includes("recursos") || hash.includes("tab-recursos")) return "recursos";
+    return "prensa";
   });
 
   useEffect(() => {
     const syncTabFromHash = () => {
-      if (window.location.hash === "#prensa" || window.location.hash === "#tab-prensa") {
-        setActiveTab("prensa");
-      } else if (window.location.hash === "#recursos" || window.location.hash === "#tab-recursos") {
+      const hash = window.location.hash.toLowerCase();
+      if (hash.includes("recursos") || hash.includes("tab-recursos")) {
         setActiveTab("recursos");
+      } else if (hash.includes("prensa") || hash.includes("tab-prensa") || !hash) {
+        setActiveTab("prensa");
       }
     };
     syncTabFromHash();

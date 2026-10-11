@@ -40,15 +40,25 @@ async function fetchCmsPost(url: string, payload: Record<string, unknown>) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
+    // Apps Script ContentService puede responder mediante una redirección a
+    // script.googleusercontent.com. En Cloudflare, seguir esa redirección tras
+    // un POST puede dejar la petición esperando aunque doPost ya haya guardado.
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
       cache: "no-store",
+      redirect: "manual",
       signal: controller.signal,
     });
+    if (response.status >= 300 && response.status < 400) {
+      // La ejecución de doPost ya ha sido aceptada por Apps Script; ContentService
+      // entrega su salida a través de una URL temporal redirigida.
+      return { ok: true, message: "Petición recibida por Google Apps Script." };
+    }
     if (!response.ok) throw new Error(`Google Apps Script respondió ${response.status}`);
-    return await response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {
       throw new Error("Google Apps Script no ha respondido en 30 segundos. Comprueba que la implementación esté actualizada y accesible.");

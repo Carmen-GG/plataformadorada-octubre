@@ -37,36 +37,18 @@ export function SiteFooter() {
               Navegación
             </h2>
             <ul className="mt-4 space-y-2 text-sm text-primary-foreground/85">
-              <li>
-                <Link to="/la-plataforma" className="hover:text-accent">
-                  {t("nav.about")}
-                </Link>
-              </li>
-              <li>
-                <Link to="/la-dependencia" className="hover:text-accent">
-                  {t("nav.dependency")}
-                </Link>
-              </li>
-              <li>
-                <Link to="/redes-sociales" className="hover:text-accent">
-                  {t("nav.social")}
-                </Link>
-              </li>
-              <li>
-                <Link to="/voluntariado" className="hover:text-accent">
-                  {t("nav.volunteer")}
-                </Link>
-              </li>
-              <li>
-                <Link to="/testimonios" className="hover:text-accent">
-                  {t("nav.testimonials")}
-                </Link>
-              </li>
-              <li>
-                <Link to="/prensa" className="hover:text-accent">
-                  {t("nav.press")}
-                </Link>
-              </li>
+              <li><Link to="/" className="hover:text-accent">Inicio</Link></li>
+              <li><Link to="/la-plataforma" className="hover:text-accent">La Plataforma</Link></li>
+              <li><Link to="/la-dependencia" className="hover:text-accent">La Dependencia</Link></li>
+              <li><Link to="/mociones-ayuntamientos" className="hover:text-accent">Mociones en ayuntamientos</Link></li>
+              <li><Link to="/datos" className="hover:text-accent">Datos</Link></li>
+              <li><Link to="/prensa" className="hover:text-accent">Prensa y recursos</Link></li>
+              <li><Link to="/redes-sociales" className="hover:text-accent">Redes sociales</Link></li>
+              <li><Link to="/eventos" className="hover:text-accent">Eventos</Link></li>
+              <li><Link to="/entidades" className="hover:text-accent">Entidades</Link></li>
+              <li><Link to="/novedades" className="hover:text-accent">Novedades</Link></li>
+              <li><Link to="/unete" className="hover:text-accent">Participa y adhiérete</Link></li>
+              <li><Link to="/mapa-web" className="hover:text-accent">Mapa web</Link></li>
             </ul>
           </nav>
 
@@ -75,7 +57,7 @@ export function SiteFooter() {
               Contacto
             </h2>
             <ul className="mt-4 space-y-2 text-sm text-primary-foreground/85">
-              <li>{SITE.email}</li>
+              <li><a href={"mailto:" + SITE.email} className="break-words hover:text-accent" aria-label={"Enviar correo a " + SITE.email}>{SITE.email}</a></li>
               <li>
                 <a href={SITE.instagram} className="hover:text-accent">
                   Instagram

@@ -26,8 +26,34 @@ function checkBackofficePassword(password) {
 
 function doPost(e) {
   try {
-    var body = JSON.parse(e.postData && e.postData.contents || "{}");
-    return outputJson_(body.type === "lema" ? saveLemaPublic_(body) : saveProposalPublic_(body));
+    var params = e && e.parameter ? e.parameter : {};
+    var body = params;
+
+    // Las peticiones JSON de la web y las peticiones de formulario usan
+    // el mismo punto de entrada, pero se derivan al procesador correcto.
+    if (e && e.postData && e.postData.contents) {
+      var raw = e.postData.contents;
+      try {
+        body = JSON.parse(raw);
+      } catch (parseError) {
+        body = params;
+      }
+    }
+
+    // Formulario de contacto (parámetros o JSON).
+    if (body && (body.nombre || body.email || body.mensaje)) {
+      return procesarContactoPost_(body);
+    }
+
+    // Propuestas públicas del CMS.
+    if (body && body.type === "lema") {
+      return outputJson_(saveLemaPublic_(body));
+    }
+    if (body && (body.type === "cancion" || body.type === "frase")) {
+      return outputJson_(saveProposalPublic_(body));
+    }
+
+    return outputJson_({ ok:false, error:"Tipo de petición no válido." });
   } catch (err) {
     return outputJson_({ ok:false, error:String(err && err.message || err) });
   }

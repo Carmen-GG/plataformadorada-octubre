@@ -58,19 +58,28 @@ function Page() {
           <h2 id="principios-title" className="mt-3 font-display text-3xl font-bold sm:text-4xl">Los 10 principios de Plataforma Dorada</h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">Una guía compartida para defender los derechos de las personas en situación de dependencia y de quienes cuidan.</p>
         </div>
-        {principlesImage ? (
-          <a href={principlesImage} target="_blank" rel="noreferrer" className="relative mx-auto mt-8 block max-w-4xl overflow-hidden rounded-2xl border border-border/60 bg-background/80 p-2 shadow-xl transition-transform duration-300 hover:-translate-y-1" aria-label="Abrir la infografía de los 10 principios de Plataforma Dorada">
-            <img src={principlesImage} alt="Infografía: los 10 principios de Plataforma Dorada" className="mx-auto max-h-[900px] w-full rounded-xl object-contain" loading="lazy" />
-          </a>
-        ) : (
-          <div className="relative mx-auto mt-8 max-w-3xl rounded-2xl border border-dashed border-primary/30 bg-background/70 p-6 text-center">
-            <p className="font-semibold">La infografía de los 10 principios se mostrará aquí.</p>
-            <p className="mt-2 text-sm text-muted-foreground">Para mostrar el contenido aprobado, el recurso público «Principios de Plataforma Dorada» debe estar publicado en el apartado Recursos del backoffice.</p>
-          </div>
-        )}
-        {principlesResource?.url && principlesImage && principlesResource.url !== principlesImage && (
-          <p className="relative mt-4 text-center text-sm"><a className="font-semibold text-primary underline underline-offset-4" href={principlesResource.url} target="_blank" rel="noreferrer">Consultar el documento completo</a></p>
-        )}
+        <ol className="relative mt-8 grid gap-4 sm:grid-cols-2">
+          {[
+            ["La atención a la dependencia es un derecho", "La atención a la dependencia debe reconocerse y garantizarse como un derecho."],
+            ["Igualdad de derechos en todo el territorio", "Todas las personas deben tener los mismos derechos y garantías, con independencia de dónde vivan."],
+            ["Financiación suficiente, estable y sostenible", "El sistema debe contar con recursos suficientes y una financiación estable y sostenible en el tiempo."],
+            ["Atención centrada en la persona", "La atención debe respetar las necesidades, preferencias, autonomía y dignidad de cada persona."],
+            ["Derecho a elegir dónde y cómo vivir", "Las personas deben poder decidir dónde y cómo vivir, con los apoyos que necesiten."],
+            ["Calidad y dignidad en los cuidados", "Los cuidados deben prestarse con calidad, respeto y dignidad."],
+            ["Coordinación sociosanitaria real", "Los servicios sociales y sanitarios deben coordinarse de forma efectiva para ofrecer una atención integral."],
+            ["Apoyo real a las familias cuidadoras", "Las familias y personas cuidadoras deben recibir apoyo, reconocimiento y recursos adecuados."],
+            ["Transparencia, evaluación y rendición de cuentas", "Las políticas y recursos destinados a la dependencia deben gestionarse con transparencia, evaluación y rendición de cuentas."],
+            ["Un compromiso que trascienda las legislaturas", "La atención a la dependencia requiere un compromiso de Estado estable, que vaya más allá de los cambios de gobierno."]
+          ].map(([title, description], index) => (
+            <li key={title} className="flex gap-4 rounded-2xl border border-primary/15 bg-background/85 p-5 shadow-sm">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary font-display text-lg font-bold text-primary-foreground" aria-hidden="true">{index + 1}</span>
+              <div>
+                <h3 className="font-display text-lg font-bold leading-snug text-foreground">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
 

@@ -83,7 +83,7 @@ function PhraseCarousel({ phrases }: { phrases: Array<{ text: string; name: stri
   return <div className="mt-5 rounded-3xl bg-accent/15 p-7 sm:p-9" aria-roledescription="carrusel" aria-label="Lemas de Plataforma Dorada">
     <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Lema destacado</p>
     <div className="relative flex min-h-44 flex-col justify-center">
-      <blockquote key={currentIndex + ":" + currentPhrase} className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{currentPhrase.text}”</blockquote>
+      <blockquote key={currentIndex + ":" + currentPhrase.text + ":" + currentPhrase.name} className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{currentPhrase.text}”</blockquote>
       <p className="mt-5 text-sm font-semibold text-muted-foreground" aria-live="polite">— {currentPhrase.name.trim() || "Anónimo"}</p>
     </div>
     <div className="mt-4 flex items-center justify-between gap-3">
@@ -203,7 +203,7 @@ function RedesSociales(){
         <article id="lemas" className="glass-panel rounded-3xl p-5 sm:p-7">
           <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Palabras</p>
           <h2 className="mt-1 font-display text-2xl font-semibold">Lemas y citas</h2>
-          <PhraseCarousel phrases={visiblePhrases}/>
+          <PhraseCarousel key={visiblePhrases.map((phrase) => phrase.text + "|~|" + phrase.name).join("|~~|")} phrases={visiblePhrases}/>
           <ProposalForm type="lema" />
         </article>
       </div>

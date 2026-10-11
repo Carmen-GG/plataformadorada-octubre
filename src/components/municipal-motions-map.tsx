@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { formatCount } from "@/lib/public-stats";
 
 type MotionStatus = "presentada" | "aprobada" | "rechazada" | "no presentada";
-type Feature = {
-  type: "Feature";
-  properties?: Record<string, unknown>;
-  geometry?: { type: string; coordinates: any };
+type MotionRecord = {
+  municipio: string;
+  provincia: string;
+  estado: string;
+  mociones: number;
+  motionStatus: MotionStatus;
 };
-type MotionMapData = { ok: boolean; total: number; features: Feature[]; communities: Feature[]; error?: string };
+type MotionMapData = { ok: boolean; total: number; records: MotionRecord[]; error?: string };
 
 const STATUS: Record<MotionStatus, { label: string; color: string }> = {
   presentada: { label: "Presentada", color: "#2586d8" },
@@ -16,193 +18,203 @@ const STATUS: Record<MotionStatus, { label: string; color: string }> = {
   "no presentada": { label: "No presentada", color: "#ffffff" },
 };
 
+const IGN_STYLE = "https://vt-unidades-administrativas.ign.es/demo/style_s3_cloud.json";
+const OSM_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+
 declare global {
-  interface Window { L?: any }
+  interface Window { maplibregl?: any }
 }
 
-function loadLeaflet(): Promise<any> {
-  if (window.L) return Promise.resolve(window.L);
+function loadMapLibre(): Promise<any> {
+  if (window.maplibregl) return Promise.resolve(window.maplibregl);
   return new Promise((resolve, reject) => {
-    const cssId = "pd-leaflet-css";
-    if (!document.getElementById(cssId)) {
+    if (!document.getElementById("pd-maplibre-css")) {
       const link = document.createElement("link");
-      link.id = cssId;
+      link.id = "pd-maplibre-css";
       link.rel = "stylesheet";
-      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      link.href = "https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css";
       document.head.appendChild(link);
     }
-    const existing = document.getElementById("pd-leaflet-js") as HTMLScriptElement | null;
-    const finish = () => window.L ? resolve(window.L) : reject(new Error("No se ha podido cargar la librería cartográfica."));
+    const existing = document.getElementById("pd-maplibre-js") as HTMLScriptElement | null;
+    const finish = () => window.maplibregl ? resolve(window.maplibregl) : reject(new Error("No se ha podido cargar MapLibre."));
     if (existing) {
       existing.addEventListener("load", finish, { once: true });
-      existing.addEventListener("error", () => reject(new Error("Error al cargar Leaflet.")), { once: true });
-      if (window.L) resolve(window.L);
+      existing.addEventListener("error", () => reject(new Error("Error al cargar MapLibre.")), { once: true });
+      if (window.maplibregl) resolve(window.maplibregl);
       return;
     }
     const script = document.createElement("script");
-    script.id = "pd-leaflet-js";
-    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    script.id = "pd-maplibre-js";
+    script.src = "https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js";
     script.onload = finish;
-    script.onerror = () => reject(new Error("Error al cargar Leaflet."));
-    document.body.appendChild(script);
+    script.onerror = () => reject(new Error("Error al cargar MapLibre."));
+    document.head.appendChild(script);
   });
 }
 
+function normalize(value: unknown) {
+  return String(value ?? "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
 function normalizeStatus(value: unknown): MotionStatus {
-  const status = String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-  if (status.startsWith("no present")) return "no presentada";
+  const status = normalize(value);
   if (status.startsWith("aprob") || status.startsWith("acept")) return "aprobada";
   if (status.startsWith("rechaz") || status.startsWith("deneg") || status.startsWith("no aprob")) return "rechazada";
-  if (status.startsWith("present")) return "presentada";
+  if (status.startsWith("present") || status.startsWith("registr") || status.startsWith("tramit")) return "presentada";
   return "no presentada";
 }
 
-function featureName(feature: Feature) {
-  const p = feature.properties || {};
-  return String(p.NAMEUNIT ?? p.name ?? p.NOMBRE ?? p.municipio ?? "Municipio");
+function escapeHtml(value: unknown) {
+  return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 }
 
-function featureStatus(feature: Feature): MotionStatus {
-  return normalizeStatus(feature.properties?.motionStatus);
+function provinceCodeForName(value: string) {
+  const codes: Record<string, string> = {
+    alava:"01", araba:"01", albacete:"02", alicante:"03", alacant:"03", almeria:"04", asturias:"33", avila:"05",
+    badajoz:"06", baleares:"07", "illes balears":"07", barcelona:"08", burgos:"09", caceres:"10", cadiz:"11",
+    cantabria:"39", castellon:"12", castello:"12", "ciudad real":"13", cordoba:"14", cuenca:"16", girona:"17",
+    gerona:"17", granada:"18", guadalajara:"19", guipuzcoa:"20", gipuzkoa:"20", huelva:"21", huesca:"22",
+    jaen:"23", "la coruna":"15", "a coruna":"15", lleida:"25", lerida:"25", leon:"24", lugo:"27", madrid:"28",
+    malaga:"29", murcia:"30", navarra:"31", ourense:"32", palencia:"34", "las palmas":"35", pontevedra:"36",
+    "la rioja":"26", rioja:"26", salamanca:"37", "santa cruz de tenerife":"38", segovia:"40", sevilla:"41",
+    soria:"42", tarragona:"43", teruel:"44", toledo:"45", valencia:"46", valladolid:"47", vizcaya:"48",
+    bizkaia:"48", zamora:"49", zaragoza:"50", ceuta:"51", melilla:"52"
+  };
+  return codes[normalize(value)] || "";
+}
+
+function findMunicipalityLayer(map: any) {
+  const style = map.getStyle();
+  const sources = style.sources || {};
+  const ids = Object.keys(sources).filter((id) => (sources[id]?.tiles || []).some((tile: string) => String(tile).includes("vt-unidades-administrativas.ign.es")));
+  const layers = style.layers || [];
+  const candidates = layers.filter((layer: any) => layer.type === "fill" && ids.includes(layer.source) && layer["source-layer"]);
+  const fallback = layers.filter((layer: any) => layer.source && ids.includes(layer.source) && layer["source-layer"]);
+  const layer = candidates[0] || fallback[0];
+  return layer ? { source: layer.source, sourceLayer: layer["source-layer"] } : null;
 }
 
 export function MunicipalMotionsMap() {
   const mapElement = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
-  const layerRef = useRef<any>(null);
   const [data, setData] = useState<MotionMapData | null>(null);
   const [statusFilter, setStatusFilter] = useState<MotionStatus | "todas">("todas");
   const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
-    (async () => {
-      try {
-        const allFeatures: Feature[] = [];
-        let communities: Feature[] = [];
-        let total = 0;
-        const pageSize = 1000;
-
-        const fetchPage = async (offset: number) => {
-          const response = await fetch(`/api/mociones-municipios?offset=${offset}`, { cache: "default" });
-          const json = await response.json().catch(() => null);
-          if (!response.ok || !json?.ok) {
-            throw new Error(String(json?.error || `No se han podido obtener los datos del mapa (HTTP ${response.status}).`));
-          }
-          return json;
-        };
-
-        const first = await fetchPage(0);
-        allFeatures.push(...(Array.isArray(first.features) ? first.features : []));
-        communities = Array.isArray(first.communities) ? first.communities : [];
-        total = Number(first.total || 0);
-
-        let offset = pageSize;
-        let hasMore = Boolean(first.hasMore && first.features?.length);
-        // Descarga varias páginas en paralelo para no esperar una petición por bloque.
-        while (hasMore) {
-          const offsets = [0, 1, 2, 3].map((page) => offset + page * pageSize);
-          const pages = await Promise.all(offsets.map(fetchPage));
-          for (const json of pages) {
-            if (Array.isArray(json.features)) allFeatures.push(...json.features);
-          }
-          hasMore = pages.some((json) => Boolean(json.hasMore && json.features?.length));
-          offset += offsets.length * pageSize;
-        }
-        if (active) setData({ ok: true, total, features: allFeatures, communities });
-      } catch (reason) {
-        if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa.");
-      }
-    })();
+    fetch("/api/mociones-municipios", { cache: "default" })
+      .then(async (response) => {
+        const json = await response.json().catch(() => null);
+        if (!response.ok || !json?.ok) throw new Error(String(json?.error || `No se han podido obtener los datos del mapa (HTTP ${response.status}).`));
+        return json as MotionMapData;
+      })
+      .then((json) => { if (active) setData(json); })
+      .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa."); });
     return () => { active = false; };
   }, []);
 
   useEffect(() => {
-    if (!mapElement.current || !data?.ok || !data.features.length) return;
+    if (!mapElement.current || !data?.ok) return;
     let active = true;
     let map: any;
-    loadLeaflet().then((L) => {
+    loadMapLibre().then((ml) => {
       if (!active || !mapElement.current) return;
-      map = L.map(mapElement.current, { zoomControl: true, scrollWheelZoom: true, preferCanvas: true });
+      map = new ml.Map({
+        container: mapElement.current,
+        style: IGN_STYLE,
+        center: [-3.7, 40.2],
+        zoom: 5.5,
+        attributionControl: true,
+      });
       mapRef.current = map;
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 18,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
+      map.addControl(new ml.NavigationControl(), "top-left");
 
-      const geoJson = { type: "FeatureCollection", features: data.features };
-      const layer = L.geoJSON(geoJson, {
-        style: (feature: Feature) => {
-          const status = featureStatus(feature);
-          const visible = statusFilter === "todas" || status === statusFilter;
-          return {
-            // Keep municipal fills but remove internal outlines to reduce visual clutter.
-            color: STATUS[status].color,
-            weight: 0,
-            opacity: 0,
-            fillColor: STATUS[status].color,
-            fillOpacity: visible ? (status === "no presentada" ? 0.48 : 0.78) : 0.08,
-          };
-        },
-        onEachFeature: (feature: Feature, leafletLayer: any) => {
-          const status = featureStatus(feature);
-          const statusLabel = STATUS[status].label;
-          const province = String(feature.properties?.motionProvince ?? "");
-          const count = Number(feature.properties?.motionCount ?? 0);
-          const detail = status !== "no presentada"
-            ? `<div style="font-size:12px;color:#666;margin-top:8px">Estado de la moción</div><div style="font-size:16px;margin-top:4px">${statusLabel}</div>${province ? `<div style="font-size:12px;color:#666;margin-top:8px">${province}</div>` : ""}${count > 1 ? `<div style="font-size:12px;margin-top:6px">${formatCount(count)} mociones</div>` : ""}`
-            : '<div style="font-size:12px;color:#666;margin-top:8px">Estado de la moción</div><div style="font-size:16px;margin-top:4px">No presentada</div><div style="font-size:12px;color:#666;margin-top:6px">No consta ninguna moción registrada.</div>';
-          const safeName = featureName(feature).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] || char);
-          leafletLayer.bindPopup(`<div style="min-width:180px"><strong style="font-size:18px">${safeName}</strong>${detail}</div>`);
-          leafletLayer.on("mouseover", () => leafletLayer.setStyle({ weight: 0.8, color: "#334155", fillOpacity: 0.9 }));
-          leafletLayer.on("mouseout", () => layer.resetStyle(leafletLayer));
-        },
-      }).addTo(map);
-      layerRef.current = layer;
+      map.on("load", () => {
+        if (!active) return;
+        try {
+          map.addSource("pd-osm-base", { type: "raster", tiles: [OSM_TILES], tileSize: 256, attribution: "&copy; OpenStreetMap contributors" });
+          const firstLayer = map.getStyle().layers?.[0];
+          map.addLayer({ id: "pd-osm-base", type: "raster", source: "pd-osm-base", paint: { "raster-opacity": 0.32 } }, firstLayer?.id);
+        } catch { /* La cartografía oficial del IGN sigue disponible sin la base OSM. */ }
 
-      // Add only autonomous-community outlines above the colored municipalities.
-      // This layer is non-interactive so municipality popups still work underneath.
-      if (data.communities.length) {
-        L.geoJSON({ type: "FeatureCollection", features: data.communities }, {
-          interactive: false,
-          style: { color: "#334155", weight: 2.2, opacity: 0.95, fill: false },
-        }).addTo(map);
-      }
+        const info = findMunicipalityLayer(map);
+        if (!info) {
+          setError("No se ha localizado la capa vectorial municipal del IGN.");
+          return;
+        }
+        const matchNames = ["match", ["get", "nameunit"]];
+        const filterNames: string[] = [];
+        data.records.forEach((record) => {
+          if (!filterNames.includes(record.municipio)) filterNames.push(record.municipio);
+        });
+        const nameMatch: any = ["match", ["get", "nameunit"], filterNames, true, false];
+        const colorMatch: any = ["match", ["get", "nameunit"]];
+        data.records.forEach((record) => {
+          colorMatch.push(record.municipio, STATUS[record.motionStatus].color);
+        });
+        colorMatch.push("#00000000");
 
-      const bounds = layer.getBounds();
-      if (bounds.isValid()) map.fitBounds(bounds, { padding: [12, 12] });
+        map.addLayer({
+          id: "pd-municipal-motions-fill",
+          type: "fill",
+          source: info.source,
+          "source-layer": info.sourceLayer,
+          filter: nameMatch,
+          paint: {
+            "fill-color": colorMatch,
+            "fill-opacity": ["case", ["==", statusFilter, "todas"], 0.68, 0.68],
+          },
+        });
+        map.addLayer({
+          id: "pd-municipal-motions-outline",
+          type: "line",
+          source: info.source,
+          "source-layer": info.sourceLayer,
+          filter: nameMatch,
+          paint: { "line-color": "#334155", "line-width": 0.7, "line-opacity": 0.75 },
+        });
+
+        map.on("click", "pd-municipal-motions-fill", (event: any) => {
+          const feature = event.features?.[0];
+          if (!feature) return;
+          const name = String(feature.properties?.nameunit || "").trim();
+          const nationalCode = String(feature.properties?.nationalcode || "");
+          const provinceCode = nationalCode.length >= 6 ? nationalCode.substring(4, 6) : "";
+          const candidates = data.records.filter((record) => normalize(record.municipio) === normalize(name));
+          const record = candidates.length > 1 && provinceCode
+            ? candidates.find((item) => provinceCodeForName(item.provincia) === provinceCode) || candidates[0]
+            : candidates[0];
+          if (!record) return;
+          const html = `<div style="min-width:190px"><strong style="font-size:18px">${escapeHtml(record.municipio)}</strong><div style="font-size:12px;color:#666;margin-top:8px">Estado de la moción</div><div style="font-size:16px;margin-top:4px">${escapeHtml(record.estado || STATUS[record.motionStatus].label)}</div>${record.provincia ? `<div style="font-size:12px;color:#666;margin-top:8px">${escapeHtml(record.provincia)}</div>` : ""}${record.mociones > 1 ? `<div style="font-size:12px;margin-top:6px">${formatCount(record.mociones)} mociones</div>` : ""}<div style="font-size:12px;color:#666;margin-top:8px">Moción registrada en Plataforma Dorada</div></div>`;
+          new ml.Popup({ closeButton: true, maxWidth: "320px" }).setLngLat(event.lngLat).setHTML(html).addTo(map);
+        });
+        map.on("mouseenter", "pd-municipal-motions-fill", () => { map.getCanvas().style.cursor = "pointer"; });
+        map.on("mouseleave", "pd-municipal-motions-fill", () => { map.getCanvas().style.cursor = ""; });
+      });
+      map.on("error", (event: any) => { if (event?.error?.message) console.warn("MapLibre:", event.error.message); });
     }).catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "No se ha podido cargar el mapa interactivo."); });
 
     return () => {
       active = false;
       if (map) map.remove();
       mapRef.current = null;
-      layerRef.current = null;
     };
   }, [data]);
 
   useEffect(() => {
     const map = mapRef.current;
-    const layer = layerRef.current;
-    if (!window.L || !map || !layer) return;
-    layer.eachLayer((item: any) => {
-      const status = featureStatus(item.feature as Feature);
-      const visible = statusFilter === "todas" || status === statusFilter;
-      item.setStyle({
-        color: STATUS[status].color,
-        weight: 0,
-        opacity: 0,
-        fillColor: STATUS[status].color,
-        fillOpacity: visible ? (status === "no presentada" ? 0.48 : 0.78) : 0.08,
-      });
-    });
-  }, [statusFilter]);
+    if (!map || !map.getLayer("pd-municipal-motions-fill") || !data) return;
+    const visibleRecords = statusFilter === "todas" ? data.records : data.records.filter((record) => record.motionStatus === statusFilter);
+    const names = visibleRecords.map((record) => record.municipio);
+    map.setFilter("pd-municipal-motions-fill", ["match", ["get", "nameunit"], names, true, false]);
+    map.setFilter("pd-municipal-motions-outline", ["match", ["get", "nameunit"], names, true, false]);
+  }, [statusFilter, data]);
 
   return (
     <div className="space-y-4">
-      {!data && !error && <p className="text-sm text-muted-foreground" role="status">Cargando mapa municipal…</p>}
+      {!data && !error && <p className="text-sm text-muted-foreground" role="status">Cargando datos de mociones…</p>}
       {error && <p className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm" role="alert">{error}</p>}
-      {data && !data.ok && <p className="text-sm text-muted-foreground" role="status">{data.error || "No se ha podido cargar el mapa."}</p>}
       <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
         <div className="relative">
           <div ref={mapElement} className="h-[68vh] min-h-[480px] w-full bg-[#e7edf0]" role="application" aria-label="Mapa interactivo de mociones por municipio" />
@@ -211,12 +223,12 @@ export function MunicipalMotionsMap() {
             <div className="space-y-3 text-sm text-gray-800">
               {(Object.keys(STATUS) as MotionStatus[]).map((key) => <button type="button" key={key} onClick={() => setStatusFilter(statusFilter === key ? "todas" : key)} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === key ? "font-bold" : ""}`} aria-pressed={statusFilter === key}><span className="size-3.5 shrink-0 rounded-sm border border-gray-300" style={{ backgroundColor: STATUS[key].color }} />{STATUS[key].label}</button>)}
             </div>
-            <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600">{data ? `${formatCount(data.features.length)} municipios en el mapa` : "Cargando municipios…"}</div>
-            <p className="mt-2 text-[10px] text-gray-500">Cartografía base: OpenStreetMap</p>
+            <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600">{data ? `${formatCount(data.records.length)} municipios con mociones` : "Cargando registros…"}</div>
+            <p className="mt-2 text-[10px] text-gray-500">Cartografía vectorial oficial: IGN/CNIG</p>
           </aside>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">Los municipios se rellenan según el estado de su moción, sin mostrar sus límites internos. Solo se destacan los límites de las comunidades autónomas. Azul: presentada; verde: aprobada; rojo: rechazada; blanco: no presentada.</p>
+      <p className="text-xs text-muted-foreground">El mapa utiliza las teselas vectoriales oficiales del IGN/CNIG y las carga bajo demanda al mover o ampliar el mapa. Azul: presentada; verde: aprobada; rojo: rechazada. El filtro permite aislar cada estado.</p>
     </div>
   );
 }

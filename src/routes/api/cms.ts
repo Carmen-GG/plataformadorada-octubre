@@ -37,13 +37,26 @@ async function fetchCms(url: string) {
 
 
 async function fetchCmsPost(url: string, payload: Record<string, unknown>) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) throw new Error(`Google Apps Script respondió ${response.status}`);
-  return response.json();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error(`Google Apps Script respondió ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error("Google Apps Script no ha respondido en 30 segundos. Comprueba que la implementación esté actualizada y accesible.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export const Route = createFileRoute("/api/cms")({
@@ -76,7 +89,8 @@ export const Route = createFileRoute("/api/cms")({
           return Response.json(response, { headers: { "Cache-Control": "no-store" } });
         } catch (error) {
           console.error("Error enviando propuesta:", error);
-          return Response.json({ error: "No se ha podido enviar la propuesta" }, { status: 502 });
+          const message = error instanceof Error ? error.message : "Error desconocido al enviar la propuesta.";
+          return Response.json({ error: message }, { status: 502, headers: { "Cache-Control": "no-store" } });
         }
       },
       GET: async ({ request }) => {

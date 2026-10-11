@@ -154,8 +154,9 @@ async function refresh() {
     data = {
       noticias: (raw.noticias ?? []).map((item) => ({
         id: String(item.id ?? ""),
-        title: String(item.titulo ?? item.title ?? ""),
-        media: String(item.medio ?? item.media ?? ""),
+        // La respuesta actual del Apps Script devuelve título y medio intercambiados.
+        title: String(item.medio ?? item.media ?? ""),
+        media: String(item.titulo ?? item.title ?? ""),
         date: String(item.fecha ?? item.date ?? ""),
         url: String(item.url ?? ""),
         summary: String(item.resumen ?? item.summary ?? ""),

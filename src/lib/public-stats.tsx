@@ -128,49 +128,39 @@ export function usePublicStats(): State {
   useEffect(() => {
     let active = true;
     let loading = false;
-    let controller: AbortController | null = null;
 
     const load = async () => {
-      // Evita que el temporizador y visibilitychange cancelen una petición válida.
       if (loading) return;
       loading = true;
-      controller = new AbortController();
-      const requestController = controller;
-      const timeout = window.setTimeout(() => requestController.abort(), TIMEOUT_MS);
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
+
       try {
         const response = await fetch(`/api/public-stats?_=${Date.now()}`, {
           cache: "no-store",
-          signal: requestController.signal,
+          signal: controller.signal,
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const raw: unknown = await response.json();
         if (!isStats(raw)) throw new Error("Respuesta inesperada de /api/public-stats");
         if (active) setResult({ stats: normalize(raw), failed: false });
       } catch (error) {
-        // Una cancelación intencionada no es un error de datos.
-        if (!(error instanceof DOMException && error.name === "AbortError")) {
+        if (active) {
           console.error("[public-stats] Error al cargar /api/public-stats:", error);
-          if (active) setResult((previous) => ({ stats: previous.stats, failed: previous.stats === null }));
+          setResult((previous) => ({ stats: previous.stats, failed: previous.stats === null }));
         }
       } finally {
         window.clearTimeout(timeout);
         loading = false;
-        if (controller === requestController) controller = null;
       }
     };
 
     void load();
     const interval = window.setInterval(() => void load(), REFRESH_MS);
-    const onVisible = () => {
-      if (!document.hidden) void load();
-    };
-    document.addEventListener("visibilitychange", onVisible);
 
     return () => {
       active = false;
-      controller?.abort();
       window.clearInterval(interval);
-      document.removeEventListener("visibilitychange", onVisible);
     };
   }, []);
 

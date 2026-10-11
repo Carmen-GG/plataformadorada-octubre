@@ -56,8 +56,44 @@ function ResourcePreview({ resource }: { resource: CmsResource }) {
   );
 }
 
+function embeddedMediaUrl(raw: string) {
+  try {
+    const u = new URL(raw);
+    const host = u.hostname.toLowerCase();
+
+    if (host === "youtu.be") {
+      const id = u.pathname.split("/").filter(Boolean)[0];
+      return id ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1` : "";
+    }
+    if (host === "youtube.com" || host.endsWith(".youtube.com")) {
+      const id = u.searchParams.get("v");
+      if (id) return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
+      if (u.pathname.startsWith("/embed/")) return `https://www.youtube-nocookie.com${u.pathname}`;
+    }
+    if (host === "vimeo.com" || host.endsWith(".vimeo.com")) {
+      const id = u.pathname.split("/").filter(Boolean).pop();
+      if (id && /^\d+$/.test(id)) return `https://player.vimeo.com/video/${id}?autoplay=1`;
+    }
+    if (host === "open.spotify.com") {
+      const parts = u.pathname.split("/").filter(Boolean);
+      if (["episode", "show", "track", "album"].includes(parts[0] || "") && parts[1]) {
+        return `https://open.spotify.com/embed/${parts[0]}/${parts[1]}`;
+      }
+    }
+    if (host === "soundcloud.com" || host === "www.soundcloud.com") {
+      return `https://w.soundcloud.com/player/?url=${encodeURIComponent(u.toString())}&auto_play=false`;
+    }
+    return "";
+  } catch {
+    return "";
+  }
+}
+
 function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsContent>>["noticias"][number] | null }) {
   const pageUrl = item?.url?.trim() || "";
+  const embedUrl = pageUrl ? embeddedMediaUrl(pageUrl) : "";
+  const isDirectAudio = /\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(pageUrl);
+  const isDirectVideo = /\.(mp4|webm|ogv)(?:$|[?#])/i.test(pageUrl);
 
   return (
     <section className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[2.5rem] border-[8px] border-foreground/85 bg-foreground p-2 shadow-2xl">
@@ -67,32 +103,48 @@ function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsConten
           <h2 className="mt-1 font-display text-base font-bold leading-tight text-foreground">Últimas noticias</h2>
           {item && <p className="mt-1 max-w-full truncate text-[11px] text-muted-foreground">{item.title}</p>}
         </header>
-        <div className="relative aspect-[9/16] w-full bg-muted/40">
-          {pageUrl ? (
-            <iframe
-              key={pageUrl}
-              className="absolute inset-0 h-full w-full border-0 bg-white"
-              src={pageUrl}
-              title={item ? `Plataforma Dorada: ${item.title}` : "Últimas noticias de Plataforma Dorada"}
-              loading="eager"
-              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-              referrerPolicy="strict-origin-when-cross-origin"
-            />
-          ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+
+        <div className="relative aspect-[9/16] w-full overflow-y-auto bg-white text-[#382b1d]">
+          {!item ? (
+            <div className="flex min-h-full flex-col items-center justify-center px-6 py-10 text-center">
               <span className="font-display text-4xl font-bold text-primary" aria-hidden="true">PD</span>
               <h3 className="mt-4 font-display text-lg font-semibold">Plataforma Dorada</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Selecciona una noticia y se abrirá aquí.</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Selecciona una noticia para verla aquí.</p>
             </div>
+          ) : embedUrl ? (
+            <iframe
+              key={embedUrl}
+              className="absolute inset-0 h-full w-full border-0 bg-white"
+              src={embedUrl}
+              title={`Plataforma Dorada: ${item.title}`}
+              loading="eager"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          ) : isDirectAudio ? (
+            <div className="flex min-h-full flex-col justify-center px-5 py-8">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#8a6a43]">{item.media || "Audio / podcast"}</p>
+              <h3 className="mt-3 font-serif text-xl font-bold leading-tight">{item.title}</h3>
+              {item.summary && <p className="mt-3 text-sm leading-relaxed">{item.summary}</p>}
+              <audio className="mt-6 w-full" controls autoPlay preload="metadata" src={pageUrl}>Tu navegador no admite la reproducción de audio.</audio>
+            </div>
+          ) : isDirectVideo ? (
+            <video className="h-full min-h-full w-full bg-black object-contain" controls autoPlay playsInline src={pageUrl}>Tu navegador no admite la reproducción de vídeo.</video>
+          ) : (
+            <article className="px-5 py-6">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#8a6a43]">{[item.media, item.date].filter(Boolean).join(" · ")}</p>
+              <h3 className="mt-3 font-serif text-2xl font-bold leading-tight">{item.title}</h3>
+              {item.summary && <p className="mt-4 border-l-4 border-amber-300 pl-3 font-serif text-base italic leading-relaxed">{item.summary}</p>}
+              {item.contentText && <div className="mt-4 whitespace-pre-line font-serif text-sm leading-6">{item.contentText}</div>}
+              <p className="mt-5 text-xs leading-relaxed text-[#725d45]">
+                La web de origen no permite mostrarse dentro del teléfono o no ofrece un formato incrustable. Puedes leer aquí los datos disponibles de la noticia y abrir la fuente original.
+              </p>
+              {pageUrl && <a href={pageUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex rounded-full bg-[#704516] px-4 py-2.5 text-xs font-semibold text-white">Leer noticia original ↗</a>}
+            </article>
           )}
         </div>
       </div>
-      {item && pageUrl && (
-        <div className="px-3 py-3 text-center">
-          <p className="text-[10px] leading-relaxed text-primary-foreground/80">Si esta web no permite mostrarse dentro del teléfono, ábrela directamente.</p>
-          <a href={pageUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center rounded-full bg-accent px-4 py-2 text-xs font-semibold text-accent-foreground underline underline-offset-2">Abrir noticia en otra pestaña ↗</a>
-        </div>
-      )}
     </section>
   );
 }

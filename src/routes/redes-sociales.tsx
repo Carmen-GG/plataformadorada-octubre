@@ -50,7 +50,8 @@ export const Route = createFileRoute("/redes-sociales")({ head:()=>pageHead({pat
 
 function RedesSociales(){
   const cms=useCmsContent();
-  const phrases=((cms?.frases??[]).map(x=>x.text).filter(Boolean));
+  const cmsLemas=(cms?.lemas??[]).filter(x=>x.published).map(x=>x.text).filter(Boolean);
+  const phrases=(cmsLemas.length?cmsLemas:(cms?.frases??[]).map(x=>x.text).filter(Boolean));
   const visiblePhrases=phrases.length?phrases:fallbackPhrases;
   const [activeTab, setActiveTab] = useState<SocialTab>("instagram");
   const locationHash = useLocation({ select: (location) => location.hash });

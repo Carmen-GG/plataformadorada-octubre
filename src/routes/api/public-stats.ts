@@ -14,12 +14,20 @@ export const Route = createFileRoute("/api/public-stats")({
         try {
           const url = new URL(CMS_URL);
           url.searchParams.set("action", "public");
-          const response = await fetch(url.toString(), {
-            method: "GET",
-            headers: { Accept: "application/json" },
-            cache: "no-store",
-            redirect: "follow",
-          });
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 25_000);
+          let response: Response;
+          try {
+            response = await fetch(url.toString(), {
+              method: "GET",
+              headers: { Accept: "application/json" },
+              cache: "no-store",
+              redirect: "follow",
+              signal: controller.signal,
+            });
+          } finally {
+            clearTimeout(timeout);
+          }
           if (!response.ok) {
             return Response.json(
               { ok: false, error: "CMS respondió " + response.status },

@@ -19,7 +19,6 @@ import {
   counters,
   events,
   indicators,
-  news as fallbackNews,
   regions,
 } from "@/lib/content";
 
@@ -77,10 +76,12 @@ function Home() {
     "Todavía no hay testimonios publicados.",
   );
 
-  const liveNews =
-    cms?.noticias ??
-    fallbackNews.map((n, i) => ({ id: String(i), ...n, summary: "" }));
   const liveEvents = cms?.eventos?.length ? cms.eventos : events;
+  const upcomingEvents = liveEvents.filter((e: any) => {
+    if (!e.date) return !e.past;
+    const parsed = new Date(`${e.date}T23:59:59`).getTime();
+    return Number.isFinite(parsed) && parsed >= Date.now();
+  });
 
   return (
     <>
@@ -373,13 +374,7 @@ function Home() {
                 Próximos eventos
               </h2>
               <ul className="mt-5 space-y-4">
-                {liveEvents
-                  .filter((e: any) =>
-                    e.date
-                      ? new Date(`${e.date}T23:59:59`).getTime() >= Date.now()
-                      : !e.past,
-                  )
-                  .map((e, i) => (
+                {upcomingEvents.map((e, i) => (
                     <li
                       key={i}
                       className="glass-soft flex items-center gap-4 rounded-2xl p-4"
@@ -448,37 +443,13 @@ function Home() {
         </div>
       </section>
 
-      {/* Últimas adhesiones */}
-      <section
-        aria-labelledby="adhesiones"
-        className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6"
-      >
-        <h2
-          id="adhesiones"
-          className="font-display text-3xl font-semibold"
-        >
-          Últimas adhesiones
-        </h2>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          Solo se publican las personas que han autorizado expresamente
-          aparecer, con nombre, inicial del primer apellido y ciudad.
-        </p>
-        {joinsStatus ? (
-          <p className="mt-6 text-muted-foreground" role="status">
-            {joinsStatus}
-          </p>
-        ) : (
-          <AdhesionCarousel items={recentJoins} />
-        )}
-      </section>
-
       {/* Testimonios */}
       <section
-        aria-labelledby="voces"
+        aria-labelledby="testimonios"
         className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6"
       >
-        <h2 id="voces" className="font-display text-3xl font-semibold">
-          Voces del cuidado
+        <h2 id="testimonios" className="font-display text-3xl font-semibold">
+          Testimonios
         </h2>
         {voicesStatus ? (
           <p className="mt-6 text-muted-foreground" role="status">
@@ -497,40 +468,32 @@ function Home() {
         </p>
       </section>
 
-      {/* Novedades + prensa + contacto */}
+      {/* Últimas adhesiones + rincón de prensa + contacto */}
       <section className="mx-auto w-full max-w-6xl px-4 py-8 pb-14 sm:px-6">
         <div className="grid gap-6 lg:grid-cols-3">
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">Novedades</h2>
-            <ul className="mt-4 space-y-3 text-sm">
-              {liveNews.slice(0, 3).map((n) => (
-                <li key={n.id}>
-                  <a
-                    href={n.url}
-                    className="font-medium text-primary hover:underline"
-                  >
-                    {n.title}
-                  </a>
-                  <span className="block text-xs text-muted-foreground">
-                    {n.media} · {n.date}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <h2 className="font-display text-xl font-semibold">Últimas adhesiones</h2>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Solo aparecen las personas que han autorizado expresamente la publicación de sus datos.
+            </p>
+            {joinsStatus ? (
+              <p className="mt-4 text-sm text-muted-foreground" role="status">{joinsStatus}</p>
+            ) : (
+              <AdhesionCarousel items={recentJoins} />
+            )}
+            <p className="mt-4 text-sm">
+              <Link to="/datos" className="font-semibold text-primary underline underline-offset-4">
+                Ver adhesiones
+              </Link>
+            </p>
           </Panel>
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">
-              Prensa y recursos
-            </h2>
+            <h2 className="font-display text-xl font-semibold">Rincón de prensa</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Logotipos, dossier de prensa y materiales para difundir el
-              movimiento.
+              Logotipos, dossier de prensa, noticias y materiales para descargar y difundir el movimiento.
             </p>
-            <Link
-              to="/prensa"
-              className="glass-soft mt-4 inline-block rounded-full px-5 py-2.5 text-sm font-semibold text-primary"
-            >
-              Ir a recursos
+            <Link to="/prensa" className="glass-soft mt-4 inline-block rounded-full px-5 py-2.5 text-sm font-semibold text-primary">
+              Ir a prensa/descargables
             </Link>
           </Panel>
           <Panel as="section">
@@ -538,10 +501,7 @@ function Home() {
             <p className="mt-3 text-sm text-muted-foreground">
               ¿Eres periodista, entidad o ayuntamiento? Escríbenos.
             </p>
-            <Link
-              to="/contacto"
-              className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground"
-            >
+            <Link to="/contacto" className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground">
               Escríbenos
             </Link>
           </Panel>

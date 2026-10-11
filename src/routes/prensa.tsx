@@ -91,21 +91,46 @@ function audioEmbedUrl(raw: string) {
 }
 
 function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsContent>>["noticias"][number] | null }) {
-  if (!item) return <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-3xl border border-border bg-muted/30 p-8 text-center"><Tv size={42} aria-hidden="true" /><h2 className="font-display text-xl font-semibold">Contenido destacado</h2><p className="max-w-sm text-sm text-muted-foreground">Selecciona una noticia para ver el vídeo, escuchar el audio o leer el texto aquí.</p></div>;
-  const type = item.type || "texto";
-  if (type === "video") {
-    const embed = videoEmbedUrl(item.mediaUrl || item.url);
-    return <section className="overflow-hidden rounded-3xl border border-border bg-slate-950 p-3 text-white sm:p-5"><div className="mb-3 flex items-center gap-2"><Tv aria-hidden="true" /><h2 className="font-display text-lg font-semibold">En pantalla: {item.title}</h2></div>{embed ? <div className="aspect-video overflow-hidden rounded-xl bg-black"><iframe className="h-full w-full" src={embed} title={`Vídeo: ${item.title}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" /></div> : <div className="rounded-xl bg-slate-800 p-5"><p className="text-sm text-slate-200">Este proveedor no permite insertar automáticamente el vídeo. Puedes abrirlo en su página original.</p><a className="mt-3 inline-flex rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900" href={item.mediaUrl || item.url} target="_blank" rel="noreferrer">Ver vídeo externo</a></div>}<p className="mt-3 text-sm text-slate-200">{item.summary}</p></section>;
-  }
-  if (type === "audio") {
-    const src = item.mediaUrl || item.url;
-    const directAudio = /\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(src);
-    const audioEmbed = audioEmbedUrl(src);
-    return <section className="rounded-3xl border border-border bg-card p-5 sm:p-7"><div className="mb-4 flex items-center gap-3"><div className="rounded-2xl bg-primary/10 p-3 text-primary"><Headphones size={28} aria-hidden="true" /></div><div><p className="text-xs font-semibold uppercase tracking-widest text-primary">Audio / podcast</p><h2 className="font-display text-xl font-semibold">{item.title}</h2></div></div>{directAudio ? <audio className="w-full" controls preload="none" src={src}>Tu navegador no admite la reproducción de audio. <a href={src}>Abrir audio</a>.</audio> : audioEmbed ? <iframe className="h-40 w-full rounded-xl border-0 sm:h-48" src={audioEmbed} title={`Reproductor de audio: ${item.title}`} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" /> : <p className="text-sm text-muted-foreground">Este enlace no se puede reproducir aquí automáticamente. Puedes abrirlo en la plataforma de origen.</p>}<a className="mt-4 inline-flex rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground" href={src} target="_blank" rel="noreferrer">Abrir audio o podcast</a>{item.summary && <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>}</section>;
-  }
-  return <article className="rounded-3xl border border-amber-200 bg-[#fff9ed] p-6 text-[#382b1d] shadow-sm sm:p-8"><div className="mb-5 flex items-center gap-3 border-b border-amber-200 pb-4"><BookOpen size={30} aria-hidden="true" /><div><p className="text-xs font-semibold uppercase tracking-widest">Lectura</p><h2 className="font-display text-2xl font-semibold">{item.title}</h2></div></div><p className="mb-4 text-sm text-[#725d45]">{[item.media,item.date].filter(Boolean).join(" · ")}</p><div className="whitespace-pre-line text-base leading-8">{item.contentText || item.summary || "No se ha añadido el texto completo. Puedes consultar la noticia original."}</div>{item.url && <a className="mt-6 inline-flex rounded-full bg-[#704516] px-5 py-3 text-sm font-semibold text-white" href={item.url} target="_blank" rel="noreferrer">Consultar fuente original</a>}</article>;
-}
+  const type = item?.type || "texto";
+  const videoItem = item && type === "video" ? item : null;
+  const audioItem = item && type === "audio" ? item : null;
+  const textItem = item && type === "texto" ? item : null;
 
+  const videoUrl = videoItem ? (videoItem.mediaUrl || videoItem.url) : "";
+  const embed = videoUrl ? videoEmbedUrl(videoUrl) : "";
+  const audioSrc = audioItem ? (audioItem.mediaUrl || audioItem.url) : "";
+  const directAudio = /\\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/i.test(audioSrc);
+  const audioEmbed = audioSrc ? audioEmbedUrl(audioSrc) : "";
+
+  return (
+    <div className="space-y-5">
+      <section className="overflow-hidden rounded-3xl border border-border bg-slate-950 p-3 text-white shadow-sm sm:p-5">
+        <div className="mb-3 flex items-center gap-2"><Tv aria-hidden="true" /><h2 className="font-display text-lg font-semibold">Visor de vídeo</h2></div>
+        {videoItem ? (
+          <>
+            {embed ? <div className="aspect-video overflow-hidden rounded-xl bg-black"><iframe className="h-full w-full" src={embed} title={`Vídeo: ${videoItem.title}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" /></div> : <div className="rounded-xl bg-slate-800 p-5"><p className="text-sm text-slate-200">Este proveedor no permite insertar automáticamente el vídeo. Puedes abrirlo en su página original.</p><a className="mt-3 inline-flex rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900" href={videoUrl} target="_blank" rel="noreferrer">Ver vídeo externo</a></div>}
+            <h3 className="mt-3 font-semibold">{videoItem.title}</h3>
+            {videoItem.summary && <p className="mt-1 text-sm text-slate-200">{videoItem.summary}</p>}
+          </>
+        ) : <div className="flex aspect-video flex-col items-center justify-center rounded-xl bg-slate-800 px-5 text-center text-slate-200"><Tv size={32} aria-hidden="true" /><p className="mt-3 font-semibold">{item ? "Esta noticia no es un vídeo" : "Selecciona una noticia"}</p><p className="mt-1 text-sm text-slate-300">Los vídeos seleccionados aparecerán aquí.</p></div>}
+      </section>
+
+      <section className="rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
+        <div className="mb-4 flex items-center gap-3"><div className="rounded-2xl bg-primary/10 p-3 text-primary"><Headphones size={26} aria-hidden="true" /></div><div><p className="text-xs font-semibold uppercase tracking-widest text-primary">Audio / podcast</p><h2 className="font-display text-lg font-semibold">Reproductor de audio</h2></div></div>
+        {audioItem ? <><h3 className="mb-3 font-semibold">{audioItem.title}</h3>{directAudio ? <audio key={audioSrc} className="w-full" controls preload="none" src={audioSrc}>Tu navegador no admite la reproducción de audio. <a href={audioSrc}>Abrir audio</a>.</audio> : audioEmbed ? <iframe key={audioEmbed} className="h-40 w-full rounded-xl border-0 sm:h-48" src={audioEmbed} title={`Reproductor de audio: ${audioItem.title}`} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" /> : <p className="text-sm text-muted-foreground">Este enlace no se puede reproducir aquí automáticamente. Puedes abrirlo en la plataforma de origen.</p>}<a className="mt-3 inline-flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" href={audioSrc} target="_blank" rel="noreferrer">Abrir audio o podcast</a>{audioItem.summary && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{audioItem.summary}</p>}</> : <p className="rounded-xl bg-muted/40 p-4 text-sm text-muted-foreground">{item ? "Esta noticia no contiene audio. Selecciona una noticia de tipo audio para escucharla aquí." : "Cuando selecciones una noticia de audio, podrás escucharla aquí."}</p>}
+      </section>
+
+      <article className="overflow-hidden rounded-3xl border border-amber-200 bg-[#fff9ed] text-[#382b1d] shadow-sm">
+        <div className="border-b-4 border-double border-amber-300 px-5 py-4 text-center sm:px-7">
+          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#8a6a43]">Plataforma Dorada · Prensa</p>
+          <div className="my-2 border-y border-[#bba17e] py-2"><h2 className="font-serif text-3xl font-black tracking-tight sm:text-4xl">EL PERIÓDICO</h2></div>
+          <p className="text-[10px] uppercase tracking-widest text-[#8a6a43]">Dependencia · Cuidados · Derechos</p>
+        </div>
+        {textItem ? <div className="p-5 sm:p-7"><p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#8a6a43]">{[textItem.media, textItem.date].filter(Boolean).join(" · ")}</p><h3 className="font-serif text-2xl font-bold leading-tight sm:text-3xl">{textItem.title}</h3>{textItem.summary && <p className="mt-4 border-l-4 border-amber-300 pl-4 font-serif text-lg italic leading-relaxed">{textItem.summary}</p>}<div className="mt-5 whitespace-pre-line font-serif text-base leading-8">{textItem.contentText || "No se ha añadido el texto completo de esta noticia. Puedes consultar la fuente original."}</div>{textItem.url && <a className="mt-6 inline-flex rounded-full bg-[#704516] px-5 py-3 text-sm font-semibold text-white" href={textItem.url} target="_blank" rel="noreferrer">Leer noticia original</a>}</div> : <div className="p-6 text-center sm:p-8"><BookOpen size={32} className="mx-auto text-[#8a6a43]" aria-hidden="true" /><h3 className="mt-3 font-serif text-xl font-bold">{item ? "Esta noticia no es un texto" : "Tu espacio de lectura"}</h3><p className="mt-2 text-sm leading-relaxed text-[#725d45]">{item ? "Selecciona una noticia de tipo texto para leerla en esta página de periódico." : "Al seleccionar una noticia de texto, su contenido aparecerá maquetado como una página de periódico."}</p></div>}
+      </article>
+    </div>
+  );
+}
 function Page() {
   const cms = useCmsContent();
   const resources = cms?.recursos ?? [];

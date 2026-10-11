@@ -11,7 +11,6 @@ import {
   type CounterKey,
 } from "@/lib/public-stats";
 import { useCmsContent } from "@/lib/cms";
-import { EventList } from "@/routes/eventos";
 import { LatestInstagramVideo } from "@/components/social-feeds";
 import { TestimonyCarousel } from "@/components/testimony-carousel";
 import { AdhesionCarousel } from "@/components/adhesion-carousel";
@@ -75,6 +74,14 @@ function Home() {
     voices.length,
     "Todavía no hay testimonios publicados.",
   );
+
+  const nextEvent = (cms?.eventos ?? [])
+    .filter((event) => {
+      if (!event.date) return false;
+      const timestamp = new Date(`${event.date}T23:59:59`).getTime();
+      return Number.isFinite(timestamp) && timestamp >= Date.now();
+    })
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
 
   return (
     <>
@@ -362,11 +369,39 @@ function Home() {
 
           {/* Eventos arriba y entidades debajo */}
           <div className="grid gap-6 lg:col-span-5">
-            <Panel as="section">
+            <Panel as="section" className="min-w-0 overflow-hidden">
               <h2 className="font-display text-2xl font-semibold">
-                Próximos eventos
+                Próximo evento
               </h2>
-              <EventList past={false} events={cms?.eventos ?? []} limit={2} />
+              {nextEvent ? (
+                <div className="glass-soft mt-5 flex min-w-0 items-center gap-4 overflow-hidden rounded-2xl p-4">
+                  <div className="grid size-14 shrink-0 place-items-center rounded-xl bg-primary px-1 text-center text-primary-foreground">
+                    <span className="font-display text-xl font-bold leading-none">
+                      {new Date(`${nextEvent.date}T12:00:00`).getDate()}
+                      <span className="mt-1 block text-[10px] tracking-wide">
+                        {new Date(`${nextEvent.date}T12:00:00`).toLocaleDateString("es-ES", { month: "short" }).replace(".", "").toUpperCase()}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="break-words font-display text-lg font-semibold leading-snug">
+                      {nextEvent.title}
+                    </p>
+                    <p className="mt-1 break-words text-sm text-muted-foreground">
+                      {[nextEvent.place, nextEvent.city].filter(Boolean).join(" · ")}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Próximamente anunciaremos nuevos eventos.
+                </p>
+              )}
+              <p className="mt-4 text-sm">
+                <Link to="/eventos" className="font-semibold text-primary underline underline-offset-4">
+                  Ver todos los eventos
+                </Link>
+              </p>
             </Panel>
 
             <Panel as="section">

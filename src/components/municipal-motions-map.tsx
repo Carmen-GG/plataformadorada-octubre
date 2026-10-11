@@ -132,6 +132,12 @@ export function MunicipalMotionsMap() {
 
       map.on("load", () => {
         if (!active) return;
+        // Misma vista inicial que el mapa V14: España completa, con Canarias visible.
+        map.fitBounds([[-18.5, 27.5], [4.4, 43.9]], {
+          padding: { top: 48, right: 48, bottom: 48, left: 48 },
+          duration: 0,
+          maxZoom: 5.5,
+        });
         try {
           map.addSource("pd-osm-base", { type: "raster", tiles: [OSM_TILES], tileSize: 256, attribution: "&copy; OpenStreetMap contributors" });
           const firstLayer = map.getStyle().layers?.[0];

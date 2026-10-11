@@ -15,27 +15,47 @@ function Testimonios() {
   const state = usePublicStats();
   const items = state.stats?.testimonios ?? [];
   const status = listStatus(state, items.length, "Todavía no hay testimonios publicados.");
+  // La misma respuesta pública contiene los contadores y los datos territoriales.
+  // Cada instancia del hook tiene estado propio, así que esta sección carga los
+  // datos directamente y también aprovecha el estado compartido de esta página si llega.
   const [regionalCounts, setRegionalCounts] = useState<Record<string, number> | null>(null);
   const [regionalError, setRegionalError] = useState(false);
   useEffect(() => {
     let active = true;
-    const loadRegionalCounts = async () => {
-      try {
-        const response = await fetch("/api/public-stats?_testimonios=" + Date.now(), { cache: "no-store" });
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    fetch("/api/public-stats?section=testimonios&ts=" + Date.now(), {
+      cache: "no-store",
+      signal: controller.signal,
+    })
+      .then(async (response) => {
         if (!response.ok) throw new Error("HTTP " + response.status);
-        const data: unknown = await response.json();
+        return await response.json();
+      })
+      .then((data: unknown) => {
         if (!data || typeof data !== "object") throw new Error("Respuesta no válida");
         const rawCounts = (data as { testimoniosPorComunidad?: unknown }).testimoniosPorComunidad;
-        if (!rawCounts || typeof rawCounts !== "object" || Array.isArray(rawCounts)) throw new Error("La respuesta no incluye recuentos por comunidad");
-        const parsed = Object.fromEntries(Object.entries(rawCounts).map(([key, value]) => [key, Number(value) || 0]));
-        if (active) { setRegionalCounts(parsed); setRegionalError(false); }
-      } catch (error) {
-        console.error("[testimonios] No se pudieron cargar los recuentos territoriales:", error);
-        if (active) setRegionalError(true);
-      }
+        if (!rawCounts || typeof rawCounts !== "object" || Array.isArray(rawCounts)) {
+          throw new Error("La respuesta no incluye recuentos por comunidad");
+        }
+        const parsed: Record<string, number> = {};
+        for (const [key, value] of Object.entries(rawCounts)) {
+          const number = typeof value === "number" ? value : Number(value);
+          if (Number.isFinite(number)) parsed[key] = number;
+        }
+        if (active) setRegionalCounts(parsed);
+      })
+      .catch((error) => {
+        if (!active) return;
+        console.error("[testimonios] Error cargando recuentos:", error);
+        setRegionalError(true);
+      })
+      .finally(() => window.clearTimeout(timeout));
+    return () => {
+      active = false;
+      window.clearTimeout(timeout);
+      controller.abort();
     };
-    void loadRegionalCounts();
-    return () => { active = false; };
   }, []);
   const counts = regionalCounts ?? {};
   const statsLoaded = regionalCounts !== null;

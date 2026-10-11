@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const CMS_URL =
+const DEFAULT_CMS_URL =
   "https://script.google.com/macros/s/AKfycbxKl68XDCa_Z7XAisrDDjYwrDz-1hHMGJ8JwnErWvB1s6aIwClitHKmpbbKON63D0KZ/exec";
+// Usa exactamente el mismo CMS configurado para /api/cms. Antes esta ruta tenía
+// la URL fijada a mano y podía leer una versión distinta del Apps Script, por lo
+// que los contadores generales llegaban pero testimoniosPorComunidad no.
+const CMS_URL = import.meta.env.VITE_ADHESION_COUNT_URL?.trim() || DEFAULT_CMS_URL;
 
 export const Route = createFileRoute("/api/public-stats")({
   server: {

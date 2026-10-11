@@ -43,9 +43,21 @@ function Testimonios() {
     normalizedCounts.set(normalized, (normalizedCounts.get(normalized) ?? 0) + Number(value ?? 0));
   }
   const countForRegion = (name: string) => {
-    const keys = aliases[name] ?? [normalizeRegion(name)];
-    return keys.reduce((sum, key) => sum + (normalizedCounts.get(normalizeRegion(key)) ?? 0), 0);
+    const keys = (aliases[name] ?? [normalizeRegion(name)]).map(normalizeRegion);
+    // Primero busca equivalencias exactas; después admite nombres más largos
+    // procedentes de versiones anteriores del Apps Script (p. ej. "Comunidad de Madrid").
+    let total = 0;
+    const matched = new Set<string>();
+    for (const [key, value] of normalizedCounts.entries()) {
+      const matches = keys.some((alias) => key === alias || key.includes(alias) || alias.includes(key));
+      if (matches && !matched.has(key)) {
+        total += value;
+        matched.add(key);
+      }
+    }
+    return total;
   };
+  const hasTerritorialData = Object.keys(counts).length > 0;
   const regionRows = regions.map((r) => ({ name: r.name, count: countForRegion(r.name) })).filter((r) => r.count > 0);
   return (
     <>
@@ -65,7 +77,7 @@ function Testimonios() {
           <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Testimonios por comunidad autónoma">
             {regions.map((r) => <div key={r.name} className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm" role="listitem"><span>{r.name}</span><strong>{formatCount(countForRegion(r.name))}</strong></div>)}
           </div>
-          {regionRows.length === 0 && <p className="mt-4 text-sm text-muted-foreground">Aún no hay datos territoriales disponibles.</p>}
+          {!hasTerritorialData && <p className="mt-4 text-sm text-muted-foreground">No se han recibido datos territoriales del CMS. Comprueba que la versión publicada de Apps Script incluye el campo testimoniosPorComunidad.</p>}{hasTerritorialData && regionRows.length === 0 && <p className="mt-4 text-sm text-muted-foreground">Hay datos del CMS, pero no se han podido asociar a las comunidades autónomas. Revisa los nombres territoriales que devuelve el CMS.</p>}
         </Panel>
       </section>
     </>

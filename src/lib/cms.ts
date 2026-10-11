@@ -25,6 +25,7 @@ export type CmsEvent = { id:string; title:string; date:string; time:string; plac
 export type CmsMilestone = { id: string; date: string; title: string; description: string; imageUrl?: string };
 export type CmsVideo = { id: string; title: string; description: string; url: string; platform: "youtube" | "facebook"; order: number; published: boolean };
 export type CmsRoadmap = { id: string; phase: string; title: string; detail: string; date?: string; active?: boolean };
+export type CmsLema = { id: string; text: string; name: string; order: number; published: boolean };
 
 export type CmsPayload = {
   noticias: CmsNews[];
@@ -35,6 +36,7 @@ export type CmsPayload = {
   hojaRuta?: CmsRoadmap[];
   canciones?: Array<{x:string;artist:string}>;
   frases?: Array<{text:string;name:string}>;
+  lemas?: CmsLema[];
   actualizado?: string;
 };
 
@@ -88,6 +90,7 @@ type AppsScriptContentResponse = {
   hojaRuta?: AppsScriptRoadmap[];
   canciones?: Array<{x?:string;artist?:string}>;
   frases?: Array<{text?:string;name?:string}>;
+  lemas?: Array<{id?:string;text?:string;name?:string;order?:number|string;published?:boolean|string}>;
   actualizado?: string;
 };
 
@@ -198,6 +201,7 @@ async function refresh() {
 
       canciones: (raw.canciones ?? []).map((item) => ({ x:String(item.x??""), artist:String(item.artist??"") })),
       frases: (raw.frases ?? []).map((item) => ({ text:String(item.text??""), name:String(item.name??"") })),
+      lemas: (raw.lemas ?? []).map((item) => ({ id:String(item.id??""), text:String(item.text??""), name:String(item.name??""), order:Number(item.order??0), published:item.published !== false && !/^(no|false|0)$/i.test(String(item.published??"Sí")) })),
 
       eventos: (raw.eventos ?? []).map((item) => {
         const rawDate = String(item.fecha ?? item.date ?? "").trim();

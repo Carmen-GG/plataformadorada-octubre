@@ -41,7 +41,7 @@ export function SiteFooter() {
               <li><Link to="/la-dependencia" className="hover:text-accent">Dependencia</Link></li>
               <li><Link to="/unete" className="hover:text-accent">Participa</Link></li>
               <li><Link to="/datos" className="hover:text-accent">Datos</Link></li>
-              <li><Link to="/prensa" className="hover:text-accent">Recursos</Link></li>
+              <li><Link to="/prensa" className="hover:text-accent">Prensa</Link></li>
               <li><Link to="/redes-sociales" className="hover:text-accent">Conecta</Link></li>
               <li><Link to="/mapa-web" className="hover:text-accent">Mapa web</Link></li>
             </ul>

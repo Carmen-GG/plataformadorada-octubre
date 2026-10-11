@@ -26,10 +26,11 @@ function Testimonios() {
   const displayCounts = Object.keys(counts).length > 0 ? counts : verifiedRegionalFallback;
   const statsLoaded = state.stats !== null;
   const regionalError = state.failed;
-  const normalizeRegion = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const normalizeRegion = (value: string) =>
+    value.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
   const aliases: Record<string, string[]> = {
     "Cataluña": ["cataluna", "catalunya"],
-    "Comunitat Valenciana": ["comunitatvalenciana", "comunidadvalenciana", "valencia", "comunidadvalenciana"],
+    "Comunitat Valenciana": ["comunitatvalenciana", "comunidadvalenciana", "valencia"],
     "Illes Balears": ["illesbalears", "islasbaleares", "baleares"],
     "Madrid": ["madrid", "comunidaddemadrid"],
     "País Vasco": ["paisvasco", "euskadi"],
@@ -48,25 +49,16 @@ function Testimonios() {
     "Ceuta": ["ceuta"],
     "Melilla": ["melilla"],
   };
-  const normalizedCounts = new Map<string, number>();
-  for (const [key, value] of Object.entries(displayCounts)) {
-    const normalized = normalizeRegion(key);
-    normalizedCounts.set(normalized, (normalizedCounts.get(normalized) ?? 0) + Number(value ?? 0));
-  }
+  const normalizedCounts = Object.entries(displayCounts).map(([key, value]) => ({
+    key: normalizeRegion(key),
+    value: Number(value ?? 0),
+  }));
   const countForRegion = (name: string) => {
-    const keys = (aliases[name] ?? [normalizeRegion(name)]).map(normalizeRegion);
-    // Primero busca equivalencias exactas; después admite nombres más largos
-    // procedentes de versiones anteriores del Apps Script (p. ej. "Comunidad de Madrid").
-    let total = 0;
-    const matched = new Set<string>();
-    for (const [key, value] of normalizedCounts.entries()) {
-      const matches = keys.some((alias) => key === alias || key.includes(alias) || alias.includes(key));
-      if (matches && !matched.has(key)) {
-        total += value;
-        matched.add(key);
-      }
-    }
-    return total;
+    const keys = (aliases[name] ?? [name]).map(normalizeRegion);
+    return normalizedCounts.reduce((total, item) => {
+      const matches = keys.some((alias) => item.key === alias || item.key.includes(alias) || alias.includes(item.key));
+      return total + (matches ? item.value : 0);
+    }, 0);
   };
   const hasTerritorialData = Object.keys(displayCounts).length > 0;
   const regionRows = regions.map((r) => ({ name: r.name, count: countForRegion(r.name) })).filter((r) => r.count > 0);

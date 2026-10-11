@@ -135,8 +135,13 @@ function publishSharedResult(next: State) {
 async function loadSharedStats() {
   if (sharedLoading) return;
   sharedLoading = true;
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
-    const response = await fetch(`/api/public-stats?_=${Date.now()}`, { cache: "no-store" });
+    const response = await fetch(`/api/public-stats?_=${Date.now()}`, {
+      cache: "no-store",
+      signal: controller.signal,
+    });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const raw: unknown = await response.json();
     if (!isStats(raw)) throw new Error("Respuesta inesperada de /api/public-stats");
@@ -145,6 +150,7 @@ async function loadSharedStats() {
     console.error("[public-stats] Error al cargar /api/public-stats:", error);
     publishSharedResult({ stats: sharedResult.stats, failed: sharedResult.stats === null });
   } finally {
+    window.clearTimeout(timeout);
     sharedLoading = false;
   }
 }

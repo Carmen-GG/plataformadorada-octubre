@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE, regions } from "@/lib/content";
@@ -14,8 +15,30 @@ function Testimonios() {
   const state = usePublicStats();
   const items = state.stats?.testimonios ?? [];
   const status = listStatus(state, items.length, "Todavía no hay testimonios publicados.");
-  const counts = state.stats?.testimoniosPorComunidad ?? {};
-  const statsLoaded = state.stats !== null;
+  const [regionalCounts, setRegionalCounts] = useState<Record<string, number> | null>(null);
+  const [regionalError, setRegionalError] = useState(false);
+  useEffect(() => {
+    let active = true;
+    const loadRegionalCounts = async () => {
+      try {
+        const response = await fetch("/api/public-stats?_testimonios=" + Date.now(), { cache: "no-store" });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const data: unknown = await response.json();
+        if (!data || typeof data !== "object") throw new Error("Respuesta no válida");
+        const rawCounts = (data as { testimoniosPorComunidad?: unknown }).testimoniosPorComunidad;
+        if (!rawCounts || typeof rawCounts !== "object" || Array.isArray(rawCounts)) throw new Error("La respuesta no incluye recuentos por comunidad");
+        const parsed = Object.fromEntries(Object.entries(rawCounts).map(([key, value]) => [key, Number(value) || 0]));
+        if (active) { setRegionalCounts(parsed); setRegionalError(false); }
+      } catch (error) {
+        console.error("[testimonios] No se pudieron cargar los recuentos territoriales:", error);
+        if (active) setRegionalError(true);
+      }
+    };
+    void loadRegionalCounts();
+    return () => { active = false; };
+  }, []);
+  const counts = regionalCounts ?? {};
+  const statsLoaded = regionalCounts !== null;
   const normalizeRegion = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
   const aliases: Record<string, string[]> = {
     "Cataluña": ["cataluna", "catalunya"],
@@ -76,9 +99,9 @@ function Testimonios() {
           <h2 className="font-display text-xl font-semibold">Testimonios por comunidad autónoma</h2>
           <p className="mt-2 text-sm text-muted-foreground">Mapa y resumen agregado. Nunca se muestran ubicaciones personales.</p>
           <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Testimonios por comunidad autónoma">
-            {regions.map((r) => <div key={r.name} className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm" role="listitem"><span>{r.name}</span><strong>{!statsLoaded ? "Cargando…" : state.failed ? "—" : formatCount(countForRegion(r.name))}</strong></div>)}
+            {regions.map((r) => <div key={r.name} className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm" role="listitem"><span>{r.name}</span><strong>{!statsLoaded ? "Cargando…" : regionalError ? "—" : formatCount(countForRegion(r.name))}</strong></div>)}
           </div>
-          {statsLoaded && state.failed && <p className="mt-4 text-sm text-destructive" role="alert">No se han podido cargar los datos públicos. Comprueba el endpoint /api/public-stats.</p>}{statsLoaded && !state.failed && !hasTerritorialData && <p className="mt-4 text-sm text-muted-foreground">La respuesta del CMS no incluye datos territoriales de testimonios. Hay que comprobar la respuesta real de Apps Script y que la versión desplegada sea la correcta.</p>}{statsLoaded && hasTerritorialData && regionRows.length === 0 && <p className="mt-4 text-sm text-muted-foreground">El CMS devuelve datos territoriales, pero no se han podido asociar a las comunidades autónomas. Revisa las claves que devuelve.</p>}
+          {regionalError && <p className="mt-4 text-sm text-destructive" role="alert">No se han podido cargar los recuentos territoriales. Comprueba /api/public-stats.</p>}{statsLoaded && !regionalError && !hasTerritorialData && <p className="mt-4 text-sm text-muted-foreground">La respuesta del CMS no incluye datos territoriales de testimonios.</p>}{statsLoaded && hasTerritorialData && regionRows.length === 0 && <p className="mt-4 text-sm text-muted-foreground">El CMS devuelve datos territoriales, pero no se han podido asociar a las comunidades autónomas.</p>}
         </Panel>
       </section>
     </>

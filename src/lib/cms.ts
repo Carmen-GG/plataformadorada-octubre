@@ -115,7 +115,7 @@ function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
     value.includes("cope.es") ||
     value.includes("rac1.cat") ||
     value.includes("cadenaser.com") ||
-    /\\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/.test(value) ||
+    /\.(mp3|m4a|ogg|wav|aac|opus)(?:$|[?#])/.test(value) ||
     value.includes("/play/audio") ||
     value.includes("/podcast/") ||
     value.includes("/audio/")

@@ -93,18 +93,26 @@ type AppsScriptContentResponse = {
 
 function inferNewsType(item: AppsScriptNews): "video" | "audio" | "texto" {
   const declared = String(item.tipo ?? item.type ?? "").trim().toLowerCase();
-  if (declared === "video" || declared === "audio") return declared;
+  // La columna "tipo" de NoticiasWeb es la fuente principal y puede contener
+  // "Vídeo", "Audio" o "Texto", además de sus variantes sin tilde.
+  if (["video", "vídeo", "youtube", "facebook"].includes(declared)) return "video";
+  if (["audio", "podcast", "pódcast"].includes(declared)) return "audio";
+  if (["texto", "text", "noticia"].includes(declared)) return "texto";
 
-  // Prioriza el enlace multimedia: las hojas antiguas pueden no tener todavía
-  // la columna "tipo" y el backend devuelve "texto" como valor por defecto.
+  // Solo si la celda tipo está vacía o contiene un valor desconocido, inferimos
+  // a partir de la URL original o del enlace multimedia.
   const multimedia = String(item.urlMultimedia ?? item.mediaUrl ?? "").trim();
   const candidates = [multimedia, String(item.url ?? "").trim()].filter(Boolean);
   for (const candidate of candidates) {
     try {
       const u = new URL(candidate);
       const host = u.hostname.toLowerCase();
+      const path = u.pathname.toLowerCase();
       if (host === "youtu.be" || host === "youtube.com" || host.endsWith(".youtube.com") || host === "vimeo.com" || host.endsWith(".vimeo.com")) return "video";
-      if (host === "open.spotify.com" || host === "soundcloud.com" || host === "www.soundcloud.com") return "audio";
+      if (host === "open.spotify.com" || host === "soundcloud.com" || host === "www.soundcloud.com" ||
+          host.endsWith("ondacero.es") || host.endsWith("rtve.es") || host.endsWith("cope.es") ||
+          host.endsWith("rac1.cat") || host.endsWith("cadenaser.com") ||
+          /\/play\/audios?\//.test(path) || /\/podcast\//.test(path) || /\/audio\//.test(path)) return "audio";
     } catch {
       // Un enlace incompleto no se considera un reproductor.
     }

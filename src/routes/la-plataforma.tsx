@@ -37,6 +37,19 @@ function Page() {
       {[[ "Misión", "Conseguir un Pacto de Estado que garantice una atención a la dependencia digna, ágil y suficiente." ],[ "Principios", "Independencia política, transparencia, respeto a las personas y rigor en los datos." ],[ "Cómo actuamos", "Sumando adhesiones, entidades y ayuntamientos, y dando voz a quienes cuidan y son cuidados." ]].map(([t,d]) => <Panel key={t}><h2 className="font-display text-xl font-semibold">{t}</h2><p className="mt-3 text-muted-foreground">{d}</p></Panel>)}
     </section>
 
+    <section className="mx-auto w-full max-w-6xl px-4 pb-12 sm:px-6" aria-labelledby="eventos-title">
+      <div className="flex flex-col gap-4 rounded-3xl border border-primary/15 bg-gradient-to-r from-primary/10 via-background to-accent/15 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <div>
+          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Participa</p>
+          <h2 id="eventos-title" className="mt-2 font-display text-2xl font-bold sm:text-3xl">Próximos eventos</h2>
+          <p className="mt-2 max-w-2xl text-muted-foreground">Consulta las próximas actividades y encuentros de Plataforma Dorada.</p>
+        </div>
+        <Link to="/eventos" className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
+          Ver eventos <span aria-hidden="true" className="ml-2">→</span>
+        </Link>
+      </div>
+    </section>
+
     <section id="principios" className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6" aria-labelledby="principios-title">
       <div className="relative overflow-hidden rounded-[2rem] border border-primary/15 bg-gradient-to-br from-primary/10 via-background to-accent/20 p-6 sm:p-10">
         <div className="pointer-events-none absolute -right-12 -top-16 size-56 rounded-full bg-primary/10 blur-3xl" aria-hidden="true" />

@@ -60,15 +60,15 @@ function ResourcePreview({ resource }: { resource: CmsResource }) {
 function videoEmbedUrl(raw: string) {
   try {
     const u = new URL(raw);
-    if (u.hostname === "youtu.be") return "https://www.youtube-nocookie.com/embed/" + u.pathname.slice(1);
+    if (u.hostname === "youtu.be") return "https://www.youtube-nocookie.com/embed/" + u.pathname.slice(1) + "?autoplay=1";
     if (u.hostname.endsWith("youtube.com")) {
       const id = u.searchParams.get("v");
-      if (id) return "https://www.youtube-nocookie.com/embed/" + id;
-      if (u.pathname.startsWith("/embed/")) return "https://www.youtube-nocookie.com" + u.pathname;
+      if (id) return "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1";
+      if (u.pathname.startsWith("/embed/")) return "https://www.youtube-nocookie.com" + u.pathname + (u.search ? "&" : "?") + "autoplay=1";
     }
     if (u.hostname.endsWith("vimeo.com")) {
       const id = u.pathname.split("/").filter(Boolean).pop();
-      if (id && /^\d+$/.test(id)) return "https://player.vimeo.com/video/" + id;
+      if (id && /^\d+$/.test(id)) return "https://player.vimeo.com/video/" + id + "?autoplay=1";
     }
   } catch {}
   return "";
@@ -80,11 +80,11 @@ function audioEmbedUrl(raw: string) {
     if (u.hostname === "open.spotify.com") {
       const parts = u.pathname.split("/").filter(Boolean);
       if (["episode", "show", "track", "album"].includes(parts[0] || "") && parts[1]) {
-        return "https://open.spotify.com/embed/" + parts[0] + "/" + parts[1];
+        return "https://open.spotify.com/embed/" + parts[0] + "/" + parts[1] + "?autoplay=1";
       }
     }
     if (u.hostname === "soundcloud.com" || u.hostname === "www.soundcloud.com") {
-      return "https://w.soundcloud.com/player/?url=" + encodeURIComponent(u.toString()) + "&auto_play=false";
+      return "https://w.soundcloud.com/player/?url=" + encodeURIComponent(u.toString()) + "&auto_play=true";
     }
   } catch {}
   return "";
@@ -117,7 +117,7 @@ function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsConten
 
       <section className="rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
         <div className="mb-4 flex items-center gap-3"><div className="rounded-2xl bg-primary/10 p-3 text-primary"><Headphones size={26} aria-hidden="true" /></div><div><p className="text-xs font-semibold uppercase tracking-widest text-primary">Audio / podcast</p><h2 className="font-display text-lg font-semibold">Reproductor de audio</h2></div></div>
-        {audioItem ? <><h3 className="mb-3 font-semibold">{audioItem.title}</h3>{directAudio ? <audio key={audioSrc} className="w-full" controls preload="none" src={audioSrc}>Tu navegador no admite la reproducción de audio. <a href={audioSrc}>Abrir audio</a>.</audio> : audioEmbed ? <iframe key={audioEmbed} className="h-40 w-full rounded-xl border-0 sm:h-48" src={audioEmbed} title={`Reproductor de audio: ${audioItem.title}`} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" /> : <p className="text-sm text-muted-foreground">Este enlace no se puede reproducir aquí automáticamente. Puedes abrirlo en la plataforma de origen.</p>}<a className="mt-3 inline-flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" href={audioSrc} target="_blank" rel="noreferrer">Abrir audio o podcast</a>{audioItem.summary && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{audioItem.summary}</p>}</> : <p className="rounded-xl bg-muted/40 p-4 text-sm text-muted-foreground">{item ? "Esta noticia no contiene audio. Selecciona una noticia de tipo audio para escucharla aquí." : "Cuando selecciones una noticia de audio, podrás escucharla aquí."}</p>}
+        {audioItem ? <><h3 className="mb-3 font-semibold">{audioItem.title}</h3>{directAudio ? <audio key={audioSrc} className="w-full" controls autoPlay preload="auto" src={audioSrc}>Tu navegador no admite la reproducción de audio. <a href={audioSrc}>Abrir audio</a>.</audio> : audioEmbed ? <iframe key={audioEmbed} className="h-40 w-full rounded-xl border-0 sm:h-48" src={audioEmbed} title={`Reproductor de audio: ${audioItem.title}`} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" /> : <p className="text-sm text-muted-foreground">Este enlace no se puede reproducir aquí automáticamente. Puedes abrirlo en la plataforma de origen.</p>}<a className="mt-3 inline-flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" href={audioSrc} target="_blank" rel="noreferrer">Abrir audio o podcast</a>{audioItem.summary && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{audioItem.summary}</p>}</> : <p className="rounded-xl bg-muted/40 p-4 text-sm text-muted-foreground">{item ? "Esta noticia no contiene audio. Selecciona una noticia de tipo audio para escucharla aquí." : "Cuando selecciones una noticia de audio, podrás escucharla aquí."}</p>}
       </section>
 
       <article className="overflow-hidden rounded-3xl border border-amber-200 bg-[#fff9ed] text-[#382b1d] shadow-sm">
@@ -168,6 +168,12 @@ function Page() {
   useEffect(() => {
     if (newsPage > pageCount) setNewsPage(pageCount);
   }, [newsPage, pageCount]);
+
+  useEffect(() => {
+    if (!selectedNewsKey || typeof document === "undefined") return;
+    const player = document.getElementById("reproductor-prensa");
+    player?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [selectedNewsKey]);
   const categories = useMemo(() => ["Todos", ...Array.from(new Set(resources.map(categoryFor)))], [resources]);
   const [selected, setSelected] = useState("Todos");
   const visible = selected === "Todos" ? resources : resources.filter((resource) => categoryFor(resource) === selected);
@@ -218,7 +224,7 @@ function Page() {
                   </div>
                 </nav>}
               </div>
-              <div className="min-w-0 lg:sticky lg:top-6"><MediaStage item={selectedNews} /></div>
+              <div id="reproductor-prensa" className="min-w-0 scroll-mt-6 lg:sticky lg:top-6"><MediaStage item={selectedNews} /></div>
             </div>
           ) : (
             <p className="rounded-2xl border border-border bg-muted/30 p-6 text-muted-foreground">Todavía no hay noticias publicadas. Cuando se introduzcan y publiquen desde el backoffice, aparecerán aquí.</p>

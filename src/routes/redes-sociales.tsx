@@ -61,29 +61,40 @@ function ProposalForm({ type }: { type: "cancion" | "frase" | "lema" }) {
 function PhraseCarousel({ phrases }: { phrases: string[] }) {
   const [index,setIndex]=useState(0);
   const [paused,setPaused]=useState(false);
-  useEffect(() => { setIndex(0); }, [phrases.join("\\u0000")]);
+  const phraseSignature = phrases.join("|~|");
+  const currentIndex = phrases.length ? index % phrases.length : 0;
+  const currentPhrase = phrases[currentIndex] ?? "";
+  useEffect(() => { setIndex(0); }, [phraseSignature]);
   useEffect(() => {
     if (paused || phrases.length < 2) return;
-    const id = window.setInterval(() => setIndex(i => (i + 1) % phrases.length), 6500);
+    const id = window.setInterval(() => {
+      setIndex(previous => (previous + 1) % phrases.length);
+    }, 6500);
     return () => window.clearInterval(id);
-  }, [paused, phrases.length]);
+  }, [paused, phrases.length, phraseSignature]);
   if (!phrases.length) return <p className="mt-5 text-sm text-muted-foreground">Todavía no hay lemas publicados.</p>;
-  const move = (amount: number) => setIndex(i => (i + amount + phrases.length) % phrases.length);
+  const move = (amount: number) => {
+    setIndex(previous => (previous + amount + phrases.length) % phrases.length);
+  };
+  const selectPhrase = (nextIndex: number) => {
+    setIndex(nextIndex);
+    setPaused(true);
+  };
   return <div className="mt-5 rounded-3xl bg-accent/15 p-7 sm:p-9" aria-roledescription="carrusel" aria-label="Lemas de Plataforma Dorada">
     <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Lema destacado</p>
     <div className="relative flex min-h-44 flex-col justify-center">
-      <blockquote className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{phrases[index]}”</blockquote>
+      <blockquote key={currentIndex + ":" + currentPhrase} className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{currentPhrase}”</blockquote>
     </div>
     <div className="mt-4 flex items-center justify-between gap-3">
-      <span className="text-sm text-muted-foreground" aria-live="polite">{index + 1} de {phrases.length}</span>
+      <span className="text-sm text-muted-foreground" aria-live="polite">{currentIndex + 1} de {phrases.length}</span>
       <div className="flex flex-wrap gap-2">
         <button type="button" aria-label="Lema anterior" className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-background disabled:opacity-40" onClick={() => move(-1)} disabled={phrases.length < 2}>← Anterior</button>
-        <button type="button" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-40" onClick={() => setPaused(v => !v)} aria-pressed={paused} disabled={phrases.length < 2}>{paused ? "Reanudar" : "Pausar"}</button>
+        <button type="button" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-40" onClick={() => setPaused(value => !value)} aria-pressed={paused} disabled={phrases.length < 2}>{paused ? "Reanudar" : "Pausar"}</button>
         <button type="button" aria-label="Siguiente lema" className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-background disabled:opacity-40" onClick={() => move(1)} disabled={phrases.length < 2}>Siguiente →</button>
       </div>
     </div>
     <div className="mt-5 flex justify-center gap-2" aria-label="Posición del lema">
-      {phrases.map((phrase, i) => <button key={i} type="button" aria-label={`Mostrar lema ${i + 1}`} aria-current={index === i ? "true" : undefined} onClick={() => { setIndex(i); setPaused(true); }} className={"h-2.5 rounded-full transition-all " + (index === i ? "w-7 bg-primary" : "w-2.5 bg-primary/30 hover:bg-primary/60")} />)}
+      {phrases.map((phrase, i) => <button key={i} type="button" aria-label={`Mostrar lema ${i + 1}`} aria-current={currentIndex === i ? "true" : undefined} onClick={() => selectPhrase(i)} className={"h-2.5 rounded-full transition-all " + (currentIndex === i ? "w-7 bg-primary" : "w-2.5 bg-primary/30 hover:bg-primary/60")} />)}
     </div>
   </div>;
 }

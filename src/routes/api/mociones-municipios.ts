@@ -10,7 +10,19 @@ const COMMUNITIES_URL =
 
 const cache = new Map<number, { at: number; data: unknown }>();
 const CACHE_MS = 5 * 60 * 1000;
-const PAGE_SIZE = 300;
+const PAGE_SIZE = 1000;
+let cachedCms: { at: number; data: any } | null = null;
+
+async function getCmsData() {
+  if (cachedCms && Date.now() - cachedCms.at < CACHE_MS) return cachedCms.data;
+  const response = await fetch(CMS_URL + "?action=public", { cache: "no-store" });
+  if (!response.ok) throw new Error("El servicio de mociones ha respondido HTTP " + response.status);
+  const cms = await response.json();
+  if (!cms || typeof cms !== "object") throw new Error("El servicio de mociones no ha devuelto un JSON válido.");
+  if (cms.ok === false) throw new Error(String(cms.error || "El servicio de mociones ha indicado un error."));
+  cachedCms = { at: Date.now(), data: cms };
+  return cms;
+}
 
 function norm(v: unknown) {
   return String(v ?? "")
@@ -42,11 +54,7 @@ export const Route = createFileRoute("/api/mociones-municipios")({
 
         let stage = "consulta de datos de mociones";
         try {
-          const cmsResponse = await fetch(CMS_URL + "?action=public", { cache: "no-store" });
-          if (!cmsResponse.ok) throw new Error("El servicio de mociones ha respondido HTTP " + cmsResponse.status);
-          const cms = await cmsResponse.json();
-          if (!cms || typeof cms !== "object") throw new Error("El servicio de mociones no ha devuelto un JSON válido.");
-          if (cms.ok === false) throw new Error(String(cms.error || "El servicio de mociones ha indicado un error."));
+          const cms = await getCmsData();
 
           stage = "descarga de la cartografía municipal (bloque " + offset + ")";
           const params = new URLSearchParams({
@@ -57,8 +65,8 @@ export const Route = createFileRoute("/api/mociones-municipios")({
             f: "geojson",
             resultRecordCount: String(PAGE_SIZE),
             resultOffset: String(offset),
-            geometryPrecision: "3",
-            maxAllowableOffset: "0.02",
+            geometryPrecision: "2",
+            maxAllowableOffset: "0.05",
             orderByFields: "OBJECTID",
           });
           const response = await fetch(MUNICIPAL_URL + "?" + params.toString(), { cache: "no-store" });
@@ -119,7 +127,7 @@ export const Route = createFileRoute("/api/mociones-municipios")({
               outSR: "4326",
               f: "geojson",
               resultRecordCount: "100",
-              geometryPrecision: "3",
+              geometryPrecision: "2",
             });
             const communityResponse = await fetch(COMMUNITIES_URL + "?" + communityParams.toString(), { cache: "no-store" });
             if (!communityResponse.ok) throw new Error("Límites autonómicos HTTP " + communityResponse.status);

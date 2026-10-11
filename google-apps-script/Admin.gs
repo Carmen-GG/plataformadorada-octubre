@@ -27,7 +27,7 @@ function checkBackofficePassword(password) {
 function doPost(e) {
   try {
     var body = JSON.parse(e.postData && e.postData.contents || "{}");
-    return outputJson_(saveProposalPublic_(body));
+    return outputJson_(body.type === "lema" ? saveLemaPublic_(body) : saveProposalPublic_(body));
   } catch (err) {
     return outputJson_({ ok:false, error:String(err && err.message || err) });
   }
@@ -192,6 +192,16 @@ function readRoadmap_(){
 function readLemas_(includeUnpublished){
   var s=cmsGetOrCreateSheet_("LemasWeb",LEMAS_HEADERS), rows=rowValues_(s,LEMAS_HEADERS.length);
   return rows.filter(function(r){return includeUnpublished || !/^(no|false|0)$/i.test(String(r[4]||"").trim());}).map(function(r){return {id:String(r[0]||""),text:cleanPublicText_(r[1],500),name:cleanPublicText_(r[2],160),order:Number(r[3])||0,published:!/^(no|false|0)$/i.test(String(r[4]||"").trim()),created:String(r[5]||"")};}).sort(function(a,b){return a.order-b.order || a.text.localeCompare(b.text);});
+}
+function saveLemaPublic_(data){
+  var text=cleanPublicText_(data.text,500);
+  if(!text) throw new Error("Escribe el lema o la cita.");
+  var s=cmsGetOrCreateSheet_("LemasWeb",LEMAS_HEADERS);
+  var rows=rowValues_(s,LEMAS_HEADERS.length);
+  var maxOrder=rows.reduce(function(max,r){return Math.max(max,Number(r[3])||0);},0);
+  var id=Utilities.getUuid();
+  s.appendRow([id,text,cleanPublicText_(data.proposer,160),maxOrder+1,"Sí",new Date().toISOString()]);
+  return {ok:true,id:id,message:"Lema añadido correctamente."};
 }
 function saveLema(data){
   assertAdmin_(data&&data.password);

@@ -24,7 +24,7 @@ const socialTabs = [
 
 type SocialTab = (typeof socialTabs)[number]["id"];
 
-function ProposalForm({ type }: { type: "cancion" | "frase" }) {
+function ProposalForm({ type }: { type: "cancion" | "frase" | "lema" }) {
   const [title, setTitle] = useState(""); const [artist, setArtist] = useState(""); const [text, setText] = useState(""); const [proposer, setProposer] = useState(""); const [status, setStatus] = useState("");
   const submit = async (e: FormEvent) => { e.preventDefault(); setStatus("Enviando…"); try { const r = await fetch("/api/cms", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({type,title,artist,text,proposer}) }); const d=await r.json(); if(!r.ok) throw new Error(d.error||"No se ha podido enviar"); setTitle("");setArtist("");setText("");setProposer("");setStatus("Gracias. La propuesta queda pendiente de revisión."); } catch(err){setStatus(err instanceof Error?err.message:"No se ha podido enviar la propuesta.");} };
   return <form onSubmit={submit} className="mt-5 space-y-3 rounded-2xl border border-border bg-background/60 p-4">
@@ -148,7 +148,7 @@ function RedesSociales(){
           <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Palabras</p>
           <h2 className="mt-1 font-display text-2xl font-semibold">Lemas y citas</h2>
           <PhraseCarousel phrases={visiblePhrases}/>
-          <ProposalForm type="frase" />
+          <ProposalForm type="lema" />
         </article>
       </div>
       <div id="panel-videos" role="tabpanel" aria-labelledby="tab-videos" hidden={activeTab !== "videos"}>

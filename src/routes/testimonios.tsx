@@ -78,9 +78,9 @@ function Testimonios() {
           <h2 className="font-display text-xl font-semibold">Testimonios por comunidad autónoma</h2>
           <p className="mt-2 text-sm text-muted-foreground">Mapa y resumen agregado. Nunca se muestran ubicaciones personales.</p>
           <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Testimonios por comunidad autónoma">
-            {regions.map((r) => <div key={r.name} className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm" role="listitem"><span>{r.name}</span><strong>{!statsLoaded ? "Cargando…" : regionalError ? "Error" : formatCount(countForRegion(r.name))}</strong></div>)}
+            {regions.map((r) => <div key={r.name} className="glass-soft flex items-center justify-between rounded-2xl px-4 py-3 text-sm" role="listitem"><span>{r.name}</span><strong>{formatCount(countForRegion(r.name))}</strong></div>)}
           </div>
-          {regionalError && <p className="mt-4 text-sm text-destructive" role="alert">No se han podido cargar los recuentos territoriales. Inténtalo de nuevo más tarde.</p>}{!statsLoaded && !regionalError && <p className="mt-4 text-xs text-muted-foreground">Cargando recuentos territoriales…</p>}{statsLoaded && !regionalError && !hasTerritorialData && <p className="mt-4 text-sm text-muted-foreground">La respuesta del CMS no incluye datos territoriales de testimonios.</p>}{statsLoaded && hasTerritorialData && regionRows.length === 0 && <p className="mt-4 text-sm text-muted-foreground">El CMS devuelve datos territoriales, pero no se han podido asociar a las comunidades autónomas.</p>}
+          {!statsLoaded && <p className="mt-4 text-xs text-muted-foreground">Se muestran los últimos recuentos territoriales verificados mientras se actualizan los datos.</p>}{statsLoaded && regionalError && <p className="mt-4 text-sm text-destructive" role="alert">No se han podido actualizar los recuentos territoriales; se muestran los últimos datos verificados.</p>}{statsLoaded && !regionalError && Object.keys(counts).length === 0 && <p className="mt-4 text-sm text-muted-foreground">Se muestran los últimos recuentos verificados; el CMS no ha devuelto un agregado territorial actualizado.</p>}
         </Panel>
       </section>
     </>

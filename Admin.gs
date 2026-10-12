@@ -36,9 +36,22 @@ function doGet(e) {
 function doPost(e) {
   try {
     var body = JSON.parse(e && e.postData && e.postData.contents || "{}");
-    var action = String(body.action || "proposal");
-    // Mantener la ruta pública de propuestas compatible con los formularios existentes.
-    if (action === "proposal" || !action) return outputJson_(saveProposalPublic_(body));
+    var action = String(body.action || body.tipoAccion || "proposal").toLowerCase();
+
+    // El formulario de contacto conserva su manejador propio; no se duplica doPost
+    // en contacto.gs para evitar que Apps Script sobrescriba una de las rutas.
+    if (action === "contacto" || action === "contact") {
+      if (typeof procesarContactoPost_ !== "function") {
+        throw new Error("No está disponible procesarContactoPost_ en contacto.gs.");
+      }
+      return outputJson_(procesarContactoPost_(body));
+    }
+
+    // Las propuestas públicas (canciones y frases) siguen usando la misma ruta.
+    if (action === "proposal" || action === "propuesta" || !action) {
+      return outputJson_(saveProposalPublic_(body));
+    }
+
     return outputJson_({ ok:false, error:"Acción POST no admitida: " + action });
   } catch (err) {
     return outputJson_({ ok:false, error:String(err && err.message || err) });

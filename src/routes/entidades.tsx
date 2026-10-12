@@ -40,7 +40,7 @@ function Page() {
       >
       </PageHeader>
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
-        {status ? (
+        {all.length === 0 && status ? (
           <p className="text-muted-foreground" role="status">
             {status}
           </p>

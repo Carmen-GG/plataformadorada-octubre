@@ -20,7 +20,7 @@ function Page() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const [img, setImg] = useState<HTMLImageElement | null>(null);
   const [logo, setLogo] = useState(true);
-  const [border, setBorder] = useState(true);
+  const [border, setBorder] = useState(false);
   const [hashtag, setHashtag] = useState<"none" | "PlataformaDorada" | "PactoDeEstado">("none");
   const [scale, setScale] = useState(1);
   const [x, setX] = useState(0);
@@ -165,7 +165,7 @@ function Page() {
 
           <label className="flex items-center gap-3 text-sm font-semibold"><input type="checkbox" checked={logo} onChange={(e) => setLogo(e.target.checked)} /> Añadir logo de Plataforma Dorada</label>
           <p className="rounded-2xl bg-accent/15 px-4 py-3 text-sm text-muted-foreground">Con el logo activado, también puedes <strong>arrastrarlo directamente sobre la vista previa</strong> para colocarlo donde quieras.</p>
-          <label className="flex items-center gap-3 text-sm font-semibold"><input type="checkbox" checked={border} onChange={(e) => setBorder(e.target.checked)} /> Añadir contorno dorado</label>
+          <label className="flex items-center gap-3 text-sm font-semibold"><input type="checkbox" checked={border} onChange={(e) => setBorder(e.target.checked)} /> Añadir aro dorado (opcional)</label>
 
           <fieldset>
             <legend className="text-sm font-semibold">Hashtag (opcional)</legend>

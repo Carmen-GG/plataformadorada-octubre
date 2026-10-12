@@ -1,35 +1,13 @@
 /**
- * Plataforma Dorada — punto de entrada público del Web App.
+ * Este archivo ya no declara doGet().
  *
- * Las funciones compartidas del CMS y del backoffice están en Admin.gs.
- * Las estadísticas públicas están en publico.gs.
- * Este archivo conserva únicamente el enrutamiento GET para evitar duplicar
- * funciones globales (outputJson_, countAllAdhesions_, getPublicContent_, etc.).
+ * La única función doGet del proyecto está en Admin.gs para evitar conflictos
+ * entre definiciones duplicadas y mantener un único enrutamiento:
+ * - ?action=content -> contenido CMS
+ * - ?action=public  -> estadísticas, mapa y listas públicas
+ * - ?action=count   -> contador simple de adhesiones
+ * - ?admin=1        -> backoffice
+ *
+ * Se mantiene este archivo como nota de compatibilidad para instalaciones
+ * antiguas. Las funciones de estadísticas están en publico.gs.
  */
-
-function doGet(e) {
-  var params = (e && e.parameter) || {};
-
-  if (params.view === "admin") {
-    return HtmlService.createHtmlOutputFromFile("admin")
-      .setTitle("Plataforma Dorada · Backoffice")
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-  }
-
-  var callback = /^[A-Za-z_$][\w$.]*$/.test(params.callback || "") ? params.callback : "";
-  var action = params.action || "count";
-  var payload;
-
-  if (action === "content") {
-    payload = getPublicContent_();
-  } else if (action === "public") {
-    payload = getPublicStats_();
-  } else {
-    payload = {
-      adhesiones: countAllAdhesions_(),
-      actualizado: new Date().toISOString()
-    };
-  }
-
-  return outputJson_(payload, callback);
-}

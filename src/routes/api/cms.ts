@@ -140,7 +140,7 @@ export const Route = createFileRoute("/api/cms")({
 
           const cmsUrl = new URL(CMS_URL);
 
-          const known = action === "content" || action === "public" ? action : "count";
+          const known = action === "content" || action === "resources" || action === "public" ? action : "count";
           if (known !== "count") cmsUrl.searchParams.set("action", known);
 
           const cached = cache.get(known);

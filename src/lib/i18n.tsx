@@ -204,7 +204,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Dades agregades. Mai no es publiquen dades personals ni ubicacions individuals.",
     eu: "Datu agregatuak. Ez dira inoiz datu pertsonalik edo banakako kokapenik argitaratzen.",
     gl: "Datos agregados. Nunca se publican datos persoais nin localizacións individuais.",
-    en: "dependency care",
+    en: "Aggregated data. Personal data and individual locations are never published.",
   },
   "Cifras del movimiento": {
     ca: "Xifres del moviment",
@@ -247,14 +247,14 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Veure el mapa complet per comunitat autònoma",
     eu: "Ikusi mapa osoa autonomia-erkidegoka",
     gl: "Ver o mapa completo por comunidade autónoma",
-    en: "pledges",
+    en: "View the full map by autonomous community",
   },
   Hitos: { ca: "Fites", eu: "Mugarriak", gl: "Fitos" },
   "Últimas adhesiones": {
     ca: "Últimes adhesions",
     eu: "Azken atxikimenduak",
     gl: "Últimas adhesións",
-    en: "Milestones",
+    en: "Latest pledges",
   },
   "Solo se publican las personas que han autorizado expresamente aparecer, con nombre, inicial del primer apellido y ciudad.":
     {
@@ -325,7 +325,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Premsa i recursos",
     eu: "Prentsa eta baliabideak",
     gl: "Prensa e recursos",
-    en: "View Instagram",
+    en: "Press and resources",
   },
   "Logotipos, dossier de prensa y materiales para difundir el movimiento.": {
     ca: "Logotips, dossier de premsa i materials per difondre el moviment.",
@@ -339,7 +339,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Ets periodista, entitat o ajuntament? Escriu-nos.",
     eu: "Kazetaria, erakundea edo udala zara? Idatzi.",
     gl: "Es xornalista, entidade ou concello? Escríbenos.",
-    en: "Go to resources",
+    en: "Are you a journalist, organisation or local council? Get in touch.",
   },
   Escríbenos: { ca: "Escriu-nos", eu: "Idatzi", gl: "Escríbenos" },
   "Quiénes somos": { ca: "Qui som", eu: "Nor gara", gl: "Quen somos" },
@@ -348,14 +348,14 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "La nostra trajectòria",
     eu: "Gure ibilbidea",
     gl: "A nosa traxectoria",
-    en: "Contact us",
+    en: "Our journey",
   },
   "Hoja de ruta": { ca: "Full de ruta", eu: "Ibilbide-orria", gl: "Folla de ruta" },
   "Únete al movimiento": {
     ca: "Uneix-te al moviment",
     eu: "Bat egin mugimenduarekin",
     gl: "Únete ao movemento",
-    en: "Roadmap",
+    en: "Join the movement",
   },
   "Entender el problema": {
     ca: "Entendre el problema",
@@ -382,7 +382,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Dades i indicadors",
     eu: "Datuak eta adierazleak",
     gl: "Datos e indicadores",
-    en: "The problem",
+    en: "Data and indicators",
   },
   Adhesión: { ca: "Adhesió", eu: "Atxikimendua", gl: "Adhesión" },
   "Únete a Plataforma Dorada": {
@@ -426,7 +426,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Fes-te voluntari/ària",
     eu: "Egin zaitez boluntario/a",
     gl: "Faite voluntario/a",
-    en: "Share",
+    en: "Become a volunteer",
   },
   "Formas de colaborar": {
     ca: "Maneres de col·laborar",
@@ -459,7 +459,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Adherir la meva entitat",
     eu: "Nire erakundea atxikitzea",
     gl: "Adherir a miña entidade",
-    en: "Support network",
+    en: "Register my organisation",
   },
   "Filtrar por tipo": {
     ca: "Filtrar per tipus",
@@ -474,14 +474,14 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Esdeveniments realitzats",
     eu: "Egindako ekitaldiak",
     gl: "Eventos realizados",
-    en: "All",
+    en: "Past events",
   },
   Transparencia: { ca: "Transparència", eu: "Gardentasuna", gl: "Transparencia" },
   "El movimiento en cifras": {
     ca: "El moviment en xifres",
     eu: "Mugimendua zifretan",
     gl: "O movemento en cifras",
-    en: "Transparency",
+    en: "The movement in numbers",
   },
   "Por territorio": { ca: "Per territori", eu: "Lurraldeka", gl: "Por territorio" },
   Comunidad: { ca: "Comunitat", eu: "Erkidegoa", gl: "Comunidade" },
@@ -491,7 +491,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Per a mitjans i difusió",
     eu: "Hedabideentzat eta zabalkunderako",
     gl: "Para medios e difusión",
-    en: "By region",
+    en: "For media and outreach",
   },
   "Descarga disponible próximamente": {
     ca: "Descàrrega disponible pròximament",
@@ -524,7 +524,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Correu electrònic",
     eu: "Posta elektronikoa",
     gl: "Correo electrónico",
-    en: "Let's talk",
+    en: "Email address",
   },
   Mensaje: { ca: "Missatge", eu: "Mezua", gl: "Mensaxe" },
   "He leído y acepto la política de privacidad.": {
@@ -563,7 +563,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     ca: "Declaració d'accessibilitat",
     eu: "Irisgarritasun-adierazpena",
     gl: "Declaración de accesibilidade",
-    en: "Download image",
+    en: "Accessibility statement",
   },
   "Política de privacidad": {
     ca: "Política de privacitat",
@@ -603,7 +603,7 @@ Object.assign(pageTranslations, {
     ca: "Temps mitjà d'espera des de la sol·licitud fins a la resolució",
     eu: "Eskaeratik ebazpenera arteko batez besteko itxaronaldia",
     gl: "Tempo medio de espera desde a solicitude ata a resolución",
-    en: "Local councils",
+    en: "Average time from application to decision",
   },
   "Personas en lista de espera de servicios de dependencia": {
     ca: "Persones en llista d'espera de serveis de dependència",

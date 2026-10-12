@@ -198,14 +198,15 @@ export function MunicipalMotionsMap() {
         data.records.forEach((record) => {
           const names = new Set([record.municipio, ...(MUNICIPALITY_ALIASES[normalize(record.municipio)] || [])]);
           for (const name of names) {
-            colorMatch.push(["==", ["collator", { "case-sensitive": false, "diacritic-sensitive": false, "locale": "es" }], ["to-string", ["get", "nameunit"]], name);
+            colorMatch.push(["==", ["collator", { "case-sensitive": false, "diacritic-sensitive": false, "locale": "es" }], ["to-string", ["get", "nameunit"]], name]);
+            colorMatch.push(STATUS[record.motionStatus].color);
             if (name.includes("/")) {
               for (const part of name.split("/").map((item) => item.trim()).filter(Boolean)) {
-                colorMatch.push(["==", ["collator", { "case-sensitive": false, "diacritic-sensitive": false, "locale": "es" }], ["to-string", ["get", "nameunit"]], part);
+                colorMatch.push(["==", ["collator", { "case-sensitive": false, "diacritic-sensitive": false, "locale": "es" }], ["to-string", ["get", "nameunit"]], part]);
+                colorMatch.push(STATUS[record.motionStatus].color);
               }
             }
           }
-          colorMatch.push(STATUS[record.motionStatus].color);
         });
         colorMatch.push("#00000000");
 

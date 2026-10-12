@@ -10,10 +10,13 @@ export function AdhesionCarousel({
   itemLabel?: string;
 }) {
   const [index, setIndex] = useState(0);
+  // Compare actual item content, not the array reference: the parent rebuilds
+  // the array on renders, which otherwise resets the carousel after each click.
+  const itemsKey = items.map((item) => `${item.nombre}\u001f${item.municipio}`).join("\u001e");
 
   useEffect(() => {
     setIndex(0);
-  }, [items]);
+  }, [itemsKey]);
 
   useEffect(() => {
     if (items.length < 2) return;
@@ -21,11 +24,12 @@ export function AdhesionCarousel({
       setIndex((current) => (current + 1) % items.length);
     }, 5000);
     return () => window.clearInterval(timer);
-  }, [items.length]);
+  }, [items.length, itemsKey]);
 
   if (!items.length) return null;
 
-  const current = items[index] ?? items[0];
+  const currentIndex = index % items.length;
+  const current = items[currentIndex];
   const previous = () => setIndex((value) => (value - 1 + items.length) % items.length);
   const next = () => setIndex((value) => (value + 1) % items.length);
 
@@ -33,7 +37,7 @@ export function AdhesionCarousel({
     <div className="mt-6" aria-roledescription="carrusel" aria-label={`Últimas incorporaciones públicas: ${itemLabel.toLowerCase()}`}>
       <div className="glass-panel flex min-h-36 flex-col items-center justify-center rounded-3xl px-6 py-8 text-center sm:px-10">
         <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-          {itemLabel} {index + 1} de {items.length}
+          {itemLabel} {currentIndex + 1} de {items.length}
         </p>
         <p className="mt-3 font-display text-2xl font-semibold">{current.nombre}</p>
         {current.municipio && <p className="mt-1 text-sm text-muted-foreground">{current.municipio}</p>}
@@ -52,8 +56,8 @@ export function AdhesionCarousel({
               type="button"
               onClick={() => setIndex(i)}
               aria-label={`Ver ${itemLabel.toLowerCase()} ${i + 1}`}
-              aria-current={i === index}
-              className={`h-2.5 w-2.5 rounded-full border ${i === index ? "bg-primary" : "bg-transparent"}`}
+              aria-current={i === currentIndex}
+              className={`h-2.5 w-2.5 rounded-full border ${i === currentIndex ? "bg-primary" : "bg-transparent"}`}
             />
           ))}
         </div>

@@ -210,25 +210,25 @@ function Home() {
             </h2>
             <div className="mt-4 space-y-4 leading-relaxed text-muted-foreground">
               <p>
-                Cuidar no puede seguir cayendo solo sobre las familias y por la vocación de los cuidadores.
+                Cuidar no puede seguir recayendo en las familias y dependiendo de la vocación de los cuidadores.
               </p>
               <p>
-                Miles de personas en situación de dependencia: mayores, personas con discapacidad o con enfermedades crónicas, esperan meses para una valoración o un recurso insuficiente. Mientras tanto, sus familiares y cuidadores sostienen el día a día a costa de su tiempo, su salud y su proyecto de vida.
+                Miles de personas en situación de dependencia: mayores, personas con discapacidad o con enfermedades crónicas, esperan meses para una valoración y vuelven a esperar para obtener un recurso insuficiente. Mientras tanto, sus familiares y cuidadores sostienen el día a día a costa de su tiempo, su salud y su proyecto vital.
               </p>
               <p>
-                Negocio a costa de maltratos a los mayores, invisibilidad de personas vulnerables y residencias no adaptadas a pequeñas comunidades por un trato digno.
+                Negocio a costa de precariedad laboral de las profesionales, baja calidad asistencial hacia las personas dependientes, servicios diseñados en función del mayor beneficio económico, obviando el hecho de la vulnerabilidad extrema en la que se encuentran sus “clientes”.
               </p>
               <p>
-                Junto a ellas están también las trabajadoras sociales, las educadoras sociales y las profesionales de atención directa, que acompañan y organizan ese cuidado con recursos totalmente inadecuados.
+                Profesionales del ámbito sociosanitario trabajando con un alto compromiso y asumiendo una gran responsabilidad, con medios escasos y exigencias altas para cumplir unos objetivos… pero.. los objetivos de quién?
               </p>
               <p>
-                El sistema necesita más medios, mejor coordinación y una respuesta que no dependa de dónde vivas.
+                El sistema necesita más medios, mejor coordinación sociosanitaria y una respuesta que no dependa de dónde vivas.
               </p>
               <p>
                 Por eso nace y trabaja Plataforma Dorada, para conseguir un Pacto de Estado por la Dependencia y los Cuidados.
               </p>
               <p>
-                Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.
+                Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores principales y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.
               </p>
             </div>
           </div>

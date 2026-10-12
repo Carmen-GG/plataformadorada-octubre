@@ -90,8 +90,49 @@ function findMunicipalityLayer(map: any) {
   const layers = style.layers || [];
   const candidates = layers.filter((layer: any) => layer.type === "fill" && ids.includes(layer.source) && layer["source-layer"]);
   const fallback = layers.filter((layer: any) => layer.source && ids.includes(layer.source) && layer["source-layer"]);
-  const layer = candidates[0] || fallback[0];
+  // Prioriza explícitamente la capa municipal; la primera capa del IGN puede ser
+  // provincial o autonómica y en ese caso ningún municipio llega a colorearse.
+  const municipal = [...candidates, ...fallback].find((layer: any) =>
+    /municip|municipio|municipal/i.test(String(layer.id) + " " + String(layer["source-layer"]))
+  );
+  const layer = municipal || candidates[0] || fallback[0];
   return layer ? { source: layer.source, sourceLayer: layer["source-layer"] } : null;
+}
+
+const MUNICIPALITY_ALIASES: Record<string, string[]> = {
+  "alacant alicante": ["Alicante", "Alacant"],
+  "elx elche": ["Elche", "Elx"],
+  "alcoi alcoy": ["Alcoy", "Alcoi"],
+  "sagunt sagunto": ["Sagunto", "Sagunt"],
+  "sant vicent del raspeig san vicente del raspeig": ["San Vicente del Raspeig", "Sant Vicent del Raspeig"],
+  "astillero el": ["El Astillero", "Astillero"],
+  "garriga la": ["La Garriga", "Garriga"],
+  "hospitalet de llobregat l": ["L'Hospitalet de Llobregat", "Hospitalet de Llobregat"],
+  "coruna a": ["A Coruña", "La Coruña"],
+  "palmas de gran canaria las": ["Las Palmas de Gran Canaria", "Palmas de Gran Canaria"],
+  "lleida": ["Lérida"],
+  "lloret de mar": ["Lloret de Mar"],
+  "ejido el": ["El Ejido", "Ejido"],
+  "puerto de santa maria el": ["El Puerto de Santa María", "Puerto de Santa María"],
+  "roz as de madrid las": ["Las Rozas de Madrid", "Rozas de Madrid"],
+};
+
+function municipalityMatchExpression(records: MotionRecord[]) {
+  const collator = ["collator", { "case-sensitive": false, "diacritic-sensitive": false, "locale": "es" }];
+  const clauses: any[] = [];
+  for (const record of records) {
+    const variants = new Set([record.municipio, ...(MUNICIPALITY_ALIASES[normalize(record.municipio)] || [])]);
+    // Los nombres oficiales pueden incluir dos idiomas separados por una barra.
+    for (const name of Array.from(variants)) {
+      clauses.push(["==", collator, ["to-string", ["get", "nameunit"]], name]);
+      if (name.includes("/")) {
+        for (const part of name.split("/").map((item) => item.trim()).filter(Boolean)) {
+          clauses.push(["==", collator, ["to-string", ["get", "nameunit"]], part]);
+        }
+      }
+    }
+  }
+  return clauses.length ? ["any", ...clauses] : ["==", 1, 0];
 }
 
 export function MunicipalMotionsMap() {
@@ -152,13 +193,19 @@ export function MunicipalMotionsMap() {
         // IGN puede devolver los nombres municipales con mayúsculas distintas a las del
         // registro de mociones. Las expresiones de MapLibre distinguen mayúsculas/minúsculas,
         // así que comparamos en minúsculas tanto para el filtro como para el color.
-        const filterNames = Array.from(new Set(
-          data.records.map((record) => record.municipio.toLocaleLowerCase("es")),
-        ));
-        const nameMatch: any = ["match", ["downcase", ["to-string", ["get", "nameunit"]]], filterNames, true, false];
-        const colorMatch: any = ["match", ["downcase", ["to-string", ["get", "nameunit"]]]];
+        const nameMatch = municipalityMatchExpression(data.records);
+        const colorMatch: any = ["case"];
         data.records.forEach((record) => {
-          colorMatch.push(record.municipio.toLocaleLowerCase("es"), STATUS[record.motionStatus].color);
+          const names = new Set([record.municipio, ...(MUNICIPALITY_ALIASES[normalize(record.municipio)] || [])]);
+          for (const name of names) {
+            colorMatch.push(["==", ["collator", { "case-sensitive": false, "diacritic-sensitive": false, "locale": "es" }], ["to-string", ["get", "nameunit"]], name);
+            if (name.includes("/")) {
+              for (const part of name.split("/").map((item) => item.trim()).filter(Boolean)) {
+                colorMatch.push(["==", ["collator", { "case-sensitive": false, "diacritic-sensitive": false, "locale": "es" }], ["to-string", ["get", "nameunit"]], part);
+              }
+            }
+          }
+          colorMatch.push(STATUS[record.motionStatus].color);
         });
         colorMatch.push("#00000000");
 
@@ -170,7 +217,7 @@ export function MunicipalMotionsMap() {
           filter: nameMatch,
           paint: {
             "fill-color": colorMatch,
-            "fill-opacity": ["case", ["==", statusFilter, "todas"], 0.68, 0.68],
+            "fill-opacity": 0.68,
           },
         });
         map.addLayer({
@@ -213,10 +260,9 @@ export function MunicipalMotionsMap() {
     const map = mapRef.current;
     if (!map || !map.getLayer("pd-municipal-motions-fill") || !data) return;
     const visibleRecords = statusFilter === "todas" ? data.records : data.records.filter((record) => record.motionStatus === statusFilter);
-    const names = visibleRecords.map((record) => record.municipio.toLocaleLowerCase("es"));
-    const normalizedName = ["downcase", ["to-string", ["get", "nameunit"]]];
-    map.setFilter("pd-municipal-motions-fill", ["match", normalizedName, names, true, false]);
-    map.setFilter("pd-municipal-motions-outline", ["match", normalizedName, names, true, false]);
+    const expression = municipalityMatchExpression(visibleRecords);
+    map.setFilter("pd-municipal-motions-fill", expression);
+    map.setFilter("pd-municipal-motions-outline", expression);
   }, [statusFilter, data]);
 
   return (

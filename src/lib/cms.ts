@@ -72,6 +72,7 @@ type AppsScriptResource = {
   descripcion?: string;
   url?: string;
   vistaPreviaUrl?: string;
+  previewUrl?: string;
   nombreArchivo?: string;
   title?: string;
   category?: string;

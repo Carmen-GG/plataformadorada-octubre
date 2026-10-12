@@ -10,13 +10,7 @@ export function AdhesionCarousel({
   itemLabel?: string;
 }) {
   const [index, setIndex] = useState(0);
-  // Compare actual item content, not the array reference: the parent rebuilds
-  // the array on renders, which otherwise resets the carousel after each click.
   const itemsKey = items.map((item) => `${item.nombre}\u001f${item.municipio}`).join("\u001e");
-
-  useEffect(() => {
-    setIndex(0);
-  }, [itemsKey]);
 
   useEffect(() => {
     if (items.length < 2) return;
@@ -24,7 +18,7 @@ export function AdhesionCarousel({
       setIndex((current) => (current + 1) % items.length);
     }, 5000);
     return () => window.clearInterval(timer);
-  }, [items.length, itemsKey]);
+  }, [items.length]);
 
   if (!items.length) return null;
 

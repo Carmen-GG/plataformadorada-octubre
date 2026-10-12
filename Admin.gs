@@ -9,7 +9,7 @@ var PD_CMS = {
   RESOURCE_FOLDER_PROPERTY: "RECURSOS_FOLDER_ID",
 };
 
-var NEWS_HEADERS = ["id","titulo","medio","fecha","url","resumen","publicada","creada"];
+var NEWS_HEADERS = ["id","titulo","medio","fecha","url","resumen","publicada","creada","tipo","urlMultimedia","contenidoTexto"];
 var RESOURCE_HEADERS = ["id","titulo","categoria","descripcion","archivo","url","creado","archivoId"];
 var EVENT_HEADERS = ["id","titulo","fecha","hora","lugar","ciudad","descripcion","url","documentoNombre","documentoUrl","documentoId","publicada","creada"];
 var PROPOSAL_HEADERS = ["id","tipo","titulo","artista","texto","proponente","publicada","creada"];
@@ -18,16 +18,22 @@ var ROADMAP_HEADERS = ["id","fase","titulo","detalle","fecha","orden","activa","
 var VIDEO_HEADERS = ["id","title","description","url","platform","order","published","category","created"];
 
 function doGet(e) {
-  var action = e && e.parameter ? String(e.parameter.action || "") : "";
-  var payload = action === "content" ? getPublicContent_() : action === "public" ? getPublicStats_() : { adhesiones: countAllAdhesions_(), actualizado: new Date().toISOString() };
-  var callback = e && e.parameter ? String(e.parameter.callback || "") : "";
-  return outputJson_(payload, callback);
+  var params = e && e.parameter ? e.parameter : {};
+  var action = String(params.action || "");
+  var payload;
+  if (action === "content") payload = getPublicContent_();
+  else if (action === "public") payload = getPublicStats_();
+  else payload = { adhesiones: countAllAdhesions_(), actualizado: new Date().toISOString() };
+  return outputJson_(payload, String(params.callback || ""));
 }
 
 function doPost(e) {
   try {
-    var body = JSON.parse(e.postData && e.postData.contents || "{}");
-    return outputJson_(saveProposalPublic_(body));
+    var body = JSON.parse(e && e.postData && e.postData.contents || "{}");
+    var action = String(body.action || "proposal");
+    // Mantener la ruta pública de propuestas compatible con los formularios existentes.
+    if (action === "proposal" || !action) return outputJson_(saveProposalPublic_(body));
+    return outputJson_({ ok:false, error:"Acción POST no admitida: " + action });
   } catch (err) {
     return outputJson_({ ok:false, error:String(err && err.message || err) });
   }
@@ -43,6 +49,19 @@ function countAllAdhesions_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName("Firmantes");
   return sheet ? Math.max(0, sheet.getLastRow() - 1) : 0;
+}
+
+function getPublicStats_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  function countRows(name) { var sh = ss.getSheetByName(name); return sh ? Math.max(0, sh.getLastRow() - 1) : 0; }
+  return {
+    adhesiones: countAllAdhesions_(),
+    noticias: countRows("NoticiasWeb"),
+    recursos: countRows("RecursosWeb"),
+    eventos: countRows(PD_CMS.EVENTOS_SHEET_NAME),
+    testimoniosRecibidos: countRows("Testimonios"),
+    actualizado: new Date().toISOString()
+  };
 }
 
 function getOrCreateSheet_(name, headers) {
@@ -88,7 +107,11 @@ function assertAdmin_(password){ var expected=PropertiesService.getScriptPropert
 
 function readNews_(){
   var s=getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS), rows=rowValues_(s,NEWS_HEADERS.length);
-  return rows.filter(function(r){return String(r[6]).toLowerCase()!=="no";}).map(function(r){return {id:r[0],title:cleanPublicText_(r[1],300),media:cleanPublicText_(r[2],160),date:r[3],url:r[4],summary:cleanPublicText_(r[5],1000)};}).reverse();
+  return rows.filter(function(r){return !/^(no|false|0)$/i.test(String(r[6]||""));}).map(function(r){return {
+    id:String(r[0]||""), title:cleanPublicText_(r[1],300), media:cleanPublicText_(r[2],160), date:String(r[3]||""),
+    url:String(r[4]||""), summary:cleanPublicText_(r[5],1000), published:!/^(no|false|0)$/i.test(String(r[6]||"")),
+    type:String(r[8]||""), mediaUrl:String(r[9]||""), contentText:cleanPublicText_(r[10],10000)
+  };}).reverse();
 }
 
 function drivePreviewUrl_(id){ return id ? "https://drive.google.com/thumbnail?id="+encodeURIComponent(id)+"&sz=w1000" : ""; }
@@ -155,7 +178,14 @@ function saveVideo(data){
 }
 function deleteVideo(data){assertAdmin_(data&&data.password);return deleteRowById_("VideosWeb",data.id);}
 
-function saveNews(data){assertAdmin_(data&&data.password);var s=getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS),id=Utilities.getUuid();s.appendRow([id,cleanPublicText_(data.title,300),cleanPublicText_(data.media,160),String(data.date||"").trim(),String(data.url||"").trim(),cleanPublicText_(data.summary,1000),data.published===false?"No":"Sí",new Date().toISOString()]);return{ok:true,id:id};}
+function saveNews(data){
+  assertAdmin_(data&&data.password);
+  var s=getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS), id=String(data.id||"").trim(), row=id?findRowById_(s,id):-1;
+  if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
+  var created=row<=s.getLastRow()?String(s.getRange(row,8).getDisplayValue()||""):""; if(!created)created=new Date().toISOString();
+  s.getRange(row,1,1,NEWS_HEADERS.length).setValues([[id,cleanPublicText_(data.title,300),cleanPublicText_(data.media,160),String(data.date||"").trim(),String(data.url||"").trim(),cleanPublicText_(data.summary,1000),data.published===false?"No":"Sí",created,String(data.type||"").trim(),String(data.mediaUrl||"").trim(),cleanPublicText_(data.contentText,10000)]]);
+  return{ok:true,id:id};
+}
 
 function saveResource(data){
   assertAdmin_(data&&data.password);

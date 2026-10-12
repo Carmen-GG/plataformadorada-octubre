@@ -1,50 +1,49 @@
 /**
- * Punto de entrada GET de la aplicación web.
- * Mantiene la ruta del backoffice y publica el contenido del CMS en JSON.
+ * ÚNICO punto de entrada GET de la aplicación web.
+ * No crear otro doGet en adhesiones.gs ni en otros archivos.
+ *
+ * ?admin=1 o ?view=admin -> backoffice
+ * ?action=content        -> noticias, recursos, eventos, vídeos y CMS
+ * ?action=public         -> estadísticas, mapa y listas públicas autorizadas
+ * ?action=count o sin action -> contador simple de adhesiones
  */
 function doGet(e) {
   e = e || {};
   var params = e.parameter || {};
+  var callback = /^[A-Za-z_$][\\w$.]*$/.test(String(params.callback || "")) ? String(params.callback) : "";
 
-  // Backoffice
-  if (String(params.admin || "") === "1") {
-    return HtmlService
-      .createHtmlOutputFromFile("admin")
-      .setTitle("Plataforma Dorada - Backoffice");
+  if (String(params.admin || "") === "1" || String(params.view || "") === "admin") {
+    return HtmlService.createHtmlOutputFromFile("admin")
+      .setTitle("Plataforma Dorada - Backoffice")
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
 
-  // Contenido público consumido por la web.
-  if (params.action === "content" || params.action === "public") {
-    try {
-      return outputJson_(obtenerContenidoPublico(), params.callback);
-    } catch (err) {
-      return outputJson_({
-        ok: false,
-        error: String(err && err.message || err)
-      }, params.callback);
+  var action = String(params.action || "count").toLowerCase();
+  try {
+    if (action === "content") {
+      return outputJson_(obtenerContenidoPublico(), callback);
     }
-  }
-
-  // La web solicita los contadores de portada sin parámetro action.
-  // También aceptamos action=count para clientes antiguos.
-  if (!params.action || params.action === "count") {
-    try {
+    if (action === "public") {
       if (typeof getPublicStats_ !== "function") {
-        throw new Error("No está disponible getPublicStats_() para servir los contadores públicos.");
+        throw new Error("Falta publico.gs o no está definida getPublicStats_().");
       }
-      return outputJson_(getPublicStats_(), params.callback);
-    } catch (err) {
-      return outputJson_({
-        ok: false,
-        error: String(err && err.message || err)
-      }, params.callback);
+      return outputJson_(getPublicStats_(), callback);
     }
+    if (action === "count") {
+      return outputJson_({
+        adhesiones: countAllAdhesions_(),
+        actualizado: new Date().toISOString()
+      }, callback);
+    }
+    return outputJson_({ ok:false, error:"Acción no válida: " + action }, callback);
+  } catch (err) {
+    console.error("doGet (" + action + "): " + (err && err.stack ? err.stack : err));
+    return outputJson_({
+      ok:false,
+      error:String(err && err.message || err),
+      action:action
+    }, callback);
   }
-
-  return outputJson_({
-    ok: false,
-    error: "Acción no válida."
-  }, params.callback);
 }
 
 /** Plataforma Dorada — CMS + backoffice.

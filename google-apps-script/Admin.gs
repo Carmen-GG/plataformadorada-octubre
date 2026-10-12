@@ -178,18 +178,30 @@ function readEvents_(){
   var lastRow = sh.getLastRow(), lastCol = sh.getLastColumn();
   if (lastRow < 2 || lastCol < 2) return [];
   var headers = sh.getRange(1,1,1,lastCol).getDisplayValues()[0].map(function(x) {
-    return String(x||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+    return String(x||"").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").replace(/[_-]+/g," ").replace(/\\s+/g," ").trim();
   });
-  var idx = function(name) { return headers.indexOf(name); };
-  var idIdx=idx("id"), titleIdx=idx("titulo"), dateIdx=idx("fecha"), timeIdx=idx("hora"),
-      placeIdx=idx("lugar"), cityIdx=idx("ciudad"), descIdx=idx("descripcion"),
-      urlIdx=idx("url"), pubIdx=idx("publicada");
-  if (titleIdx < 0 || dateIdx < 0) return [];
+  // Aceptar tanto los encabezados canónicos como variantes descriptivas usadas en la hoja.
+  var idx = function(names) {
+    for (var n=0; n<names.length; n++) {
+      var i=headers.indexOf(names[n]);
+      if (i>=0) return i;
+    }
+    return -1;
+  };
+  var idIdx=idx(["id","identificador"]), titleIdx=idx(["titulo","titulo del evento","nombre","nombre del evento"]),
+      dateIdx=idx(["fecha","fecha del evento","dia","día"]), timeIdx=idx(["hora","hora del evento"]),
+      placeIdx=idx(["lugar","ubicacion","ubicacion del evento","espacio"]), cityIdx=idx(["ciudad","municipio","localidad"]),
+      descIdx=idx(["descripcion","descripcion del evento","detalle"]), urlIdx=idx(["url","enlace","link"]),
+      pubIdx=idx(["publicada","publicado","publicar","visible","publicacion","publicación"]);
+  if (titleIdx < 0 || dateIdx < 0) {
+    console.warn("EventosWeb: no se encuentran columnas de título y fecha. Encabezados:", headers);
+    return [];
+  }
   var rows=sh.getRange(2,1,lastRow-1,lastCol).getDisplayValues(), all=[];
   rows.forEach(function(r,i) {
     var title=String(r[titleIdx]||"").trim(), date=String(r[dateIdx]||"").trim();
     if (!title || !date) return;
-    if (pubIdx >= 0 && /^(no|false|0)$/i.test(String(r[pubIdx]||"").trim())) return;
+    if (pubIdx >= 0 && /^(no|false|0|no publicar|borrador)$/i.test(String(r[pubIdx]||"").trim())) return;
     all.push({
       id:String(idIdx >= 0 ? r[idIdx]||"" : "") || (sh.getName()+"-"+(i+2)),
       title:cleanPublicText_(title,300),
@@ -199,7 +211,7 @@ function readEvents_(){
       city:cleanPublicText_(cityIdx >= 0 ? r[cityIdx] : "",120),
       description:cleanPublicText_(descIdx >= 0 ? r[descIdx] : "",1500),
       url:urlIdx >= 0 ? String(r[urlIdx]||"").trim() : "",
-      published:pubIdx < 0 || !/^(no|false|0)$/i.test(String(r[pubIdx]||"").trim())
+      published:pubIdx < 0 || !/^(no|false|0|no publicar|borrador)$/i.test(String(r[pubIdx]||"").trim())
     });
   });
   return all.sort(function(a,b) { return String(a.date).localeCompare(String(b.date)) || String(a.id).localeCompare(String(b.id)); });

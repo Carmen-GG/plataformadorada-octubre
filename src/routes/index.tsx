@@ -101,7 +101,7 @@ function Home() {
               <span className="text-primary italic">dependencia</span> y los
               cuidados
             </h1>
-            <div className="mt-6 max-w-xl space-y-3 text-lg leading-relaxed text-muted-foreground">
+            <div className="mt-6 max-w-xl space-y-3 text-base md:text-[1.05rem] leading-relaxed text-muted-foreground">
               <p>Queremos un sistema que cuide de verdad.</p>
               <p>Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.</p>
               <p>Para eso hace falta una financiación suficiente, estable y pensada para durar. Centrada en las personas, no en cada presupuesto ni en cada idea o cambio político.</p>

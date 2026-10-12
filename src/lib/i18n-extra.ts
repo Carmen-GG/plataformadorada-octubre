@@ -371,7 +371,14 @@ export const extraTranslations: Record<string, Variants> = {
 
 
 // --- Traducciones inglesas ---
-Object.assign(extraTranslations, {
+// Merge translation variants instead of replacing existing Catalan, Basque and Galician values.
+function mergeTranslationVariants(additions: Record<string, Variants>) {
+  for (const [key, variants] of Object.entries(additions)) {
+    extraTranslations[key] = { ...(extraTranslations[key] ?? {}), ...variants };
+  }
+}
+
+mergeTranslationVariants({
   "Saltar al contenido principal": { en: "Skip to main content" },
   "Esta página no se ha cargado": { en: "This page could not be loaded" },
   "Ha ocurrido un problema. Puedes reintentar o volver al inicio.": { en: "A problem occurred. You can try again or return to the home page." },

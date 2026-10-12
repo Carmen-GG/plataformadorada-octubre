@@ -133,8 +133,38 @@ function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsConten
 
 function Page() {
   const cms = useCmsContent();
-  const resources = cms?.recursos ?? [];
   const news = cms?.noticias ?? [];
+  const [resources, setResources] = useState<CmsResource[] | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    const loadResources = async () => {
+      try {
+        const response = await fetch("/api/cms?action=resources", { cache: "no-store" });
+        if (!response.ok) throw new Error("No se pudieron cargar los recursos");
+        const raw = await response.json();
+        const items = Array.isArray(raw?.recursos) ? raw.recursos : [];
+        if (active) {
+          setResources(items.map((item: any) => ({
+            id: String(item.id ?? ""),
+            title: String(item.title ?? item.titulo ?? ""),
+            category: String(item.category ?? item.categoria ?? ""),
+            description: String(item.description ?? item.descripcion ?? ""),
+            filename: String(item.filename ?? item.nombreArchivo ?? ""),
+            url: String(item.url ?? ""),
+            previewUrl: String(item.previewUrl ?? item.vistaPreviaUrl ?? ""),
+          })));
+        }
+      } catch (error) {
+        console.error("[prensa] Error al cargar recursos:", error);
+        if (active) setResources([]);
+      }
+    };
+    void loadResources();
+    return () => { active = false; };
+  }, []);
+
+  const availableResources = resources ?? [];
   const [activeTab, setActiveTab] = useState<"prensa" | "recursos">(() => {
     if (typeof window === "undefined") return "prensa";
     const hash = window.location.hash.toLowerCase();
@@ -174,9 +204,9 @@ function Page() {
     const player = document.getElementById("reproductor-prensa");
     player?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [selectedNewsKey]);
-  const categories = useMemo(() => ["Todos", ...Array.from(new Set(resources.map(categoryFor)))], [resources]);
+  const categories = useMemo(() => ["Todos", ...Array.from(new Set(availableResources.map(categoryFor)))], [availableResources]);
   const [selected, setSelected] = useState("Todos");
-  const visible = selected === "Todos" ? resources : resources.filter((resource) => categoryFor(resource) === selected);
+  const visible = selected === "Todos" ? availableResources : availableResources.filter((resource) => categoryFor(resource) === selected);
 
   return (
     <>
@@ -248,7 +278,9 @@ function Page() {
           ))}
         </div>
 
-        {visible.length ? (
+        {resources === null ? (
+          <p className="rounded-2xl border border-border bg-muted/30 p-6 text-muted-foreground" role="status">Cargando recursos…</p>
+        ) : visible.length ? (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((resource) => (
               <Panel key={resource.id} className="overflow-hidden p-0">

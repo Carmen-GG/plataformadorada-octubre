@@ -210,35 +210,25 @@ function Home() {
             </h2>
             <div className="mt-4 space-y-4 leading-relaxed text-muted-foreground">
               <p>
-                Cuidar no puede seguir siendo una responsabilidad que recaiga
-                principalmente sobre las familias.
+                Cuidar no puede seguir cayendo solo sobre las familias y por la vocación de los cuidadores.
               </p>
               <p>
-                Miles de personas en situación de dependencia esperan durante
-                meses para acceder a una valoración, una prestación o un
-                recurso. Mientras tanto, familiares y cuidadores sostienen
-                cada día una realidad que afecta a su tiempo, su salud, su
-                economía y su proyecto de vida.
+                Miles de personas en situación de dependencia: mayores, personas con discapacidad o con enfermedades crónicas, esperan meses para una valoración o un recurso insuficiente. Mientras tanto, sus familiares y cuidadores sostienen el día a día a costa de su tiempo, su salud y su proyecto de vida.
               </p>
               <p>
-                El sistema necesita más recursos, mayor coordinación y una
-                respuesta estable que garantice los mismos derechos con
-                independencia del lugar donde vivamos.
+                Negocio a costa de maltratos a los mayores, invisibilidad de personas vulnerables y residencias no adaptadas a pequeñas comunidades por un trato digno.
               </p>
               <p>
-                Ante esta realidad, creemos que ha llegado el momento de
-                alcanzar un{" "}
-                <strong className="text-foreground">
-                  Pacto de Estado por la Dependencia y los Cuidados.
-                </strong>
-              </p>
-              <p className="font-semibold text-foreground">
-                Por eso nace Plataforma Dorada
+                Junto a ellas están también las trabajadoras sociales, las educadoras sociales y las profesionales de atención directa, que acompañan y organizan ese cuidado con recursos totalmente inadecuados.
               </p>
               <p>
-                Para unir voces, visibilizar esta realidad y conseguir un
-                compromiso de Estado que coloque los cuidados y la dependencia
-                en el centro de las políticas públicas.
+                El sistema necesita más medios, mejor coordinación y una respuesta que no dependa de dónde vivas.
+              </p>
+              <p>
+                Por eso nace y trabaja Plataforma Dorada, para conseguir un Pacto de Estado por la Dependencia y los Cuidados.
+              </p>
+              <p>
+                Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.
               </p>
             </div>
           </div>

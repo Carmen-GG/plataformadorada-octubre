@@ -64,6 +64,11 @@ export function SiteFooter() {
                 </a>
               </li>
               <li>
+                <Link to="/redes-sociales" hash="spotify" className="hover:text-accent">
+                  Spotify
+                </Link>
+              </li>
+              <li>
                 <Link to="/contacto" className="hover:text-accent">
                   Formulario de contacto
                 </Link>

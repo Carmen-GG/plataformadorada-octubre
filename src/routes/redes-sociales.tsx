@@ -82,8 +82,8 @@ function PhraseCarousel({ phrases }: { phrases: Array<{ text: string; name: stri
   };
   return <div className="mt-5 rounded-3xl bg-accent/15 p-7 sm:p-9" aria-roledescription="carrusel" aria-label="Lemas de Plataforma Dorada">
     <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Lema destacado</p>
-    <div className="relative flex min-h-44 flex-col justify-center">
-      <blockquote key={currentIndex + ":" + currentPhrase.text + ":" + currentPhrase.name} className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{currentPhrase.text}”</blockquote>
+    <div key={currentIndex + ":" + currentPhrase.text + ":" + currentPhrase.name} className="relative flex min-h-44 flex-col justify-center">
+      <blockquote className="mt-4 font-display text-2xl leading-snug italic sm:text-3xl" aria-live="polite">“{currentPhrase.text}”</blockquote>
       <p className="mt-5 text-sm font-semibold text-muted-foreground" aria-live="polite">— {currentPhrase.name.trim() || "Anónimo"}</p>
     </div>
     <div className="mt-4 flex items-center justify-between gap-3">

@@ -1,3 +1,37 @@
+/**
+ * Punto de entrada GET de la aplicación web.
+ * Mantiene la ruta del backoffice y publica el contenido del CMS en JSON.
+ */
+function doGet(e) {
+  e = e || {};
+  var params = e.parameter || {};
+
+  // Backoffice
+  if (String(params.admin || "") === "1") {
+    return HtmlService
+      .createHtmlOutputFromFile("admin")
+      .setTitle("Plataforma Dorada - Backoffice");
+  }
+
+  // Contenido público consumido por la web
+  if (params.action === "content" || params.action === "public") {
+    try {
+      return outputJson_(obtenerContenidoPublico(), params.callback);
+    } catch (err) {
+      return outputJson_({
+        ok: false,
+        error: String(err && err.message || err)
+      }, params.callback);
+    }
+  }
+
+  // Respuesta explícita para acciones no implementadas en este punto de entrada.
+  return outputJson_({
+    ok: false,
+    error: "Acción no válida."
+  }, params.callback);
+}
+
 /** Plataforma Dorada — CMS + backoffice.
  * Hojas propias: NoticiasWeb, RecursosWeb, PropuestasWeb, TrayectoriaWeb, HojaRutaWeb.
  * Eventos: hoja externa configurada en EVENTOS_SPREADSHEET_ID.

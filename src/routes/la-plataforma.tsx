@@ -83,28 +83,38 @@ function Page() {
       </div>
     </section>
 
-    <section id="trayectoria" className="mx-auto w-full max-w-6xl px-4 pb-12 sm:px-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Historia viva</p>
-          <h2 className="mt-2 font-display text-3xl">Nuestra trayectoria</h2>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="hidden text-sm text-muted-foreground sm:inline">Actualizada desde el backoffice</span>
-          <div className="flex gap-2" aria-label="Controles para recorrer la trayectoria">
-            <button type="button" aria-label="Subir por la trayectoria" title="Subir por la trayectoria" onClick={() => document.getElementById("trayectoria-lista")?.scrollBy({ top: -320, behavior: "smooth" })} className="inline-flex size-10 items-center justify-center rounded-full border border-primary/20 bg-background text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-              <span aria-hidden="true" className="text-xl leading-none">↑</span>
-            </button>
-            <button type="button" aria-label="Bajar por la trayectoria" title="Bajar por la trayectoria" onClick={() => document.getElementById("trayectoria-lista")?.scrollBy({ top: 320, behavior: "smooth" })} className="inline-flex size-10 items-center justify-center rounded-full border border-primary/20 bg-background text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-              <span aria-hidden="true" className="text-xl leading-none">↓</span>
-            </button>
-          </div>
-        </div>
+    <section id="trayectoria" className="mx-auto w-full max-w-6xl px-4 pb-12 sm:px-6" aria-labelledby="trayectoria-title">
+      <div className="mb-6">
+        <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Historia viva</p>
+        <h2 id="trayectoria-title" className="mt-2 font-display text-3xl">Nuestra trayectoria</h2>
+        <p className="mt-2 max-w-2xl text-muted-foreground">Un recorrido por los hitos que nos han traído hasta aquí.</p>
       </div>
-      <div id="trayectoria-lista" className="mt-8 max-h-[34rem] overflow-y-auto overscroll-contain rounded-2xl pr-3 scroll-smooth" tabIndex={0} aria-label="Recorrido por la trayectoria; usa las flechas para subir o bajar">
-        <ol className="relative space-y-7 border-l-2 border-accent pl-7" aria-label="Línea del tiempo de Plataforma Dorada">
-          {milestones.map((m:any, i:number) => <li key={m.id ?? i} className="relative"><span className="absolute -left-[37px] top-1.5 size-4 rounded-full border-4 border-background bg-primary" aria-hidden="true"/><p className="text-sm font-semibold text-primary">{m.date}</p><h3 className="mt-1 font-display text-xl font-semibold">{m.title}</h3><p className="mt-2 max-w-3xl text-muted-foreground">{m.description}</p>{m.imageUrl && <img src={m.imageUrl} alt="" className="mt-4 max-h-48 rounded-2xl object-cover" />}</li>)}
-        </ol>
+      <div className="grid gap-6 md:grid-cols-[minmax(12rem,0.7fr)_minmax(0,1.6fr)] md:gap-10">
+        <aside className="relative flex flex-col rounded-3xl border border-primary/15 bg-gradient-to-b from-primary/10 via-background to-accent/15 p-5 sm:p-7" aria-label="Navegación de la trayectoria">
+          <div className="flex items-center justify-between gap-3">
+            <span className="font-display text-lg font-semibold">Recorre nuestra historia</span>
+            <div className="flex shrink-0 gap-2" aria-label="Controles para recorrer toda la trayectoria">
+              <button type="button" aria-label="Subir por la trayectoria" title="Subir por la trayectoria" onClick={() => { const el = document.getElementById("trayectoria-lista"); if (el) el.scrollBy({ top: -Math.max(240, el.clientHeight * 0.8), behavior: "smooth" }); }} className="inline-flex size-10 items-center justify-center rounded-full border border-primary/20 bg-background text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                <span aria-hidden="true" className="text-xl leading-none">↑</span>
+              </button>
+              <button type="button" aria-label="Bajar por la trayectoria" title="Bajar por la trayectoria" onClick={() => { const el = document.getElementById("trayectoria-lista"); if (el) el.scrollBy({ top: Math.max(240, el.clientHeight * 0.8), behavior: "smooth" }); }} className="inline-flex size-10 items-center justify-center rounded-full border border-primary/20 bg-background text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                <span aria-hidden="true" className="text-xl leading-none">↓</span>
+              </button>
+            </div>
+          </div>
+          <div className="relative mt-7 flex-1 overflow-hidden rounded-2xl bg-background/60 p-4">
+            <div className="absolute bottom-5 left-8 top-5 w-0.5 bg-accent" aria-hidden="true" />
+            <ol className="relative space-y-5" aria-hidden="true">
+              {milestones.map((m:any, i:number) => <li key={m.id ?? i} className="flex min-h-8 items-center gap-3"><span className="z-10 size-3 shrink-0 rounded-full border-2 border-background bg-primary shadow-sm" /><span className="text-sm font-semibold text-muted-foreground">{m.date || `Hito ${i + 1}`}</span></li>)}
+            </ol>
+          </div>
+          <p className="mt-4 text-sm text-muted-foreground">Usa las flechas para avanzar o retroceder por todos los hitos.</p>
+        </aside>
+        <div id="trayectoria-lista" className="max-h-[34rem] min-w-0 overflow-y-auto overscroll-contain rounded-2xl pr-3 scroll-smooth" tabIndex={0} aria-label="Hitos de la trayectoria. Usa las flechas para subir o bajar">
+          <ol className="relative space-y-7 border-l-2 border-accent pl-7" aria-label="Línea del tiempo de Plataforma Dorada">
+            {milestones.map((m:any, i:number) => <li key={m.id ?? i} className="relative pb-2"><span className="absolute -left-[37px] top-1.5 size-4 rounded-full border-4 border-background bg-primary" aria-hidden="true"/><p className="text-sm font-semibold text-primary">{m.date}</p><h3 className="mt-1 font-display text-xl font-semibold">{m.title}</h3><p className="mt-2 max-w-3xl text-muted-foreground">{m.description}</p>{m.imageUrl && <img src={m.imageUrl} alt="" className="mt-4 max-h-48 rounded-2xl object-cover" />}</li>)}
+          </ol>
+        </div>
       </div>
     </section>
     <section id="hoja-de-ruta" className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">

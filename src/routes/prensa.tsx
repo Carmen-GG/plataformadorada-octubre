@@ -57,7 +57,9 @@ function ResourcePreview({ resource }: { resource: CmsResource }) {
 }
 
 function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsContent>>["noticias"][number] | null }) {
-  const pageUrl = item?.url?.trim() || "";
+  // La vista previa siempre abre el enlace asociado, sin ramificar por tipo de contenido.
+  // Si url está vacío, usa mediaUrl como alternativa para noticias del CMS que lo tengan.
+  const pageUrl = item?.url?.trim() || item?.mediaUrl?.trim() || "";
 
   return (
     <section className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[2.5rem] border-[8px] border-foreground/85 bg-foreground p-2 shadow-2xl">

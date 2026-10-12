@@ -152,9 +152,29 @@ function readVideos_(includeUnpublished){
     return {id:String(r[0]||""),title:cleanPublicText_(r[1],300),description:cleanPublicText_(r[2],1000),url:String(r[3]||"").trim(),platform:String(r[4]||"").toLowerCase()==="facebook"?"facebook":"youtube",order:Number(r[5])||0,published:!/^(no|false|0)$/i.test(String(r[6]||"")),category:String(r[7]||"actualidad")};
   }).filter(function(v){return v.title&&v.url;}).sort(function(a,b){return a.order-b.order;});
 }
+function safeReadSection_(name, reader, fallback) {
+  try { return reader(); }
+  catch (err) {
+    console.error("Error leyendo sección " + name + ": " + String(err && err.stack || err));
+    return fallback;
+  }
+}
+
 function getPublicContent_(){
-  var p=readProposals_();
-  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),videos:readVideos_(false),canciones:p.canciones,frases:p.frases,actualizado:new Date().toISOString()};
+  // Cada sección se lee de forma independiente: un fallo en Eventos o Trayectoria
+  // no debe ocultar las Noticias ni los Recursos descargables.
+  var proposals = safeReadSection_("Propuestas", function(){ return readProposals_(); }, {canciones:[],frases:[],todas:[]});
+  return {
+    noticias: safeReadSection_("Noticias", readNews_, []),
+    recursos: safeReadSection_("Recursos", readResources_, []),
+    eventos: safeReadSection_("Eventos", readEvents_, []),
+    trayectoria: safeReadSection_("Trayectoria", readTimeline_, []),
+    hojaRuta: safeReadSection_("Hoja de ruta", readRoadmap_, []),
+    videos: safeReadSection_("Vídeos", function(){ return readVideos_(false); }, []),
+    canciones: proposals.canciones || [],
+    frases: proposals.frases || [],
+    actualizado: new Date().toISOString()
+  };
 }
 function getPublicContent(){return getPublicContent_();}
 function getBackofficeContent(){var c=getPublicContent_();c.videos=readVideos_(true);c.propuestas=readProposals_().todas;return c;}

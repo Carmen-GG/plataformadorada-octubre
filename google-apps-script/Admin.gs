@@ -114,12 +114,19 @@ function ensureHeaders_(sheet, headers) {
   return sheet;
 }
 
-function openEventsSpreadsheet_() { return getCmsSpreadsheet_(); }
+function openEventsSpreadsheet_() {
+  // Los eventos pueden vivir en una hoja de cálculo distinta del CMS.
+  // Si se ha configurado EVENTOS_SPREADSHEET_ID en las propiedades del script,
+  // usamos esa base; si no, mantenemos compatibilidad con la hoja CMS principal.
+  var externalId = String(PropertiesService.getScriptProperties().getProperty("EVENTOS_SPREADSHEET_ID") || "").trim();
+  return externalId ? SpreadsheetApp.openById(externalId) : getCmsSpreadsheet_();
+}
 function getEventsSheet_() {
-  var ss = getCmsSpreadsheet_();
+  var ss = openEventsSpreadsheet_();
   var sh = ss.getSheetByName(PD_CMS.EVENTOS_SHEET_NAME);
-  if (!sh) sh = ss.insertSheet(PD_CMS.EVENTOS_SHEET_NAME);
-  ensureHeaders_(sh, EVENT_HEADERS);
+  if (!sh) {
+    throw new Error("No se encuentra la hoja '" + PD_CMS.EVENTOS_SHEET_NAME + "' en la hoja de cálculo de eventos configurada. Revisa la propiedad EVENTOS_SPREADSHEET_ID.");
+  }
   return sh;
 }
 

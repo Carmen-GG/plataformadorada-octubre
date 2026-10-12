@@ -631,7 +631,7 @@ mergeTranslationVariants({
   "Ayudar a organizar encuentros y actos públicos.": { en: "Help organise meetings and public events." },
   "Contactar con asociaciones, entidades y ayuntamientos.": { en: "Contact associations, organisations and local councils." },
   "Aportar conocimientos profesionales (jurídicos, sociales, comunicación).": { en: "Contribute professional expertise in law, social care or communications." },
-}});
+});
 
 // Compleció de la interfície en català: botons, missatges, navegació i eines.
 Object.assign(extraTranslations, {

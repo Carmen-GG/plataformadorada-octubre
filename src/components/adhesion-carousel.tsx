@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useEffect, useId, useRef } from "react";
 
 export type PublicAdhesion = { nombre: string; municipio: string };
 
@@ -12,11 +12,26 @@ export function AdhesionCarousel({
   const reactId = useId();
   const groupName = `pd-carousel-${reactId}`;
   const idFor = (index: number) => `${groupName}-${index}`;
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (items.length < 2) return;
+    const timer = window.setInterval(() => {
+      const radios = carouselRef.current?.querySelectorAll<HTMLInputElement>(
+        'input[type="radio"]',
+      );
+      if (!radios?.length) return;
+      const currentIndex = Array.from(radios).findIndex((radio) => radio.checked);
+      const nextIndex = (currentIndex + 1) % radios.length;
+      radios[nextIndex].checked = true;
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [items.length]);
 
   if (!items.length) return null;
 
   return (
-    <div className="mt-6" aria-roledescription="carrusel" aria-label={`Últimas incorporaciones públicas: ${itemLabel.toLowerCase()}`}>
+    <div ref={carouselRef} className="mt-6" aria-roledescription="carrusel" aria-label={`Últimas incorporaciones públicas: ${itemLabel.toLowerCase()}`}>
       <style>{`
         .pd-carousel-radio { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
         .pd-carousel-slide { display: none; }

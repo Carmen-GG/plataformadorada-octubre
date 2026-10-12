@@ -185,7 +185,7 @@ function readEvents_(){
   var lastRow = sh.getLastRow(), lastCol = sh.getLastColumn();
   if (lastRow < 2 || lastCol < 2) return [];
   var headers = sh.getRange(1,1,1,lastCol).getDisplayValues()[0].map(function(x) {
-    return String(x||"").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").replace(/[_-]+/g," ").replace(/\\s+/g," ").trim();
+    return String(x||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[_-]+/g," ").replace(/\s+/g," ").trim();
   });
   // Aceptar tanto los encabezados canónicos como variantes descriptivas usadas en la hoja.
   var idx = function(names) {

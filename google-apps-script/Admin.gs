@@ -13,7 +13,7 @@ function doGet(e) {
       .setTitle("Plataforma Dorada - Backoffice");
   }
 
-  // Contenido público consumido por la web
+  // Contenido público consumido por la web.
   if (params.action === "content" || params.action === "public") {
     try {
       return outputJson_(obtenerContenidoPublico(), params.callback);
@@ -25,7 +25,22 @@ function doGet(e) {
     }
   }
 
-  // Respuesta explícita para acciones no implementadas en este punto de entrada.
+  // La web solicita los contadores de portada sin parámetro action.
+  // También aceptamos action=count para clientes antiguos.
+  if (!params.action || params.action === "count") {
+    try {
+      if (typeof getPublicStats_ !== "function") {
+        throw new Error("No está disponible getPublicStats_() para servir los contadores públicos.");
+      }
+      return outputJson_(getPublicStats_(), params.callback);
+    } catch (err) {
+      return outputJson_({
+        ok: false,
+        error: String(err && err.message || err)
+      }, params.callback);
+    }
+  }
+
   return outputJson_({
     ok: false,
     error: "Acción no válida."

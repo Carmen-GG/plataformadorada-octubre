@@ -4,6 +4,8 @@
  */
 
 var PD_CMS = {
+  // Hoja que contiene NoticiasWeb, RecursosWeb y el resto del CMS.
+  CMS_SPREADSHEET_ID: "1nNK3t4_jrJf9n1bUs1W-bg09-zprzKsZ3KRfFPSoyC4",
   EVENTOS_SPREADSHEET_ID: "1uexiL3JPV1DTDGLl6NsbGWjMmn9584thAmVaheyAYpU",
   EVENTOS_SHEET_NAME: "Eventos",
   RESOURCE_FOLDER_PROPERTY: "RECURSOS_FOLDER_ID",
@@ -19,6 +21,10 @@ var VIDEO_HEADERS = ["id","title","description","url","platform","order","publis
 
 function doGet(e) {
   var params = e && e.parameter ? e.parameter : {};
+  // Backoffice HTML y API pública conviven en la misma implementación.
+  if (String(params.admin || "") === "1") {
+    return HtmlService.createHtmlOutputFromFile("admin").setTitle("Plataforma Dorada - Backoffice");
+  }
   var action = String(params.action || "");
   var payload;
   if (action === "content") payload = getPublicContent_();
@@ -52,7 +58,7 @@ function countAllAdhesions_() {
 }
 
 function getPublicStats_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = cmsSpreadsheet_();
   function countRows(name) { var sh = ss.getSheetByName(name); return sh ? Math.max(0, sh.getLastRow() - 1) : 0; }
   return {
     adhesiones: countAllAdhesions_(),
@@ -64,8 +70,12 @@ function getPublicStats_() {
   };
 }
 
+function cmsSpreadsheet_() {
+  return SpreadsheetApp.openById(PD_CMS.CMS_SPREADSHEET_ID);
+}
+
 function getOrCreateSheet_(name, headers) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = cmsSpreadsheet_();
   var sheet = ss.getSheetByName(name);
   if (!sheet) sheet = ss.insertSheet(name);
   ensureHeaders_(sheet, headers);

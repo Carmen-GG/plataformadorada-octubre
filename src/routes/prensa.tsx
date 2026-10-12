@@ -29,9 +29,29 @@ function newsKey(item: { id: string; title: string; url: string }, index: number
   return item.id ? `${item.id}::${item.url}::${item.title}::${index}` : `${item.url}::${item.title}::${index}`;
 }
 
+function resourceThumbnailUrl(resource: CmsResource) {
+  const preview = resource.previewUrl?.trim();
+  if (preview) return preview;
+
+  const url = resource.url?.trim();
+  if (!url) return "";
+  try {
+    const parsed = new URL(url);
+    const driveId =
+      parsed.pathname.match(/\/file\/d\/([^/]+)/)?.[1] ||
+      parsed.searchParams.get("id");
+    if ((parsed.hostname === "drive.google.com" || parsed.hostname === "docs.google.com") && driveId) {
+      return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveId)}&sz=w1000`;
+    }
+  } catch {
+    // Si la URL no es absoluta, probamos a usarla tal como llega del CMS.
+  }
+  return url;
+}
+
 function ResourcePreview({ resource }: { resource: CmsResource }) {
   const [broken, setBroken] = useState(false);
-  const thumb = resource.previewUrl || resource.url;
+  const thumb = resourceThumbnailUrl(resource);
   const kind = extension(resource.filename);
 
   if (!thumb || broken) {

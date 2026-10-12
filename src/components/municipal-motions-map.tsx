@@ -56,6 +56,31 @@ function normalize(value: unknown) {
   return String(value ?? "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+
+const MUNICIPALITY_ALIASES: Record<string, string[]> = {
+  "alacant alicante": ["alicante", "alacant"],
+  "elx elche": ["elche", "elx"],
+  "alcoi alcoy": ["alcoy", "alcoi"],
+  "sagunt sagunto": ["sagunto", "sagunt"],
+  "sant vicent del raspeig san vicente del raspeig": ["san vicente del raspeig", "sant vicent del raspeig"],
+  "astillero el": ["el astillero", "astillero"],
+  "garriga la": ["la garriga", "garriga"],
+  "hospitalet de llobregat l": ["l hospitalet de llobregat", "hospitalet de llobregat"],
+  "coruna a": ["a coruna", "la coruna"],
+  "palmas de gran canaria las": ["las palmas de gran canaria", "palmas de gran canaria"],
+  "ejido el": ["el ejido", "ejido"],
+  "puerto de santa maria el": ["el puerto de santa maria", "puerto de santa maria"],
+  "roz as de madrid las": ["las rozas de madrid", "rozas de madrid"],
+};
+
+function municipalityVariants(value: string) {
+  const normalized = normalize(value);
+  const aliases = MUNICIPALITY_ALIASES[normalized] || [];
+  const variants = [normalized, ...aliases.map(normalize)];
+  if (normalized.includes(" ")) variants.push(normalized.replace(/^(el|la|los|las) /, ""));
+  return Array.from(new Set(variants.filter(Boolean)));
+}
+
 function normalizeStatus(value: unknown): MotionStatus {
   const status = normalize(value);
   if (status.startsWith("aprob") || status.startsWith("acept")) return "aprobada";
@@ -152,13 +177,18 @@ export function MunicipalMotionsMap() {
         // IGN puede devolver los nombres municipales con mayúsculas distintas a las del
         // registro de mociones. Las expresiones de MapLibre distinguen mayúsculas/minúsculas,
         // así que comparamos en minúsculas tanto para el filtro como para el color.
-        const filterNames = Array.from(new Set(
-          data.records.map((record) => record.municipio.toLocaleLowerCase("es")),
-        ));
-        const nameMatch: any = ["match", ["downcase", ["to-string", ["get", "nameunit"]]], filterNames, true, false];
-        const colorMatch: any = ["match", ["downcase", ["to-string", ["get", "nameunit"]]]];
+        const colorByName: Record<string, string> = {};
         data.records.forEach((record) => {
-          colorMatch.push(record.municipio.toLocaleLowerCase("es"), STATUS[record.motionStatus].color);
+          municipalityVariants(record.municipio).forEach((name) => {
+            colorByName[name] = STATUS[record.motionStatus].color;
+          });
+        });
+        const filterNames = Object.keys(colorByName);
+        const normalizedFeatureName: any = ["to-string", ["get", "nameunit"]];
+        const nameMatch: any = ["match", ["downcase", normalizedFeatureName], filterNames, true, false];
+        const colorMatch: any = ["match", ["downcase", normalizedFeatureName]];
+        Object.entries(colorByName).forEach(([name, color]) => {
+          colorMatch.push(name, color);
         });
         colorMatch.push("#00000000");
 
@@ -213,7 +243,7 @@ export function MunicipalMotionsMap() {
     const map = mapRef.current;
     if (!map || !map.getLayer("pd-municipal-motions-fill") || !data) return;
     const visibleRecords = statusFilter === "todas" ? data.records : data.records.filter((record) => record.motionStatus === statusFilter);
-    const names = visibleRecords.map((record) => record.municipio.toLocaleLowerCase("es"));
+    const names = Array.from(new Set(visibleRecords.flatMap((record) => municipalityVariants(record.municipio))));
     const normalizedName = ["downcase", ["to-string", ["get", "nameunit"]]];
     map.setFilter("pd-municipal-motions-fill", ["match", normalizedName, names, true, false]);
     map.setFilter("pd-municipal-motions-outline", ["match", normalizedName, names, true, false]);

@@ -244,15 +244,7 @@ function getYouTubeId(value: string) {
 }
 
 function VideosLibrary({ videos }: { videos: CmsVideo[] }) {
-  const [videoUrl, setVideoUrl] = useState("");
-  const [selectedVideo, setSelectedVideo] = useState<(typeof videoSearches)[number] | null>(null);
-  const [error, setError] = useState("");
-  const playVideo = () => {
-    const id = getYouTubeId(videoUrl.trim());
-    if (!id) { setError("Pega un enlace válido de YouTube (youtube.com/watch, youtu.be, Shorts o embed)."); return; }
-    setSelectedVideo({ title: "Vídeo de YouTube", description: "Vídeo seleccionado", url: "https://www.youtube.com/watch?v=" + id, platform: "youtube" });
-    setError("");
-  };
+  const [selectedVideo, setSelectedVideo] = useState<CmsVideo | null>(null);
   const embedUrl = selectedVideo
     ? selectedVideo.platform === "youtube"
       ? "https://www.youtube-nocookie.com/embed/" + (getYouTubeId(selectedVideo.url) ?? "") + "?autoplay=0&rel=0"
@@ -271,13 +263,8 @@ function VideosLibrary({ videos }: { videos: CmsVideo[] }) {
       {selectedVideo && <a className="mt-2 inline-block px-2 text-xs font-semibold text-primary underline" href={selectedVideo.url} target="_blank" rel="noreferrer">Abrir vídeo en {selectedVideo.platform === "youtube" ? "YouTube" : "Facebook"} si no se reproduce</a>}
     </div>
     <div className="space-y-4">
-      <form onSubmit={(e) => { e.preventDefault(); playVideo(); }} className="rounded-2xl border border-border bg-background/70 p-4">
-        <label htmlFor="youtube-video-url" className="block text-sm font-semibold">También puedes pegar un enlace de YouTube</label>
-        <div className="mt-2 flex gap-2"><input id="youtube-video-url" type="url" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="Pega aquí el enlace del vídeo" className="min-w-0 flex-1 rounded-xl border border-input bg-card px-3 py-2 text-sm" /><button type="submit" className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Ver</button></div>
-        {error && <p role="alert" className="mt-2 text-sm text-destructive">{error}</p>}
-      </form>
       <div><h3 className="mb-3 font-display text-xl font-semibold">Vídeos para descubrir</h3><ul className="space-y-2">
-        {videos.filter((item) => item.published).sort((a, b) => a.order - b.order).map((item) => <li key={item.id || item.url}><button type="button" onClick={() => { setSelectedVideo(item); setError(""); }} aria-pressed={selectedVideo?.url === item.url} className={"group flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-colors " + (selectedVideo?.url === item.url ? "border-primary bg-accent/20" : "border-border bg-background/65 hover:bg-accent/15")}><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">{item.platform === "youtube" ? <Youtube size={20} aria-hidden="true" /> : <span className="text-xs font-bold">f</span>}</span><span className="min-w-0"><span className="block text-sm font-semibold group-hover:text-primary">{item.title}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{item.description}</span><span className="mt-1 block text-xs font-semibold text-primary">▶ Reproducir en el televisor</span></span></button></li>)}
+        {videos.filter((item) => item.published).sort((a, b) => a.order - b.order).map((item) => <li key={item.id || item.url}><button type="button" onClick={() => setSelectedVideo(item)} aria-pressed={selectedVideo?.url === item.url} className={"group flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-colors " + (selectedVideo?.url === item.url ? "border-primary bg-accent/20" : "border-border bg-background/65 hover:bg-accent/15")}><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">{item.platform === "youtube" ? <Youtube size={20} aria-hidden="true" /> : <span className="text-xs font-bold">f</span>}</span><span className="min-w-0"><span className="block text-sm font-semibold group-hover:text-primary">{item.title}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{item.description}</span><span className="mt-1 block text-xs font-semibold text-primary">▶ Reproducir en el televisor</span></span></button></li>)}
       </ul>{videos.filter((item) => item.published).length === 0 && <p className="text-sm text-muted-foreground">Todavía no hay vídeos publicados.</p>}<p className="mt-3 text-xs leading-relaxed text-muted-foreground">Pulsa cualquier elemento de la lista para cargar el vídeo en la pantalla central. Los vídeos de Facebook dependen de que su autor permita la reproducción incrustada.</p></div>
     </div>
   </div>;

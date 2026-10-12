@@ -1095,12 +1095,22 @@ function translateHead(locale: Locale) {
   }
 }
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
-  useEffect(() => {
+function readInitialLocale(): Locale {
+  if (typeof window === "undefined") return DEFAULT_LOCALE;
+  try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored && (LOCALES as readonly string[]).includes(stored)) setLocaleState(stored as Locale);
-  }, []);
+    return stored && (LOCALES as readonly string[]).includes(stored)
+      ? (stored as Locale)
+      : DEFAULT_LOCALE;
+  } catch {
+    return DEFAULT_LOCALE;
+  }
+}
+
+export function I18nProvider({ children }: { children: ReactNode }) {
+  // Read the saved language before the first render. This avoids rendering Spanish,
+  // translating React-owned text nodes, and then forcing React to reconcile them in English.
+  const [locale, setLocaleState] = useState<Locale>(readInitialLocale);
   useEffect(() => {
     document.documentElement.lang = locale;
     translateDom(locale);
@@ -1109,8 +1119,15 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     return () => observer.disconnect();
   }, [locale]);
   const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-    window.localStorage.setItem(STORAGE_KEY, next);
+    if (!(LOCALES as readonly string[]).includes(next)) return;
+    try {
+      window.localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      // The language can still be changed for this page if storage is unavailable.
+    }
+    // Reload instead of changing the locale state in-place: the current site translates
+    // legacy page copy in the DOM, and React must not reconcile those mutated text nodes.
+    if (typeof window !== "undefined") window.location.reload();
   }, []);
   const t = useCallback(
     (key: string) => dictionaries[locale][key] ?? dictionaries[DEFAULT_LOCALE][key] ?? key,

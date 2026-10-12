@@ -412,30 +412,35 @@ function pdAdhesiones_() {
 // ───────────────────────────── voluntarios ─────────────────────────────
 
 function pdVoluntarios_() {
-  var t = pdReadTable_(pdOpen_(PD.VOLUNTARIOS_SPREADSHEET_ID), "codigo etico", "Respuestas de formulario 1");
+  var t = pdReadTable_(
+    pdOpen_(PD.VOLUNTARIOS_SPREADSHEET_ID),
+    "codigo etico",
+    "Respuestas de formulario 1",
+  );
   if (!t) throw new Error("No encuentro la hoja de voluntarios.");
+
   var h = t.headers;
   var iCode = pdIdx_(h, pdHas_("codigo etico"));
-  var iCcaa = pdIdx_(h, function(x) { return x === "autonomia" || x === "comunidad autonoma" || x === "comunitat autonoma"; });
+  var iCcaa = pdIdx_(h, function(x) {
+    return x === "autonomia" || x === "comunidad autonoma" || x === "comunitat autonoma";
+  });
   var iCity = pdIdx_(h, pdHas_("ciudad en la que vives"));
   var iName = pdIdx_(h, pdEq_("nombre y apellidos"));
-  // Localiza la pregunta de consentimiento aunque el formulario haya cambiado ligeramente
-  // su redacción. Nunca se publica a nadie si no se identifica una columna de autorización.
-  var iConsent = pdIdx_(h, pdHas_(PD.CONSENT_HEADER_TEXT), true);
-  if (iConsent < 0) {
-    iConsent = pdIdx_(h, function(x) {
-      return x.indexOf("public") >= 0 &&
-        (x.indexOf("aparec") >= 0 || x.indexOf("publicar") >= 0 ||
-         x.indexOf("dato") >= 0 || x.indexOf("autoriza") >= 0 ||
-         x.indexOf("consent") >= 0);
-    }, true);
-  }
 
   var res = {
     total: 0,
     ultimos: [],
-    diag: { filasTotales: t.rows.length, aceptanCodigo: 0, noAceptan: 0 },
+    diag: {
+      filasTotales: t.rows.length,
+      aceptanCodigo: 0,
+      noAceptan: 0,
+      columnaNombreEncontrada: iName >= 0,
+      columnaCiudadEncontrada: iCity >= 0,
+    },
   };
+
+  // El contador solo incluye respuestas que aceptan el código ético.
+  // El carrusel muestra las últimas inscripciones que lo aceptan y contienen nombre.
   for (var r = 0; r < t.rows.length; r++) {
     var row = t.rows[r];
     if (!pdCell_(row, 0)) continue;
@@ -446,14 +451,17 @@ function pdVoluntarios_() {
       res.diag.noAceptan++;
     }
   }
-  if (iConsent >= 0 && iName >= 0) {
+
+  if (iName >= 0) {
     for (var k = t.rows.length - 1; k >= 0 && res.ultimos.length < PD.LIST_VOLUNTARIOS; k--) {
       var rw = t.rows[k];
+      if (!pdCell_(rw, 0)) continue;
       if (iCode >= 0 && !pdYes_(pdCell_(rw, iCode))) continue;
-      if (!pdYes_(pdCell_(rw, iConsent))) continue;
+
       var parts = pdSplitFull_(pdCell_(rw, iName));
-      var name = pdPublicName_(parts.given, parts.surnames);
+      var name = pdTidy_(parts.given).split(/\\s+/)[0];
       if (!name) continue;
+
       var place = pdTidy_(pdCell_(rw, iCity)) || pdCcaa_(pdCell_(rw, iCcaa));
       res.ultimos.push(place ? name + " · " + place : name);
     }

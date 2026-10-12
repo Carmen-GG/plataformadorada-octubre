@@ -225,7 +225,7 @@ function RedesSociales(){
 }
 
 const videoSearches: CmsVideo[] = [
-  { id: "video-1", title: "Plataforma Dorada · Vídeo 1", description: "Vídeo de YouTube", url: "https://www.youtube.com/watch?v=-s3pZV8apaY", platform: "youtube", order: 1, published: true, category: "actualidad" },
+  { id: "video-1", title: "Plataforma Dorada · Vídeo 1", description: "Vídeo de YouTube", url: "https://www.youtube.com/watch?v=-s3pZV8apaY", platform: "youtube", order: 1, published: true, category: "residencias" },
   { id: "video-2", title: "Plataforma Dorada · Vídeo 2", description: "Vídeo de YouTube", url: "https://www.youtube.com/watch?v=5sbiaLrUKjM", platform: "youtube", order: 2, published: true, category: "dependencia" },
   { id: "video-3", title: "¿Qué es Plataforma Dorada?", description: "Vídeo publicado en Facebook por Assumpta Serna y Alicia Lopmar", url: "https://www.facebook.com/100058237623701/videos/ya-sab%C3%A9is-qu%C3%A9-es-plataforma-dorada-assumptaserna-y-alicialopmar-est%C3%A1n-denunciand/1070927795538559/", platform: "facebook", order: 3, published: true, category: "actualidad" },
   { id: "video-4", title: "3 millones de visualizaciones y más de 2.100 testimonios", description: "Vídeo de Assumpta Serna en Facebook", url: "https://www.facebook.com/assumptaserna/videos/nunca-imagin%C3%A9-esto-y-aqu%C3%AD-estamos3-millones-de-visualizaciones-2100-testimonios-/1690736175986098/", platform: "facebook", order: 4, published: true, category: "cuidadores" },

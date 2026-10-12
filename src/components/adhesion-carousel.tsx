@@ -10,8 +10,6 @@ export function AdhesionCarousel({
   itemLabel?: string;
 }) {
   const [index, setIndex] = useState(0);
-  const itemsKey = items.map((item) => `${item.nombre}\u001f${item.municipio}`).join("\u001e");
-
   useEffect(() => {
     if (items.length < 2) return;
     const timer = window.setInterval(() => {

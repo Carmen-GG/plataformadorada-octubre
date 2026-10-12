@@ -104,9 +104,9 @@ function Home() {
             <div className="mt-6 max-w-xl space-y-3 text-base md:text-[1.05rem] leading-relaxed text-muted-foreground">
               <p>Queremos un sistema que cuide de verdad.</p>
               <p>Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.</p>
-              <p>Para eso hace falta una financiación suficiente, estable y pensada para durar. Centrada en las personas, no en cada presupuesto ni en cada idea o cambio político.</p>
-              <p>El cuidado no puede ser un negocio. Tiene que ser transparente, sin especulación, con calidad real, dando voz de las personas afectadas.</p>
-              <p>Necesitamos una cartera básica de servicios de calidad que se adapte a cada territorio, pero que nadie se quede sin atención cuando cambia su situación o se muda.</p>
+              <p>Para eso hace falta una financiación suficiente, estable y pensada para durar. Centrada en dar respuesta a las necesidades reales de las personas, y que no dependa de cambios presupuestarios, tiempos electorales e intereses partidistas.</p>
+              <p>El cuidado no puede ser un negocio. Tiene que ser transparente, sin especulación, con calidad asistencial comprobada y comprobable, poniendo a las personas en el centro, respetando sus preferencias y sus proyectos vitales.</p>
+              <p>Necesitamos una cartera básica de servicios de calidad que se adapte a cada territorio, garantizando la accesibilidad a los servicios independientemente de donde resida y de los cambios que pueda haber en su vida.</p>
               <p>Y, sobre todo, que las personas puedan elegir de verdad.</p>
               <p>Porque cuidar no debería ser una lucha constante. Debería ser un derecho que se cumple.</p>
             </div>

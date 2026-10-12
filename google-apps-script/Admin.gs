@@ -4,6 +4,7 @@
  *
  * ?admin=1 o ?view=admin -> backoffice
  * ?action=content        -> noticias, recursos, eventos, vídeos y CMS
+ * ?action=resources      -> recursos, sin esperar a las noticias
  * ?action=public         -> estadísticas, mapa y listas públicas autorizadas
  * ?action=count o sin action -> contador simple de adhesiones
  */
@@ -22,6 +23,9 @@ function doGet(e) {
   try {
     if (action === "content") {
       return outputJson_(obtenerContenidoPublico(), callback);
+    }
+    if (action === "resources") {
+      return outputJson_({ recursos: readResources_(), actualizado: new Date().toISOString() }, callback);
     }
     if (action === "public") {
       if (typeof getPublicStats_ !== "function") {

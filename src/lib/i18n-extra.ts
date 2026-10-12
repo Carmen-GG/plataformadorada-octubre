@@ -471,7 +471,7 @@ mergeTranslationVariants({
 
 
 // --- Cobertura adicional de inglés: inicio, navegación, formularios y estados ---
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Saltar al contenido principal": { en: "Skip to main content" },
   "Esta página no se ha cargado": { en: "This page could not be loaded" },
   "Ha ocurrido un problema. Puedes reintentar o volver al inicio.": { en: "Something went wrong. You can try again or return to the home page." },

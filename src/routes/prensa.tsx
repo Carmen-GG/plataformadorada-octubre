@@ -29,32 +29,43 @@ function newsKey(item: { id: string; title: string; url: string }, index: number
   return item.id ? `${item.id}::${item.url}::${item.title}::${index}` : `${item.url}::${item.title}::${index}`;
 }
 
-function resourceThumbnailUrl(resource: CmsResource) {
-  const preview = resource.previewUrl?.trim();
-  if (preview) return preview;
+function resourceThumbnailUrls(resource: CmsResource) {
+  const candidates: string[] = [];
+  const add = (value: string | undefined) => {
+    const url = value?.trim();
+    if (url && !candidates.includes(url)) candidates.push(url);
+  };
 
-  const url = resource.url?.trim();
-  if (!url) return "";
-  try {
-    const parsed = new URL(url);
-    const driveId =
-      parsed.pathname.match(/\/file\/d\/([^/]+)/)?.[1] ||
-      parsed.searchParams.get("id");
-    if ((parsed.hostname === "drive.google.com" || parsed.hostname === "docs.google.com") && driveId) {
-      return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveId)}&sz=w1000`;
+  add(resource.previewUrl);
+  const url = resource.url?.trim() || "";
+  if (url) {
+    try {
+      const parsed = new URL(url);
+      const driveId =
+        parsed.pathname.match(/\\/file\\/d\\/([^/]+)/)?.[1] ||
+        parsed.pathname.match(/\\/(?:document|presentation)\\/d\\/([^/]+)/)?.[1] ||
+        parsed.searchParams.get("id");
+      if ((parsed.hostname === "drive.google.com" || parsed.hostname === "docs.google.com") && driveId) {
+        const id = encodeURIComponent(driveId);
+        add(`https://drive.google.com/thumbnail?id=${id}&sz=w1000`);
+        add(`https://drive.google.com/uc?export=view&id=${id}`);
+        add(`https://drive.google.com/uc?id=${id}`);
+      }
+    } catch {
+      // Conservamos la URL tal como la entrega el CMS.
     }
-  } catch {
-    // Si la URL no es absoluta, probamos a usarla tal como llega del CMS.
+    add(url);
   }
-  return url;
+  return candidates;
 }
 
 function ResourcePreview({ resource }: { resource: CmsResource }) {
-  const [broken, setBroken] = useState(false);
-  const thumb = resourceThumbnailUrl(resource);
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const sources = resourceThumbnailUrls(resource);
+  const thumb = sources[sourceIndex] || "";
   const kind = extension(resource.filename);
 
-  if (!thumb || broken) {
+  if (!thumb) {
     return (
       <div className="flex h-44 w-full flex-col items-center justify-center rounded-2xl bg-accent/15 text-primary">
         <span className="font-display text-3xl font-semibold uppercase">{kind === "archivo" ? "DOC" : kind}</span>
@@ -70,7 +81,7 @@ function ResourcePreview({ resource }: { resource: CmsResource }) {
         alt={`Miniatura de ${resource.title}`}
         className="h-44 w-full rounded-2xl object-contain bg-background"
         loading="lazy"
-        onError={() => setBroken(true)}
+        onError={() => setSourceIndex((index) => index + 1)}
       />
     </a>
   );

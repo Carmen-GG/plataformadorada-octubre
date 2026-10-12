@@ -149,15 +149,16 @@ export function MunicipalMotionsMap() {
           setError("No se ha localizado la capa vectorial municipal del IGN.");
           return;
         }
-        const matchNames = ["match", ["get", "nameunit"]];
-        const filterNames: string[] = [];
+        // IGN puede devolver los nombres municipales con mayúsculas distintas a las del
+        // registro de mociones. Las expresiones de MapLibre distinguen mayúsculas/minúsculas,
+        // así que comparamos en minúsculas tanto para el filtro como para el color.
+        const filterNames = Array.from(new Set(
+          data.records.map((record) => record.municipio.toLocaleLowerCase("es")),
+        ));
+        const nameMatch: any = ["match", ["downcase", ["to-string", ["get", "nameunit"]]], filterNames, true, false];
+        const colorMatch: any = ["match", ["downcase", ["to-string", ["get", "nameunit"]]]];
         data.records.forEach((record) => {
-          if (!filterNames.includes(record.municipio)) filterNames.push(record.municipio);
-        });
-        const nameMatch: any = ["match", ["get", "nameunit"], filterNames, true, false];
-        const colorMatch: any = ["match", ["get", "nameunit"]];
-        data.records.forEach((record) => {
-          colorMatch.push(record.municipio, STATUS[record.motionStatus].color);
+          colorMatch.push(record.municipio.toLocaleLowerCase("es"), STATUS[record.motionStatus].color);
         });
         colorMatch.push("#00000000");
 
@@ -212,9 +213,10 @@ export function MunicipalMotionsMap() {
     const map = mapRef.current;
     if (!map || !map.getLayer("pd-municipal-motions-fill") || !data) return;
     const visibleRecords = statusFilter === "todas" ? data.records : data.records.filter((record) => record.motionStatus === statusFilter);
-    const names = visibleRecords.map((record) => record.municipio);
-    map.setFilter("pd-municipal-motions-fill", ["match", ["get", "nameunit"], names, true, false]);
-    map.setFilter("pd-municipal-motions-outline", ["match", ["get", "nameunit"], names, true, false]);
+    const names = visibleRecords.map((record) => record.municipio.toLocaleLowerCase("es"));
+    const normalizedName = ["downcase", ["to-string", ["get", "nameunit"]]];
+    map.setFilter("pd-municipal-motions-fill", ["match", normalizedName, names, true, false]);
+    map.setFilter("pd-municipal-motions-outline", ["match", normalizedName, names, true, false]);
   }, [statusFilter, data]);
 
   return (

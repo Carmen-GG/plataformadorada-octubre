@@ -41,9 +41,10 @@ function resourceThumbnailUrls(resource: CmsResource) {
   if (url) {
     try {
       const parsed = new URL(url);
+      const pathParts = parsed.pathname.split("/").filter(Boolean);
       const driveId =
-        parsed.pathname.match(/\\/file\\/d\\/([^/]+)/)?.[1] ||
-        parsed.pathname.match(/\\/(?:document|presentation)\\/d\\/([^/]+)/)?.[1] ||
+        (pathParts[0] === "file" && pathParts[1] === "d" ? pathParts[2] : "") ||
+        (["document", "presentation"].includes(pathParts[0]) && pathParts[1] === "d" ? pathParts[2] : "") ||
         parsed.searchParams.get("id");
       if ((parsed.hostname === "drive.google.com" || parsed.hostname === "docs.google.com") && driveId) {
         const id = encodeURIComponent(driveId);

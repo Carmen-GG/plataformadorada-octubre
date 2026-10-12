@@ -66,8 +66,7 @@ function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsConten
       <div className="overflow-hidden rounded-[1.8rem] bg-background">
         <header className="flex min-h-20 flex-col items-center justify-center border-b border-border bg-card px-4 py-4 text-center">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Plataforma Dorada</p>
-          <h2 className="mt-1 font-display text-base font-bold leading-tight text-foreground">Últimas noticias</h2>
-          {item && <p className="mt-1 max-w-full truncate text-[11px] text-muted-foreground">{item.title}</p>}
+          <h2 className="mt-1 max-w-full font-display text-base font-bold leading-tight text-foreground">{item?.title || "Últimas noticias"}</h2>
         </header>
         <div className="relative aspect-[9/16] w-full bg-white">
           {pageUrl ? (
@@ -195,6 +194,8 @@ function Page() {
               </div>
               <div id="reproductor-prensa" className="min-w-0 scroll-mt-6 lg:sticky lg:top-6"><MediaStage item={selectedNews} /></div>
             </div>
+          ) : cms === null ? (
+            <p className="rounded-2xl border border-border bg-muted/30 p-6 text-muted-foreground" role="status">Cargando noticias…</p>
           ) : (
             <p className="rounded-2xl border border-border bg-muted/30 p-6 text-muted-foreground">Todavía no hay noticias publicadas. Cuando se introduzcan y publiquen desde el backoffice, aparecerán aquí.</p>
           )}

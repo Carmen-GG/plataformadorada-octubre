@@ -782,7 +782,7 @@ Object.assign(extraTranslations, {
   "Volver a la página anterior": { ca: "Torna a la pàgina anterior" },
   "Plataforma Dorada: Por un Pacto de Estado por la Dependencia y los Cuidados": { ca: "Plataforma Dorada: Per un Pacte d'Estat per la Dependència i les Cures" },
   "Movimiento ciudadano y apartidista que reclama un Pacto de Estado por la Dependencia y los Cuidados en España. Adhiérete, colabora y comparte tu testimonio.": { ca: "Moviment ciutadà i apartidista que reclama un Pacte d'Estat per la Dependència i les Cures a Espanya. Adhereix-t'hi, col·labora i comparteix el teu testimoni." },
-}});
+});
 
 // Traduccions complementàries per a totes les pàgines públiques i els seus controls.
 Object.assign(extraTranslations, {
@@ -904,7 +904,7 @@ Object.assign(extraTranslations, {
   "Para eso hace falta una financiación suficiente, estable y pensada para durar.": { ca: "Per això cal un finançament suficient, estable i pensat per durar." },
   "Por eso nace y trabaja Plataforma Dorada, para conseguir un Pacto de Estado por la Dependencia y los Cuidados.": { ca: "Per això neix i treballa Plataforma Dorada, per aconseguir un Pacte d'Estat per la Dependència i les Cures." },
   "Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores principales y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.": { ca: "Plataforma Dorada uneix les veus de les persones en situació de dependència, de les seves famílies, de les persones cuidadores principals i dels professionals, i treballa perquè les persones, les cures i la dependència siguin al centre de les polítiques públiques." },
-}});
+});
 
 // Traduccions catalanes per a mapes, missatges d'estat i contingut editorial fix.
 Object.assign(extraTranslations, {

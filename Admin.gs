@@ -15,6 +15,7 @@ var EVENT_HEADERS = ["id","titulo","fecha","hora","lugar","ciudad","descripcion"
 var PROPOSAL_HEADERS = ["id","tipo","titulo","artista","texto","proponente","publicada","creada"];
 var TIMELINE_HEADERS = ["id","fecha","titulo","descripcion","imagenNombre","imagenUrl","imagenId","orden","activa","creada"];
 var ROADMAP_HEADERS = ["id","fase","titulo","detalle","fecha","orden","activa","creada"];
+var VIDEO_HEADERS = ["id","title","description","url","platform","order","published","category","created"];
 
 function doGet(e) {
   var action = e && e.parameter ? String(e.parameter.action || "") : "";
@@ -122,14 +123,37 @@ function readRoadmap_(){
   return rows.filter(function(r){return String(r[6]).toLowerCase()!=="no";}).map(function(r){return{id:r[0],fase:cleanPublicText_(r[1],100),titulo:cleanPublicText_(r[2],300),detalle:cleanPublicText_(r[3],1500),fecha:r[4],orden:Number(r[5])||0,activa:String(r[6]).toLowerCase()!=="no"};}).sort(function(a,b){return a.orden-b.orden;});
 }
 
+function readVideos_(includeUnpublished){
+  var s=getOrCreateSheet_("VideosWeb",VIDEO_HEADERS), rows=rowValues_(s,VIDEO_HEADERS.length);
+  return rows.filter(function(r){return includeUnpublished || !/^(no|false|0)$/i.test(String(r[6]||""));}).map(function(r){
+    return {id:String(r[0]||""),title:cleanPublicText_(r[1],300),description:cleanPublicText_(r[2],1000),url:String(r[3]||"").trim(),platform:String(r[4]||"").toLowerCase()==="facebook"?"facebook":"youtube",order:Number(r[5])||0,published:!/^(no|false|0)$/i.test(String(r[6]||"")),category:String(r[7]||"actualidad")};
+  }).filter(function(v){return v.title&&v.url;}).sort(function(a,b){return a.order-b.order;});
+}
 function getPublicContent_(){
   var p=readProposals_();
-  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,actualizado:new Date().toISOString()};
+  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),videos:readVideos_(false),canciones:p.canciones,frases:p.frases,actualizado:new Date().toISOString()};
 }
 function getPublicContent(){return getPublicContent_();}
-function getBackofficeContent(){var c=getPublicContent_();c.propuestas=readProposals_().todas;return c;}
+function getBackofficeContent(){var c=getPublicContent_();c.videos=readVideos_(true);c.propuestas=readProposals_().todas;return c;}
 
-function setupBackoffice(){getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);getOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();getOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);getOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);getOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);getDriveFolder_();return "Backoffice preparado";}
+function setupBackoffice(){getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);getOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();getOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);getOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);getOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);getOrCreateSheet_("VideosWeb",VIDEO_HEADERS);getDriveFolder_();return "Backoffice preparado";}
+
+function saveVideo(data){
+  assertAdmin_(data&&data.password);
+  var title=cleanPublicText_(data.title,300), url=String(data.url||"").trim(), category=String(data.category||"actualidad").trim();
+  if(!title)throw new Error("El título del vídeo es obligatorio.");
+  if(!/^https?:\/\//i.test(url))throw new Error("Introduce una URL válida de YouTube o Facebook.");
+  var platform=String(data.platform||"youtube").toLowerCase()==="facebook"?"facebook":"youtube";
+  if(platform==="youtube"&&!/(youtube\.com|youtu\.be)/i.test(url))throw new Error("La URL no parece de YouTube.");
+  if(platform==="facebook"&&!/facebook\.com/i.test(url))throw new Error("La URL no parece de Facebook.");
+  if(["residencias","cuidadores","dependencia","actualidad"].indexOf(category)<0)category="actualidad";
+  var s=getOrCreateSheet_("VideosWeb",VIDEO_HEADERS),id=String(data.id||"").trim(),row=id?findRowById_(s,id):-1;
+  if(row<0){id=Utilities.getUuid();row=s.getLastRow()+1;}
+  var created=row<=s.getLastRow()?String(s.getRange(row,9).getDisplayValue()||""):"";if(!created)created=new Date().toISOString();
+  s.getRange(row,1,1,9).setValues([[id,title,cleanPublicText_(data.description,1000),url,platform,Number(data.order)||0,data.published===false?"No":"Sí",category,created]]);
+  return {ok:true,id:id};
+}
+function deleteVideo(data){assertAdmin_(data&&data.password);return deleteRowById_("VideosWeb",data.id);}
 
 function saveNews(data){assertAdmin_(data&&data.password);var s=getOrCreateSheet_("NoticiasWeb",NEWS_HEADERS),id=Utilities.getUuid();s.appendRow([id,cleanPublicText_(data.title,300),cleanPublicText_(data.media,160),String(data.date||"").trim(),String(data.url||"").trim(),cleanPublicText_(data.summary,1000),data.published===false?"No":"Sí",new Date().toISOString()]);return{ok:true,id:id};}
 

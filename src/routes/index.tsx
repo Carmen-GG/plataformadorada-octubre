@@ -308,7 +308,7 @@ function Home() {
             <div className="mt-5 overflow-x-auto rounded-2xl border border-border">
               <table className="w-full min-w-[360px] text-sm">
                 <caption className="sr-only">
-                  Resumen de adhesiones por comunidad autónoma
+                  {t("Resumen de adhesiones por comunidad autónoma")}
                 </caption>
                 <thead>
                   <tr className="bg-muted text-left">
@@ -316,7 +316,7 @@ function Home() {
                       {t("Comunidad autónoma")}
                     </th>
                     <th className="px-4 py-3 text-right font-semibold">
-                      Adhesiones
+                      {t("Adhesiones")}
                     </th>
                   </tr>
                 </thead>

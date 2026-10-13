@@ -1352,4 +1352,7 @@ Object.assign(extraTranslations, {
   "Formas de colaborar": { en: "Ways to help" },
   "Comparte": { en: "Share" },
   "Cargando…": { en: "Loading…" },
+
+  "Resumen de adhesiones por comunidad autónoma": { en: "Pledges by autonomous community" },
+  "Navegación del pie": { en: "Footer navigation" },
 });

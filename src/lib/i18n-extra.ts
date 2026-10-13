@@ -1970,3 +1970,116 @@ Object.assign(extraTranslations, {
     en: "View all organisations"
   }
 });
+
+
+/* Traduccions completes del peu de pàgina. */
+Object.assign(extraTranslations, {
+  "Por un Pacto de Estado por la Dependencia y los Cuidados. Movimiento ciudadano y apartidista.": {
+    ca: "Per un Pacte d’Estat per la Dependència i les Cures. Moviment ciutadà i apartidista.",
+    eu: "Mendekotasunaren eta Zaintzen aldeko Estatu Itunaren alde. Herritarren mugimendu independentea, alderdirik gabea.",
+    gl: "Por un Pacto de Estado pola Dependencia e os Coidados. Movemento cidadán e apartidista.",
+    en: "For a State Pact for Dependency Support and Care. A non-partisan citizens’ movement."
+  },
+  "Navegación": {
+    ca: "Navegació",
+    eu: "Nabigazioa",
+    gl: "Navegación",
+    en: "Navigation"
+  },
+  "Plataforma": {
+    ca: "La plataforma",
+    eu: "Plataforma",
+    gl: "A plataforma",
+    en: "The platform"
+  },
+  "Dependencia": {
+    ca: "Dependència",
+    eu: "Mendekotasuna",
+    gl: "Dependencia",
+    en: "Dependency support"
+  },
+  "Participa": {
+    ca: "Participa-hi",
+    eu: "Parte hartu",
+    gl: "Participa",
+    en: "Get involved"
+  },
+  "Datos": {
+    ca: "Dades",
+    eu: "Datuak",
+    gl: "Datos",
+    en: "Data"
+  },
+  "Prensa": {
+    ca: "Premsa",
+    eu: "Prentsa",
+    gl: "Prensa",
+    en: "Press"
+  },
+  "Conecta": {
+    ca: "Connecta",
+    eu: "Konektatu",
+    gl: "Conecta",
+    en: "Connect"
+  },
+  "Mapa web": {
+    ca: "Mapa del web",
+    eu: "Web-mapa",
+    gl: "Mapa web",
+    en: "Sitemap"
+  },
+  "Contacto": {
+    ca: "Contacte",
+    eu: "Kontaktua",
+    gl: "Contacto",
+    en: "Contact"
+  },
+  "Formulario de contacto": {
+    ca: "Formulari de contacte",
+    eu: "Harremanetarako formularioa",
+    gl: "Formulario de contacto",
+    en: "Contact form"
+  },
+  "Legal": {
+    ca: "Informació legal",
+    eu: "Lege-informazioa",
+    gl: "Información legal",
+    en: "Legal"
+  },
+  "Aviso legal": {
+    ca: "Avís legal",
+    eu: "Lege-oharra",
+    gl: "Aviso legal",
+    en: "Legal notice"
+  },
+  "Política de privacidad": {
+    ca: "Política de privacitat",
+    eu: "Pribatutasun-politika",
+    gl: "Política de privacidade",
+    en: "Privacy policy"
+  },
+  "Política de cookies": {
+    ca: "Política de galetes",
+    eu: "Cookieen politika",
+    gl: "Política de cookies",
+    en: "Cookie policy"
+  },
+  "Accesibilidad": {
+    ca: "Accessibilitat",
+    eu: "Irisgarritasuna",
+    gl: "Accesibilidade",
+    en: "Accessibility"
+  },
+  "Cambiar preferencias de cookies": {
+    ca: "Canvia les preferències de les galetes",
+    eu: "Aldatu cookieen hobespenak",
+    gl: "Cambiar as preferencias das cookies",
+    en: "Change cookie preferences"
+  },
+  "Plataforma Dorada — Por un Pacto de Estado por la Dependencia y los Cuidados.": {
+    ca: "Plataforma Dorada — Per un Pacte d’Estat per la Dependència i les Cures.",
+    eu: "Plataforma Dorada — Mendekotasunaren eta Zaintzen aldeko Estatu Itunaren alde.",
+    gl: "Plataforma Dorada — Por un Pacto de Estado pola Dependencia e os Coidados.",
+    en: "Plataforma Dorada — For a State Pact for Dependency Support and Care."
+  }
+});

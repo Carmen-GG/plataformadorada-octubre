@@ -470,7 +470,7 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
         {
           heading: "Jabetza intelektuala",
           paragraphs: [
-            "Plataforma Doradaren izena, logotipoa eta berezko materialak jabetza intelektualaren araudiak babesten ditu. [CONDICIONES DE USO DE LOS MATERIALES].",
+            "Plataforma Dorada mugimenduaren izena, logotipoa eta berezko materialak jabetza intelektualaren araudiak babesten ditu. [CONDICIONES DE USO DE LOS MATERIALES].",
             "Beste hedabide batzuen albisteetatik izenburua, laburpen txiki bat eta jatorrizko argitalpenerako esteka bakarrik erakusten ditugu; argitalpen horren eskubideak egile eta hedabideenak dira.",
           ],
         },

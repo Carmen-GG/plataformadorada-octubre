@@ -52,7 +52,7 @@ export const extraTranslations: Record<string, Variants> = {
   },
   "Logo de Plataforma Dorada": {
     ca: "Logotip de Plataforma Dorada",
-    eu: "Plataforma Doradaren logotipoa",
+    eu: "Plataforma Dorada mugimenduaren logotipoa",
     gl: "Logotipo de Plataforma Dorada",
   },
   Navegación: { ca: "Navegació", eu: "Nabigazioa", gl: "Navegación" },
@@ -151,7 +151,7 @@ export const extraTranslations: Record<string, Variants> = {
     },
   "Últimas publicaciones de Plataforma Dorada en Instagram y TikTok.": {
     ca: "Darreres publicacions de Plataforma Dorada a Instagram i TikTok.",
-    eu: "Plataforma Doradaren azken argitalpenak Instagramen eta TikTokean.",
+    eu: "Plataforma Dorada mugimenduaren azken argitalpenak Instagramen eta TikTokean.",
     gl: "Últimas publicacións de Plataforma Dorada en Instagram e TikTok.",
   },
   "Crea tu imagen de perfil con el marco dorado de apoyo al Pacto de Estado por la Dependencia.": {
@@ -181,13 +181,13 @@ export const extraTranslations: Record<string, Variants> = {
   "Colabora con Plataforma Dorada: difusión, apoyo a familias, organización de encuentros y trabajo territorial.":
     {
       ca: "Col·labora amb Plataforma Dorada: difusió, suport a famílies, organització de trobades i treball territorial.",
-      eu: "Lankidetzan aritu Plataforma Doradarekin: hedapena, familiei laguntza, topaketen antolaketa eta lurralde-lana.",
+      eu: "Lankidetzan aritu Plataforma Dorada mugimenduarekin: hedapena, familiei laguntza, topaketen antolaketa eta lurralde-lana.",
       gl: "Colabora con Plataforma Dorada: difusión, apoio ás familias, organización de encontros e traballo territorial.",
     },
   "Adhiérete a Plataforma Dorada y suma tu voz para exigir un Pacto de Estado por la Dependencia y los Cuidados.":
     {
       ca: "Adhereix-te a Plataforma Dorada i suma la teva veu per exigir un Pacte d'Estat per la Dependència i les Cures.",
-      eu: "Atxiki zaitez Plataforma Doradara eta gehitu zure ahotsa Mendekotasunaren eta Zaintzen aldeko Estatu Itun bat eskatzeko.",
+      eu: "Atxiki zaitez Plataforma Dorada mugimendura eta gehitu zure ahotsa Mendekotasunaren eta Zaintzen aldeko Estatu Itun bat eskatzeko.",
       gl: "Adhírete a Plataforma Dorada e suma a túa voz para esixir un Pacto de Estado pola Dependencia e os Coidados.",
     },
   "Para pedir plazos razonables en las valoraciones y concesiones de ayudas.": {
@@ -216,13 +216,13 @@ export const extraTranslations: Record<string, Variants> = {
   "Gestión interna": { ca: "Gestió interna", eu: "Barne-kudeaketa", gl: "Xestión interna" },
   "Gestión interna de noticias y recursos de Plataforma Dorada.": {
     ca: "Gestió interna de notícies i recursos de Plataforma Dorada.",
-    eu: "Plataforma Doradaren albiste eta baliabideen barne-kudeaketa.",
+    eu: "Plataforma Dorada mugimenduaren albiste eta baliabideen barne-kudeaketa.",
     gl: "Xestión interna de noticias e recursos de Plataforma Dorada.",
   },
   "Desde aquí puedes abrir el panel para publicar noticias y subir materiales de la Plataforma Dorada.":
     {
       ca: "Des d'aquí pots obrir el tauler per publicar notícies i pujar materials de Plataforma Dorada.",
-      eu: "Hemendik panela ireki dezakezu albisteak argitaratzeko eta Plataforma Doradaren materialak igotzeko.",
+      eu: "Hemendik panela ireki dezakezu albisteak argitaratzeko eta Plataforma Dorada mugimenduaren materialak igotzeko.",
       gl: "Desde aquí podes abrir o panel para publicar noticias e subir materiais de Plataforma Dorada.",
     },
   "Panel de gestión": { ca: "Tauler de gestió", eu: "Kudeaketa-panela", gl: "Panel de xestión" },
@@ -263,22 +263,22 @@ export const extraTranslations: Record<string, Variants> = {
   },
   "Información legal sobre la titularidad y el uso del sitio web de Plataforma Dorada.": {
     ca: "Informació legal sobre la titularitat i l'ús del lloc web de Plataforma Dorada.",
-    eu: "Plataforma Doradaren webgunearen titulartasunari eta erabilerari buruzko lege-informazioa.",
+    eu: "Plataforma Dorada webgunearen titulartasunari eta erabilerari buruzko lege-informazioa.",
     gl: "Información legal sobre a titularidade e o uso do sitio web de Plataforma Dorada.",
   },
   "Cómo trata Plataforma Dorada tus datos personales y cómo ejercer tus derechos.": {
     ca: "Com tracta Plataforma Dorada les teves dades personals i com exercir els teus drets.",
-    eu: "Plataforma Doradak zure datu pertsonalak nola tratatzen dituen eta zure eskubideak nola gauzatu.",
+    eu: "Plataforma Dorada mugimenduak zure datu pertsonalak nola tratatzen dituen eta zure eskubideak nola gauzatu.",
     gl: "Como trata Plataforma Dorada os teus datos persoais e como exercer os teus dereitos.",
   },
   "Qué cookies usa el sitio de Plataforma Dorada y cómo gestionarlas.": {
     ca: "Quines galetes fa servir el lloc de Plataforma Dorada i com gestionar-les.",
-    eu: "Plataforma Doradaren webguneak zein cookie erabiltzen dituen eta nola kudeatu.",
+    eu: "Plataforma Dorada webguneak zein cookie erabiltzen dituen eta nola kudeatu.",
     gl: "Que cookies usa o sitio de Plataforma Dorada e como xestionalas.",
   },
   "Compromiso de accesibilidad del sitio de Plataforma Dorada según WCAG 2.1 AA.": {
     ca: "Compromís d'accessibilitat del lloc de Plataforma Dorada segons WCAG 2.1 AA.",
-    eu: "Plataforma Doradaren webgunearen irisgarritasun-konpromisoa, WCAG 2.1 AA arabera.",
+    eu: "Plataforma Dorada webgunearen irisgarritasun-konpromisoa, WCAG 2.1 AA arabera.",
     gl: "Compromiso de accesibilidade do sitio de Plataforma Dorada segundo WCAG 2.1 AA.",
   },
 
@@ -364,7 +364,7 @@ export const extraTranslations: Record<string, Variants> = {
   "Añadir canciones": { ca: "Afegir cançons", eu: "Abestiak gehitu", gl: "Engadir cancións" },
   "Últimas publicaciones de Plataforma Dorada en Instagram, TikTok y Spotify.": {
     ca: "Darreres publicacions de Plataforma Dorada a Instagram, TikTok i Spotify.",
-    eu: "Plataforma Doradaren azken argitalpenak Instagramen, TikTokean eta Spotifyn.",
+    eu: "Plataforma Dorada mugimenduaren azken argitalpenak Instagramen, TikTokean eta Spotifyn.",
     gl: "Últimas publicacións de Plataforma Dorada en Instagram, TikTok e Spotify.",
   },
 };
@@ -1450,7 +1450,7 @@ mergeTranslationVariants({
   "Profesionales del ámbito sociosanitario trabajando con un alto compromiso y asumiendo una gran responsabilidad, con medios escasos y exigencias altas para cumplir unos objetivos… pero.. los objetivos de quién?": { eu: "Arlo soziosanitarioko profesionalek konpromiso handiz eta erantzukizun handia beren gain hartuta egiten dute lan, baliabide gutxirekin eta helburuak betetzeko eskakizun handiekin… baina, noren helburuak dira?" },
   "El sistema necesita más medios, mejor coordinación sociosanitaria y una respuesta que no dependa de dónde vivas.": { eu: "Sistemak baliabide gehiago, koordinazio soziosanitario hobea eta bizi zaren lekuaren araberakoa ez den erantzuna behar ditu." },
   "Por eso nace y trabaja Plataforma Dorada, para conseguir un Pacto de Estado por la Dependencia y los Cuidados.": { eu: "Horregatik sortu da eta lan egiten du Plataforma Dorada, mendekotasunaren eta zaintzen aldeko Estatu Ituna lortzeko." },
-  "Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores principales y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.": { eu: "Plataforma Doradak mendekotasuna duten pertsonen, haien familien, zaintzaile nagusien eta profesionalen ahotsak biltzen ditu, pertsonak, zaintza eta mendekotasuna politika publikoen erdigunean egon daitezen lan egiteko." },
+  "Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores principales y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.": { eu: "Plataforma Dorada mugimenduak mendekotasuna duten pertsonen, haien familien, zaintzaile nagusien eta profesionalen ahotsak biltzen ditu, pertsonak, zaintza eta mendekotasuna politika publikoen erdigunean egon daitezen lan egiteko." },
   "Último vídeo de Instagram": { eu: "Instagrameko azken bideoa" },
   "Se actualiza automáticamente con el contenido más reciente de": { eu: "Automatikoki eguneratzen da honen azken edukiarekin:" },
   "Cifras del movimiento": { eu: "Mugimenduaren datuak" },
@@ -1528,7 +1528,7 @@ mergeTranslationVariants({
   "Navegación del pie": { eu: "Orri-oinaren nabigazioa" },
   "Por un Pacto de Estado por la Dependencia y los Cuidados. Movimiento ciudadano y apartidista.": { eu: "Mendekotasunaren eta zaintzen aldeko Estatu Itunaren alde. Herritarren mugimendu alderdikeriarik gabea." },
   "Plataforma Dorada — Por un Pacto de Estado por la Dependencia y los Cuidados.": { eu: "Plataforma Dorada — Mendekotasunaren eta zaintzen aldeko Estatu Itunaren alde." },
-  "Logo de Plataforma Dorada": { eu: "Plataforma Doradaren logotipoa" },
+  "Logo de Plataforma Dorada": { eu: "Plataforma Dorada mugimenduaren logotipoa" },
   "Plataforma": { eu: "Plataforma" },
   "Dependencia": { eu: "Mendekotasuna" },
   "Participa": { eu: "Parte hartu" },
@@ -1593,7 +1593,7 @@ mergeTranslationVariants({
   "País Vasco": { eu: "Euskal Autonomia Erkidegoa" },
   "Navegación": { eu: "Nabigazioa" },
   "Navegación del pie": { eu: "Orri-oinaren nabigazioa" },
-  "Logo de Plataforma Dorada": { eu: "Plataforma Doradaren logotipoa" },
+  "Logo de Plataforma Dorada": { eu: "Plataforma Dorada mugimenduaren logotipoa" },
   "Plataforma": { eu: "Plataforma" },
   "Dependencia": { eu: "Mendekotasuna" },
   "Participa": { eu: "Parte hartu" },

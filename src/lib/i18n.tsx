@@ -461,7 +461,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
   Adhesión: { ca: "Adhesió", eu: "Atxikimendua", gl: "Adhesión" },
   "Únete a Plataforma Dorada": {
     ca: "Uneix-te a Plataforma Dorada",
-    eu: "Egin bat Plataforma Doradarekin",
+    eu: "Egin bat Plataforma Dorada mugimenduarekin",
     gl: "Únete a Plataforma Dorada",
     en: "Join Plataforma Dorada",
   },
@@ -903,7 +903,7 @@ mergePageTranslations({
   "Próximos encuentros, concentraciones y actos de la Plataforma Dorada, y eventos ya realizados.":
     {
       ca: "Propers trobades, concentracions i actes de Plataforma Dorada, i esdeveniments ja realitzats.",
-      eu: "Plataforma Doradaren datozen topaketak, elkarretaratzeak eta ekitaldiak, eta dagoeneko egindako ekitaldiak.",
+      eu: "Plataforma Dorada mugimenduaren datozen topaketak, elkarretaratzeak eta ekitaldiak, eta dagoeneko egindako ekitaldiak.",
       gl: "Próximos encontros, concentracións e actos de Plataforma Dorada, e eventos xa realizados.",
     en: "Upcoming meetings, gatherings and Plataforma Dorada events, as well as past events.",
     },
@@ -922,19 +922,19 @@ mergePageTranslations({
   },
   "Últimas noticias y apariciones en medios de la Plataforma Dorada.": {
     ca: "Últimes notícies i aparicions als mitjans de Plataforma Dorada.",
-    eu: "Plataforma Doradaren azken albisteak eta hedabideetako agerraldiak.",
+    eu: "Plataforma Dorada mugimenduaren azken albisteak eta hedabideetako agerraldiak.",
     gl: "Últimas noticias e aparicións nos medios de Plataforma Dorada.",
     en: "Latest news and media coverage of Plataforma Dorada.",
   },
   "Dossier de prensa, logotipos, carteles y material para redes de la Plataforma Dorada.": {
     ca: "Dossier de premsa, logotips, cartells i material per a xarxes de Plataforma Dorada.",
-    eu: "Plataforma Doradaren prentsa-dosierra, logotipoak, kartelak eta sareetarako materiala.",
+    eu: "Plataforma Dorada mugimenduaren prentsa-dosierra, logotipoak, kartelak eta sareetarako materiala.",
     gl: "Dossier de prensa, logotipos, carteis e material para redes de Plataforma Dorada.",
     en: "Plataforma Dorada press kit, logos, posters and social media materials.",
   },
   "Escribe a la Plataforma Dorada: dudas, propuestas, prensa o colaboración.": {
     ca: "Escriu a Plataforma Dorada: dubtes, propostes, premsa o col·laboració.",
-    eu: "Idatzi Plataforma Doradari: zalantzak, proposamenak, prentsa edo lankidetza.",
+    eu: "Idatzi Plataforma Dorada mugimenduari: zalantzak, proposamenak, prentsa edo lankidetza.",
     gl: "Escribe a Plataforma Dorada: dúbidas, propostas, prensa ou colaboración.",
     en: "Contact Plataforma Dorada with questions, proposals, press enquiries or collaboration offers.",
   },

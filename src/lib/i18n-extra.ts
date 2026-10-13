@@ -1211,4 +1211,13 @@ Object.assign(extraTranslations, {
   "Eventos realizados": { eu: "Egindako ekitaldiak" },
   "Más información": { eu: "Informazio gehiago" },
   "Abrir / descargar cartel": { eu: "Kartela ireki / deskargatu" },
+
+  // Homepage dashboard labels with explicit English translations.
+  "Mapa de adhesiones": { en: "Pledge map" },
+  "Datos agregados por territorio": { en: "Aggregated data by region" },
+  "Comunidad autónoma": { en: "Autonomous community" },
+  "Próximo evento": { en: "Upcoming event" },
+  "Ver todos los eventos": { en: "View all events" },
+  "Últimas entidades adheridas": { en: "Latest supporting organisations" },
+  "meses": { en: "months" },
 });

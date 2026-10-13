@@ -47,7 +47,7 @@ function Home() {
   const state = usePublicStats();
   const stats = state.stats;
 
-  const recentJoins = (stats?.ultimasAdhesiones ?? []).slice(0, 8);
+  const recentJoins = (stats?.ultimas{t("Adhesiones")} ?? []).slice(0, 8);
   const joinsStatus = listStatus(
     state,
     recentJoins.length,
@@ -290,7 +290,7 @@ function Home() {
             to="/datos"
             className="font-semibold text-primary underline underline-offset-4"
           >
-            Ver todos los datos e indicadores
+            {t("Ver todos los datos e indicadores")}
           </Link>
         </p>
       </section>
@@ -302,10 +302,10 @@ function Home() {
           <Panel as="section" className="lg:col-span-7">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="font-display text-2xl font-semibold">
-                Mapa de adhesiones
+                {t("Mapa de adhesiones")}
               </h2>
               <span className="text-xs text-muted-foreground">
-                Datos agregados por territorio
+                {t("Datos agregados por territorio")}
               </span>
             </div>
             <div className="mt-5 overflow-x-auto rounded-2xl border border-border">
@@ -316,7 +316,7 @@ function Home() {
                 <thead>
                   <tr className="bg-muted text-left">
                     <th className="px-4 py-3 font-semibold">
-                      Comunidad autónoma
+                      {t("Comunidad autónoma")}
                     </th>
                     <th className="px-4 py-3 text-right font-semibold">
                       Adhesiones
@@ -358,7 +358,7 @@ function Home() {
                 to="/datos"
                 className="font-semibold text-primary underline underline-offset-4"
               >
-                Ver el mapa completo por comunidad autónoma
+                {t("Ver el mapa completo por comunidad autónoma")}
               </Link>
             </p>
           </Panel>
@@ -367,7 +367,7 @@ function Home() {
           <div className="grid gap-6 lg:col-span-5">
             <Panel as="section" className="min-w-0 overflow-hidden">
               <h2 className="font-display text-2xl font-semibold">
-                Próximo evento
+                {t("Próximo evento")}
               </h2>
               {nextEvent ? (
                 <div className="glass-soft mt-5 flex min-w-0 items-center gap-4 overflow-hidden rounded-2xl p-4">
@@ -390,19 +390,19 @@ function Home() {
                 </div>
               ) : (
                 <p className="mt-4 text-sm text-muted-foreground">
-                  Próximamente anunciaremos nuevos eventos.
+                  {t("Próximamente anunciaremos nuevos eventos.")}
                 </p>
               )}
               <p className="mt-4 text-sm">
                 <Link to="/eventos" className="font-semibold text-primary underline underline-offset-4">
-                  Ver todos los eventos
+                  {t("Ver todos los eventos")}
                 </Link>
               </p>
             </Panel>
 
             <Panel as="section">
               <h2 className="font-display text-2xl font-semibold">
-                Últimas entidades adheridas
+                {t("Últimas entidades adheridas")}
               </h2>
               {entitiesStatus ? (
                 <p
@@ -428,7 +428,7 @@ function Home() {
                   to="/entidades"
                   className="font-semibold text-primary underline underline-offset-4"
                 >
-                  Ver todas las entidades
+                  {t("Ver todas las entidades")}
                 </Link>
               </p>
             </Panel>

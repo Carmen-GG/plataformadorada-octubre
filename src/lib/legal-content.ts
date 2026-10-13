@@ -878,7 +878,7 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
         {
           heading: "Purpose of the site",
           paragraphs: [
-            "This website provides information about the movement and its call for a State Pact on Dependency and Care, and lets you pledge your support, volunteer, share testimonies and get in touch. It does not sell products or services and has no commercial purpose.",
+            "This website provides information about the movement and its call for a State Pact on Dependency and Care, and lets you pledge your support, volunteer, share testimonials and get in touch. It does not sell products or services and has no commercial purpose.",
           ],
         },
         {
@@ -930,7 +930,7 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Pledge: the data we ask for in the form ([DATOS DEL FORMULARIO DE ADHESIÓN]). We use it to count support for the movement and show aggregate figures. Legal basis: your consent.",
             "Appearing publicly (optional): only if you expressly authorise it in the form, we show your name, the initial of your first surname and your city on the website. This is a separate consent from the one for your pledge: if you do not give it, you do not appear.",
             "Volunteering: the data in the form ([DATOS DEL FORMULARIO DE VOLUNTARIADO]), to contact you and coordinate your collaboration. Legal basis: your consent.",
-            "Testimonies: your testimony and your contact details. A testimony may reveal health or dependency data, which is specially protected: we only process it with your explicit consent. There are two separate consents: one to send us the testimony and another, optional, to publish it.",
+            "Testimonials: your testimonial and your contact details. A testimonial may reveal health or dependency data, which is specially protected: we only process it with your explicit consent. There are two separate consents: one to send us the testimonial and another, optional, to publish it.",
             "Contact: the name, email and message you send us, in order to reply. Legal basis: your consent when submitting the form.",
             "Member organisations: data about the organisation, its contact person and its logo, to display it as a member organisation. Legal basis: consent.",
           ],
@@ -939,10 +939,10 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
           ],
         },
         {
-          heading: "Testimonies that mention other people",
+          heading: "Testimonials that mention other people",
           paragraphs: [
-            "If you describe another person's situation (for example a dependent relative), please do so without details that could identify them, or make sure you have their permission. We may hide or edit a testimony to protect the privacy of third parties.",
-            "Please do not include health information in the contact form: the testimony form exists for that.",
+            "If you describe another person's situation (for example a dependent relative), please do so without details that could identify them, or make sure you have their permission. We may hide or edit a testimonial to protect the privacy of third parties.",
+            "Please do not include health information in the contact form: the testimonial form exists for that.",
           ],
         },
         {
@@ -950,7 +950,7 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
           paragraphs: [
             "We do not hand your data to third parties for their own purposes. To run the website we use Google services (Forms, Sheets, Drive, Apps Script and Gmail), which process data on our behalf and may involve transfers outside the European Economic Area with the safeguards provided by the GDPR.",
             "Access to the data is limited to the volunteers the movement authorises [CONFIRMAR ACCESO].",
-            "What you authorise us to publish (pledge or testimony) is visible to anyone on the Internet.",
+            "What you authorise us to publish (pledge or testimonial) is visible to anyone on the Internet.",
           ],
         },
         {
@@ -970,7 +970,7 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Withdraw your consent at any time, without affecting what has already been done.",
           ],
           paragraphs: [
-            "Write to {email} saying which right you want to exercise; we will reply within a maximum of one month. If you withdraw your authorisation to appear publicly or to publish your testimony, we will remove it from the website.",
+            "Write to {email} saying which right you want to exercise; we will reply within a maximum of one month. If you withdraw your authorisation to appear publicly or to publish your testimonial, we will remove it from the website.",
             "If you believe we have not handled your data properly, you can complain to the Spanish Data Protection Agency (www.aepd.es).",
           ],
         },

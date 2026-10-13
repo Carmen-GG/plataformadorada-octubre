@@ -1801,7 +1801,7 @@ mergeTranslationVariants({
     ca: "Adhesions en directe",
     eu: "Atxikimenduak zuzenean",
     gl: "Adhesións en directo",
-    en: "Live sign-ups"
+    en: "Live pledges"
   },
   "Organizaciones": {
     ca: "Organitzacions",

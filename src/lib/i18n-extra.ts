@@ -1179,3 +1179,36 @@ Object.assign(extraTranslations, {
   "Todavía no hay incorporaciones públicas.": { en: "There are no public volunteer sign-ups yet." },
   "No hemos podido enviar el mensaje. Puedes escribirnos directamente a": { en: "We could not send your message. You can email us directly at" },
 });
+
+
+/* Euskara: homepage, contact and event interface copy. */
+Object.assign(extraTranslations, {
+  "Queremos un sistema que cuide de verdad.": { eu: "Benetan zainduko duen sistema bat nahi dugu." },
+  "Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.": { eu: "Mendekotasuna duten pertsonek, haien familiek eta zaintzaileek jakin behar dute laguntzak ez duela huts egingo eta ez dela egun batetik bestera desagertuko." },
+  "Y, sobre todo, que las personas puedan elegir de verdad.": { eu: "Eta, batez ere, pertsonek benetan aukeratu ahal izatea." },
+  "Porque cuidar no debería ser una lucha constante. Debería ser un derecho que se cumple.": { eu: "Zaintzea ez litzateke etengabeko borroka izan behar. Betetzen den eskubidea izan behar luke." },
+  "Organizaciones": { eu: "Erakundeak" },
+  "Ayuntamientos": { eu: "Udalak" },
+  "Comunidades autónomas": { eu: "Autonomia-erkidegoak" },
+  "Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.": { eu: "Datu agregatuak. Ez dira inoiz datu pertsonalak edo banakako kokapenak argitaratzen." },
+  "La situación actual": { eu: "Egungo egoera" },
+  "El sistema necesita más medios, mejor coordinación sociosanitaria y una respuesta que no dependa de dónde vivas.": { eu: "Sistemak baliabide gehiago, koordinazio soziosanitario hobea eta bizi zaren lekuaren araberakoa ez den erantzuna behar ditu." },
+  "Último vídeo de Instagram": { eu: "Instagrameko azken bideoa" },
+  "Cifras del movimiento": { eu: "Mugimenduaren datuak" },
+  "Hablemos": { eu: "Hitz egin dezagun" },
+  "Contacto": { eu: "Kontaktua" },
+  "Gracias. Hemos recibido tu mensaje.": { eu: "Eskerrik asko. Zure mezua jaso dugu." },
+  "Te responderemos a la dirección de correo que has indicado.": { eu: "Adierazi duzun helbide elektronikora erantzungo dizugu." },
+  "Nombre": { eu: "Izena" },
+  "Correo electrónico": { eu: "Helbide elektronikoa" },
+  "Mensaje": { eu: "Mezua" },
+  "No rellenar este campo": { eu: "Ez bete eremu hau" },
+  "He leído y acepto la política de privacidad.": { eu: "Pribatutasun-politika irakurri eta onartzen dut." },
+  "Enviando…": { eu: "Bidaltzen…" },
+  "Enviar": { eu: "Bidali" },
+  "Eventos": { eu: "Ekitaldiak" },
+  "Próximos eventos": { eu: "Datozen ekitaldiak" },
+  "Eventos realizados": { eu: "Egindako ekitaldiak" },
+  "Más información": { eu: "Informazio gehiago" },
+  "Abrir / descargar cartel": { eu: "Kartela ireki / deskargatu" },
+});

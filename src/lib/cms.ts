@@ -23,7 +23,8 @@ export type CmsResource = {
 export type CmsEvent = { id:string; title:string; date:string; time:string; place:string; city:string; description:string; url:string; documentUrl:string; documentName:string; previewUrl?:string };
 
 export type CmsMilestone = { id: string; date: string; title: string; description: string; imageUrl?: string };
-export type CmsVideo = { id: string; title: string; description: string; url: string; platform: "youtube" | "facebook"; order: number; published: boolean; category?: "residencias" | "cuidadores" | "dependencia" | "actualidad" };
+export type CmsVideoCategory = { id: string; name: string; description: string; order: number; published: boolean };
+export type CmsVideo = { id: string; title: string; description: string; url: string; platform: "youtube" | "facebook"; order: number; published: boolean; category: string };
 export type CmsRoadmap = { id: string; phase: string; title: string; detail: string; date?: string; active?: boolean };
 export type CmsLema = { id: string; text: string; name: string; order: number; published: boolean };
 
@@ -33,6 +34,7 @@ export type CmsPayload = {
   eventos: CmsEvent[];
   trayectoria?: CmsMilestone[];
   videos?: CmsVideo[];
+  videoCategories?: CmsVideoCategory[];
   hojaRuta?: CmsRoadmap[];
   canciones?: Array<{x:string;artist:string}>;
   frases?: Array<{text:string;name:string}>;
@@ -62,6 +64,7 @@ type AppsScriptNews = {
 
 type AppsScriptMilestone = { id?:string; fecha?:string; titulo?:string; descripcion?:string; imagenUrl?:string };
 type AppsScriptVideo = { id?:string; title?:string; description?:string; url?:string; platform?:string; order?:number|string; published?:boolean|string; category?:string };
+type AppsScriptVideoCategory = { id?:string; name?:string; description?:string; order?:number|string; published?:boolean|string };
 type AppsScriptRoadmap = { id?:string; fase?:string; titulo?:string; detalle?:string; fecha?:string; activa?:boolean };
 
 type AppsScriptResource = {
@@ -88,6 +91,7 @@ type AppsScriptContentResponse = {
   eventos?: AppsScriptEvent[];
   trayectoria?: AppsScriptMilestone[];
   videos?: AppsScriptVideo[];
+  videoCategories?: AppsScriptVideoCategory[];
   hojaRuta?: AppsScriptRoadmap[];
   canciones?: Array<{x?:string;artist?:string}>;
   frases?: Array<{text?:string;name?:string}>;
@@ -228,7 +232,8 @@ async function refresh() {
       })),
 
       trayectoria: (raw.trayectoria ?? []).map((x) => ({ id:String(x.id??""), date:String(x.fecha??""), title:String(x.titulo??""), description:String(x.descripcion??""), imageUrl:String(x.imagenUrl??"") })),
-      ...(raw.videos ? { videos: raw.videos.map((x) => ({ id:String(x.id??""), title:String(x.title??""), description:String(x.description??""), url:String(x.url??""), platform:x.platform === "facebook" ? "facebook" as const : "youtube" as const, order:Number(x.order??0), published:x.published !== false && !/^(no|false|0)$/i.test(String(x.published??"Sí")), category:(["residencias","cuidadores","dependencia","actualidad"].includes(String(x.category??"")) ? String(x.category) : "actualidad") as CmsVideo["category"] })) } : {}),
+      ...(raw.videos ? { videos: raw.videos.map((x) => ({ id:String(x.id??""), title:String(x.title??""), description:String(x.description??""), url:String(x.url??""), platform:x.platform === "facebook" ? "facebook" as const : "youtube" as const, order:Number(x.order??0), published:x.published !== false && !/^(no|false|0)$/i.test(String(x.published??"Sí")), category:String(x.category??"actualidad") })) } : {}),
+      ...(raw.videoCategories ? { videoCategories: raw.videoCategories.map((x) => ({ id:String(x.id??""), name:String(x.name??""), description:String(x.description??""), order:Number(x.order??0), published:x.published !== false && !/^(no|false|0)$/i.test(String(x.published??"Sí")) })) } : {}),
       hojaRuta: (raw.hojaRuta ?? []).map((x) => ({ id:String(x.id??""), phase:String(x.fase??""), title:String(x.titulo??""), detail:String(x.detalle??""), date:String(x.fecha??""), active:x.activa !== false })),
       ...(raw.actualizado ? { actualizado: raw.actualizado } : {}),
     };

@@ -246,10 +246,10 @@ function getYouTubeId(value: string) {
 }
 
 const fallbackVideoCategories = [
-  { id: "residencias", name: "Residències", description: "Calidad asistencial, listas de espera, condiciones de vida, inspecciones y alternativas." },
-  { id: "cuidadores", name: "Persones cuidadores", description: "Sobrecarga, conciliación, salud emocional, derechos laborales y reconocimiento." },
-  { id: "dependencia", name: "Dependència", description: "Ley de Dependencia, valoraciones, ayudas, atención domiciliaria y financiación." },
-  { id: "actualidad", name: "Actualitat", description: "Noticias, propuestas políticas, iniciativas ciudadanas, movilizaciones y pactos." },
+  { id: "residencias", name: "Residències", short: "Residències", order: 1, published: true, description: "Calidad asistencial, listas de espera, condiciones de vida, inspecciones y alternativas." },
+  { id: "cuidadores", name: "Persones cuidadores", short: "Persones cuidadores", order: 2, published: true, description: "Sobrecarga, conciliación, salud emocional, derechos laborales y reconocimiento." },
+  { id: "dependencia", name: "Dependència", short: "Dependència", order: 3, published: true, description: "Ley de Dependencia, valoraciones, ayudas, atención domiciliaria y financiación." },
+  { id: "actualidad", name: "Actualitat", short: "Actualitat", order: 4, published: true, description: "Noticias, propuestas políticas, iniciativas ciudadanas, movilizaciones y pactos." },
 ] ;
 
 function VideosLibrary({ videos, categories }: { videos: CmsVideo[]; categories: Array<{id:string;name:string;description:string;order:number;published:boolean}> }) {

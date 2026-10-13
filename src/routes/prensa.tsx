@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useI18n, countLabel } from "@/lib/i18n";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";
@@ -132,6 +133,7 @@ function MediaStage({ item }: { item: NonNullable<ReturnType<typeof useCmsConten
 }
 
 function Page() {
+  const { t, locale } = useI18n();
   const cms = useCmsContent();
   const news = cms?.noticias ?? [];
   const [resources, setResources] = useState<CmsResource[] | null>(null);
@@ -247,7 +249,7 @@ function Page() {
                   </article>;
                 })}
                 {pageCount > 1 && <nav className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4" aria-label="Paginación de noticias">
-                  <span className="text-xs text-muted-foreground">Página {newsPage} de {pageCount} · {news.length} noticias</span>
+                  <span className="text-xs text-muted-foreground">{`${countLabel(locale, t("pager.page"), newsPage, pageCount)} · ${news.length} ${t("pager.news")}`}</span>
                   <div className="flex items-center gap-2">
                     <button type="button" disabled={newsPage === 1} onClick={() => { const next = newsPage - 1; setNewsPage(next); setSelectedNewsKey(""); }} className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-primary disabled:cursor-not-allowed disabled:opacity-40">Anterior</button>
                     <button type="button" disabled={newsPage === pageCount} onClick={() => { const next = newsPage + 1; setNewsPage(next); setSelectedNewsKey(""); }} className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-40">Siguiente</button>

@@ -6,6 +6,7 @@ import { LatestInstagramVideo, TikTokFeed } from "@/components/social-feeds";
 import { SITE } from "@/lib/content";
 import { pageHead } from "@/lib/seo";
 import { useCmsContent, type CmsVideo } from "@/lib/cms";
+import { useI18n, countLabel } from "@/lib/i18n";
 
 const fallbackPhrases = [
   "Cuidar también es sostener la vida.",
@@ -59,6 +60,7 @@ function ProposalForm({ type }: { type: "cancion" | "frase" | "lema" }) {
 }
 
 function PhraseCarousel({ phrases }: { phrases: Array<{ text: string; name: string }> }) {
+  const { locale } = useI18n();
   const [index,setIndex]=useState(0);
   const [paused,setPaused]=useState(false);
   const phraseSignature = phrases.map(p => p.text + "|~|" + p.name).join("|~~|");
@@ -87,7 +89,7 @@ function PhraseCarousel({ phrases }: { phrases: Array<{ text: string; name: stri
       <p className="mt-5 text-sm font-semibold text-muted-foreground" aria-live="polite">— {currentPhrase.name.trim() || "Anónimo"}</p>
     </div>
     <div className="mt-4 flex items-center justify-between gap-3">
-      <span className="text-sm text-muted-foreground" aria-live="polite">{currentIndex + 1} de {phrases.length}</span>
+      <span className="text-sm text-muted-foreground" aria-live="polite">{countLabel(locale, "", currentIndex + 1, phrases.length).trim()}</span>
       <div className="flex flex-wrap gap-2">
         <button type="button" aria-label="Lema anterior" className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-background disabled:opacity-40" onClick={() => move(-1)} disabled={phrases.length < 2}>← Anterior</button>
         <button type="button" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-40" onClick={() => setPaused(value => !value)} aria-pressed={paused} disabled={phrases.length < 2}>{paused ? "Reanudar" : "Pausar"}</button>
@@ -251,6 +253,7 @@ const videoCategories = [
 ] as const;
 
 function VideosLibrary({ videos }: { videos: CmsVideo[] }) {
+  const { t } = useI18n();
   const [selectedVideo, setSelectedVideo] = useState<CmsVideo | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<(typeof videoCategories)[number]["id"]>("actualidad");
   const categoryVideos = videos.filter((item) => item.published && (item.category ?? "actualidad") === selectedCategory).sort((a, b) => a.order - b.order);
@@ -269,7 +272,7 @@ function VideosLibrary({ videos }: { videos: CmsVideo[] }) {
         </div>
       </div>
       <div className="mt-3 flex items-center justify-between gap-3 px-2 text-xs font-semibold text-primary"><span className="truncate">{selectedVideo?.title ?? "ARCHIVO AUDIOVISUAL"}</span><span aria-hidden="true">● ━━━ ◉</span></div>
-      {selectedVideo && <a className="mt-2 inline-block px-2 text-xs font-semibold text-primary underline" href={selectedVideo.url} target="_blank" rel="noreferrer">Abrir vídeo en {selectedVideo.platform === "youtube" ? "YouTube" : "Facebook"} si no se reproduce</a>}
+      {selectedVideo && <a className="mt-2 inline-block px-2 text-xs font-semibold text-primary underline" href={selectedVideo.url} target="_blank" rel="noreferrer">{t("video.openIn").replace("{p}", selectedVideo.platform === "youtube" ? "YouTube" : "Facebook")}</a>}
     </div>
     <div className="space-y-4">
       <div><h3 className="mb-3 font-display text-xl font-semibold">Listas de actualidad</h3>

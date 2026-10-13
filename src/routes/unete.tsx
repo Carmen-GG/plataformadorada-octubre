@@ -5,6 +5,7 @@ import { SITE } from "@/lib/content";
 import { ShareButtons } from "@/components/share-buttons";
 import { listStatus, usePublicStats, LiveCount } from "@/lib/public-stats";
 import { useEffect, useState } from "react";
+import { useI18n, countLabel } from "@/lib/i18n";
 
 export const Route = createFileRoute("/unete")({
   head: () =>
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/unete")({
 });
 
 function Unete() {
+  const { t, locale } = useI18n();
   const state = usePublicStats();
   const recent = state.stats?.ultimasAdhesiones ?? [];
   const [recentIndex, setRecentIndex] = useState(0);
@@ -105,7 +107,7 @@ function Unete() {
                     }}
                     className="glass-panel rounded-3xl p-7 sm:p-8"
                   >
-                    <p className="text-sm font-semibold text-primary">Adhesión {recentIndex + 1} de {recent.length}</p>
+                    <p className="text-sm font-semibold text-primary">{countLabel(locale, t("carousel.pledge"), recentIndex + 1, recent.length)}</p>
                     <p className="mt-4 text-xl font-semibold leading-relaxed">{currentRecent?.nombre}</p>
                     {currentRecent?.municipio && <p className="mt-2 text-sm text-muted-foreground">{currentRecent.municipio}</p>}
                   </div>

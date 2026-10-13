@@ -121,7 +121,7 @@ function ConsentGate({
           rel="noreferrer"
           className="rounded-full px-5 py-2.5 text-sm font-semibold text-primary underline underline-offset-4"
         >
-          Abrir en {network}
+          {`Abrir en ${network}`}
         </a>
       </div>
     </div>

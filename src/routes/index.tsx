@@ -258,9 +258,9 @@ function Home() {
               d?.valor != null
                 ? `${formatNumberEs(d.valor)}${
                     d.unidad === "meses"
-                      ? " meses"
+                      ? ` ${t("home.months")}`
                       : d.unidad === "días"
-                        ? " días"
+                        ? ` ${t("home.days")}`
                         : d.unidad === "%"
                           ? " %"
                           : ""

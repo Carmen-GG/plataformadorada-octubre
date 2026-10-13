@@ -634,7 +634,7 @@ mergeTranslationVariants({
 });
 
 // Compleció de la interfície en català: botons, missatges, navegació i eines.
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "El Problema": { ca: "El problema" },
   "Gracias. Hemos recibido tu mensaje.": { ca: "Gràcies. Hem rebut el teu missatge." },
   "Correo electrónico": { ca: "Adreça electrònica" },
@@ -785,7 +785,7 @@ Object.assign(extraTranslations, {
 });
 
 // Traduccions complementàries per a totes les pàgines públiques i els seus controls.
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Únete a Plataforma Dorada": { ca: "Uneix-te a Plataforma Dorada" },
   "Adherirse": { ca: "Adherir-s'hi" },
   "Por qué adherirte": { ca: "Per què adherir-t'hi" },
@@ -907,7 +907,7 @@ Object.assign(extraTranslations, {
 });
 
 // Traduccions catalanes per a mapes, missatges d'estat i contingut editorial fix.
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Estado de la moción": { ca: "Estat de la moció" },
   "Moción registrada en Plataforma Dorada": { ca: "Moció registrada a Plataforma Dorada" },
   "mociones": { ca: "mocions" },
@@ -962,7 +962,7 @@ Object.assign(extraTranslations, {
 });
 
 // --- Euskara, galego e inglés: textos editoriales y de páginas principales ---
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Por un Pacto de Estado por la": { eu: "Estatu Itun baten alde", gl: "Por un Pacto de Estado pola", en: "For a State Pact for" },
   "dependencia": { eu: "mendekotasuna", gl: "dependencia", en: "dependency care" },
   "cuidados": { eu: "eta zaintzak", gl: "e os coidados", en: "and care" },
@@ -1010,7 +1010,7 @@ Object.assign(extraTranslations, {
 
 /* Auditoría de català: textos literals de portada, formularis, adhesió,
    voluntariat, contacte i agenda. El nom de marca es conserva exactament. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Por un Pacto de Estado por la": { ca: "Per un Pacte d'Estat per la" },
   "dependencia": { ca: "dependència" },
   "cuidados": { ca: "les cures" },
@@ -1096,7 +1096,7 @@ Object.assign(extraTranslations, {
 
 
 /* English audit: homepage, contact, events, joining and volunteering pages. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Por un Pacto de Estado por la": { en: "For a State Pact for" },
   "dependencia": { en: "dependency care" },
   "cuidados": { en: "and care" },
@@ -1182,7 +1182,7 @@ Object.assign(extraTranslations, {
 
 
 /* Euskara: homepage, contact and event interface copy. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Queremos un sistema que cuide de verdad.": { eu: "Benetan zainduko duen sistema bat nahi dugu." },
   "Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.": { eu: "Mendekotasuna duten pertsonek, haien familiek eta zaintzaileek jakin behar dute laguntzak ez duela huts egingo eta ez dela egun batetik bestera desagertuko." },
   "Y, sobre todo, que las personas puedan elegir de verdad.": { eu: "Eta, batez ere, pertsonek benetan aukeratu ahal izatea." },
@@ -1358,7 +1358,7 @@ Object.assign(extraTranslations, {
 });
 
 /* Català: revisió lingüística integral de la portada. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Por un Pacto de Estado por la": { ca: "Per un Pacte d’Estat per la" },
   "La situación actual": { ca: "La situació actual" },
   "El sistema necesita más medios, mejor coordinación sociosanitaria y una respuesta que no dependa de dónde vivas.": { ca: "El sistema necessita més recursos, una millor coordinació sociosanitària i una resposta que no depengui d’on visquis." },
@@ -1422,7 +1422,7 @@ Object.assign(extraTranslations, {
   "Plataforma Dorada — Por un Pacto de Estado por la Dependencia y los Cuidados.": { ca: "Plataforma Dorada — Per un Pacte d’Estat per la Dependència i les Cures." }
 });
 /* Euskara: berrikuspen linguistikoa eta homeko testuen zuzenketa. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "home.badge": { eu: "HERRITAR-MUGIMENDUA" },
   "cta.joinNow": { eu: "Atxiki zaitez" },
   "cta.collaborate": { eu: "Egin bat gurekin" },
@@ -1548,7 +1548,7 @@ Object.assign(extraTranslations, {
 
 
 /* Azken berrikuspena: hasierako orriko etiketak eta terminoak. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "home.badge": { eu: "HERRITAR-MUGIMENDUA" },
   "cta.joinNow": { eu: "Atxiki zaitez" },
   "cta.collaborate": { eu: "Egin bat gurekin" },
@@ -1612,7 +1612,7 @@ Object.assign(extraTranslations, {
 
 
 /* Revisión lingüística completa da páxina de inicio en galego. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "nav.home": { gl: "Inicio" },
   "nav.about": { gl: "A Plataforma" },
   "nav.social": { gl: "Redes sociais" },
@@ -1749,7 +1749,7 @@ Object.assign(extraTranslations, {
 
 
 /* Textos completos baixo o título principal da home: versións revisadas en ca, eu, gl e en. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Queremos un sistema que cuide de verdad.": {
     ca: "Volem un sistema que cuidi de veritat.",
     eu: "Benetan zaintzen duen sistema bat nahi dugu.",
@@ -1796,7 +1796,7 @@ Object.assign(extraTranslations, {
 
 
 /* Etiquetas da tarxeta de cifras da portada: textos dispoñibles nos catro idiomas. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "home.countersTitle": {
     ca: "Adhesions en directe",
     eu: "Atxikimenduak zuzenean",
@@ -1831,7 +1831,7 @@ Object.assign(extraTranslations, {
 
 
 /* Traduccions completes de la secció «La situación actual» i de les mètriques de portada. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "La situación actual": {
     ca: "La situació actual",
     eu: "Egungo egoera",
@@ -1914,7 +1914,7 @@ Object.assign(extraTranslations, {
 
 
 /* Traduccions dels blocs de mapa territorial, esdeveniment i entitats adherides. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Mapa de adhesiones": {
     ca: "Mapa d’adhesions",
     eu: "Atxikimenduen mapa",
@@ -1973,7 +1973,7 @@ Object.assign(extraTranslations, {
 
 
 /* Traduccions completes del peu de pàgina. */
-Object.assign(extraTranslations, {
+mergeTranslationVariants({
   "Por un Pacto de Estado por la Dependencia y los Cuidados. Movimiento ciudadano y apartidista.": {
     ca: "Per un Pacte d’Estat per la Dependència i les Cures. Moviment ciutadà i apartidista.",
     eu: "Mendekotasunaren eta Zaintzen aldeko Estatu Itunaren alde. Herritarren mugimendu independentea, alderdirik gabea.",
@@ -2082,4 +2082,64 @@ Object.assign(extraTranslations, {
     gl: "Plataforma Dorada — Por un Pacto de Estado pola Dependencia e os Coidados.",
     en: "Plataforma Dorada — For a State Pact for Dependency Support and Care."
   }
+});
+
+// --- Portada: huecos detectados en la revisión de la home (carruseles, vídeo de Instagram, SEO, regiones) ---
+mergeTranslationVariants({
+  "Inicio": { en: "Home" },
+  "Illes Balears": { en: "Balearic Islands" },
+  "Madrid": { en: "Madrid" },
+  "Murcia": { en: "Murcia" },
+  "Anterior": { eu: "Aurrekoa", gl: "Anterior" },
+  "Siguiente": { eu: "Hurrengoa", gl: "Seguinte" },
+  "Pausar": { eu: "Eten", gl: "Pausar" },
+  "Reanudar": { eu: "Jarraitu", gl: "Continuar" },
+  "Testimonio anterior": {
+    ca: "Testimoni anterior",
+    eu: "Aurreko testigantza",
+    gl: "Testemuño anterior",
+    en: "Previous testimonial",
+  },
+  "Siguiente testimonio": {
+    ca: "Testimoni següent",
+    eu: "Hurrengo testigantza",
+    gl: "Seguinte testemuño",
+    en: "Next testimonial",
+  },
+  "Seleccionar testimonio": {
+    ca: "Selecciona un testimoni",
+    eu: "Hautatu testigantza",
+    gl: "Seleccionar testemuño",
+    en: "Select a testimonial",
+  },
+  "Cargando el último vídeo…": {
+    ca: "S'està carregant l'últim vídeo…",
+    eu: "Azken bideoa kargatzen…",
+    gl: "Cargando o último vídeo…",
+    en: "Loading the latest video…",
+  },
+  "No se ha podido cargar automáticamente el último vídeo en este momento.": {
+    ca: "No s'ha pogut carregar automàticament l'últim vídeo en aquest moment.",
+    eu: "Ezin izan da azken bideoa automatikoki kargatu oraingoan.",
+    gl: "Non se puido cargar automaticamente o último vídeo neste momento.",
+    en: "The latest video could not be loaded automatically right now.",
+  },
+  "Abrir Instagram": {
+    ca: "Obre Instagram",
+    eu: "Ireki Instagram",
+    gl: "Abrir Instagram",
+    en: "Open Instagram",
+  },
+  "Ver último vídeo en Instagram": {
+    ca: "Mira l'últim vídeo a Instagram",
+    eu: "Ikusi azken bideoa Instagramen",
+    gl: "Ver o último vídeo en Instagram",
+    en: "Watch the latest video on Instagram",
+  },
+  "Movimiento ciudadano apartidista para exigir un Pacto de Estado por la Dependencia y los Cuidados. Adhiérete, hazte voluntario y comparte tu testimonio.": {
+    ca: "Moviment ciutadà apartidista per exigir un Pacte d’Estat per la Dependència i les Cures. Adhereix-t’hi, fes-te voluntari i comparteix el teu testimoni.",
+    eu: "Mendekotasunaren eta zaintzen aldeko Estatu-ituna exijitzeko herritarren mugimendu alderdikeriarik gabea. Atxiki zaitez, egin zaitez boluntario eta partekatu zure testigantza.",
+    gl: "Movemento cidadán apartidista para esixir un Pacto de Estado pola Dependencia e os Coidados. Adhírete, faite voluntario e comparte o teu testemuño.",
+    en: "A non-partisan civic movement demanding a State Pact on Dependency and Care. Pledge your support, volunteer and share your testimony.",
+  },
 });

@@ -1828,3 +1828,86 @@ Object.assign(extraTranslations, {
     en: "Aggregated data only. Personal data and individual locations are never published."
   }
 });
+
+
+/* Traduccions completes de la secció «La situación actual» i de les mètriques de portada. */
+Object.assign(extraTranslations, {
+  "La situación actual": {
+    ca: "La situació actual",
+    eu: "Egungo egoera",
+    gl: "A situación actual",
+    en: "The current situation"
+  },
+  "Cuidar no puede seguir recayendo en las familias y dependiendo de la vocación de los cuidadores.": {
+    ca: "La cura no pot continuar recaient en les famílies ni dependre de la vocació de les persones cuidadores.",
+    eu: "Zaintzaren ardura ezin da familien gain geratzen jarraitu, ezta zaintzaileen borondate onaren mende egon ere.",
+    gl: "O coidado non pode seguir recaendo nas familias nin depender unicamente da vocación das persoas coidadoras.",
+    en: "Care cannot continue to fall on families or depend solely on carers' goodwill."
+  },
+  "Miles de personas en situación de dependencia: mayores, personas con discapacidad o con enfermedades crónicas, esperan meses para una valoración y vuelven a esperar para obtener un recurso insuficiente. Mientras tanto, sus familiares y cuidadores sostienen el día a día a costa de su tiempo, su salud y su proyecto vital.": {
+    ca: "Milers de persones en situació de dependència —persones grans, amb discapacitat o amb malalties cròniques— esperen mesos per obtenir una valoració i després han de tornar a esperar per accedir a un recurs insuficient. Mentrestant, els seus familiars i cuidadors sostenen el dia a dia a costa del seu temps, la seva salut i el seu projecte de vida.",
+    eu: "Mendekotasun-egoeran dauden milaka pertsonak —adinekoek, desgaitasuna dutenek edo gaixotasun kronikoak dituztenek— hilabeteak itxaroten dituzte balorazioa jasotzeko, eta, ondoren, berriro itxaron behar dute nahikoa ez den baliabide bat lortzeko. Bien bitartean, senideek eta zaintzaileek eguneroko ardurei eusten diete beren denboraren, osasunaren eta bizi-proiektuaren kontura.",
+    gl: "Miles de persoas en situación de dependencia —maiores, persoas con discapacidade ou con enfermidades crónicas— agardan meses por unha valoración e teñen que volver agardar para conseguir un recurso insuficiente. Mentres tanto, os seus familiares e as persoas coidadoras sosteñen o día a día a costa do seu tempo, da súa saúde e do seu proxecto vital.",
+    en: "Thousands of people who need support—including older people, people with disabilities and those with chronic illnesses—wait months for an assessment, then wait again for an inadequate service. Meanwhile, their families and carers keep daily life going at the expense of their own time, health and life plans."
+  },
+  "Negocio a costa de precariedad laboral de las profesionales, baja calidad asistencial hacia las personas dependientes, servicios diseñados en función del mayor beneficio económico, obviando el hecho de la vulnerabilidad extrema en la que se encuentran sus “clientes”.": {
+    ca: "Un negoci que es basa en la precarietat laboral de les professionals, en una baixa qualitat assistencial per a les persones en situació de dependència i en serveis dissenyats per maximitzar el benefici econòmic, ignorant la vulnerabilitat extrema en què es troben els seus «clients».",
+    eu: "Negozioa, profesionalen lan-prekaritatearen, mendekotasuna duten pertsonei ematen zaien arreta-kalitate eskasaren eta etekin ekonomiko handiena lortzeko diseinatutako zerbitzuen kontura; horrek guztiak «bezeroen» muturreko zaurgarritasuna alde batera uzten du.",
+    gl: "Un negocio baseado na precariedade laboral das profesionais, na baixa calidade asistencial ás persoas en situación de dependencia e en servizos deseñados para maximizar o beneficio económico, ignorando a extrema vulnerabilidade na que se atopan os seus «clientes».",
+    en: "A business built on precarious working conditions for professionals, poor care for people who need support, and services designed to maximise profit while ignoring the extreme vulnerability of their “customers”."
+  },
+  "Profesionales del ámbito sociosanitario trabajando con un alto compromiso y asumiendo una gran responsabilidad, con medios escasos y exigencias altas para cumplir unos objetivos… pero.. los objetivos de quién?": {
+    ca: "Professionals de l’àmbit sociosanitari que treballen amb un gran compromís i assumeixen una enorme responsabilitat, amb pocs recursos i moltes exigències per complir uns objectius… però, els objectius de qui?",
+    eu: "Arlo soziosanitarioko profesionalak konpromiso handiz ari dira lanean eta erantzukizun handia hartzen dute beren gain, baliabide gutxirekin eta helburu batzuk betetzeko eskakizun handiekin… baina, noren helburuak dira?",
+    gl: "Profesionais do ámbito sociosanitario que traballan cun gran compromiso e asumen unha enorme responsabilidade, con poucos recursos e moitas esixencias para cumprir uns obxectivos… pero, os obxectivos de quen?",
+    en: "Health and social care professionals work with great commitment and carry major responsibilities, with limited resources and high demands to meet certain targets… but whose targets are they?"
+  },
+  "El sistema necesita más medios, mejor coordinación sociosanitaria y una respuesta que no dependa de dónde vivas.": {
+    ca: "El sistema necessita més recursos, una millor coordinació sociosanitària i una resposta que no depengui d’on visquis.",
+    eu: "Sistemak baliabide gehiago, koordinazio soziosanitario hobea eta bizi zaren tokiaren araberakoa ez den erantzuna behar ditu.",
+    gl: "O sistema precisa máis recursos, unha mellor coordinación sociosanitaria e unha resposta que non dependa de onde vivas.",
+    en: "The system needs more resources, better health and social care coordination, and support that does not depend on where you live."
+  },
+  "Por eso nace y trabaja Plataforma Dorada, para conseguir un Pacto de Estado por la Dependencia y los Cuidados.": {
+    ca: "Per això neix i treballa Plataforma Dorada, per aconseguir un Pacte d’Estat per la Dependència i les Cures.",
+    eu: "Horregatik sortu da Plataforma Dorada, eta horregatik egiten du lan Mendekotasunaren eta Zaintzen aldeko Estatu Ituna lortzeko.",
+    gl: "Por iso nace e traballa Plataforma Dorada, para conseguir un Pacto de Estado pola Dependencia e os Coidados.",
+    en: "That is why Plataforma Dorada was founded and works to secure a State Pact for Dependency Support and Care."
+  },
+  "Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores principales y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.": {
+    ca: "Plataforma Dorada uneix les veus de les persones en situació de dependència, de les seves famílies, de les persones cuidadores principals i dels professionals, i treballa perquè les persones, les cures i la dependència siguin al centre de les polítiques públiques.",
+    eu: "Plataforma Dorada-k mendekotasuna duten pertsonen, haien familien, zaintzaile nagusien eta profesionalen ahotsak biltzen ditu, eta pertsonak, zaintzak eta mendekotasuna politika publikoen erdigunean egon daitezen lan egiten du.",
+    gl: "Plataforma Dorada reúne as voces das persoas en situación de dependencia, das súas familias, das persoas coidadoras principais e das profesionais, e traballa para que as persoas, os coidados e a dependencia estean no centro das políticas públicas.",
+    en: "Plataforma Dorada brings together the voices of people who need support, their families, primary carers and professionals, working to put people, care and dependency support at the heart of public policy."
+  },
+  "Último vídeo de Instagram": {
+    ca: "Últim vídeo d'Instagram",
+    eu: "Instagrameko azken bideoa",
+    gl: "Último vídeo de Instagram",
+    en: "Latest Instagram video"
+  },
+  "Personas en lista de espera de servicios de dependencia": {
+    ca: "Persones en llista d’espera dels serveis d’atenció a la dependència",
+    eu: "Mendekotasun-zerbitzuen itxaron-zerrendan dauden pertsonak",
+    gl: "Persoas na lista de agarda dos servizos de dependencia",
+    en: "People on waiting lists for dependency support services"
+  },
+  "Tiempo medio desde la solicitud hasta la resolución": {
+    ca: "Temps mitjà entre la sol·licitud i la resolució",
+    eu: "Eskaera egin denetik ebazpena jaso arteko batez besteko denbora",
+    gl: "Tempo medio desde a solicitude ata a resolución",
+    en: "Average time from application to decision"
+  },
+  "Cuidadores no profesionales con convenio especial de Seguridad Social": {
+    ca: "Persones cuidadores no professionals amb conveni especial amb la Seguretat Social",
+    eu: "Gizarte Segurantzarekin hitzarmen berezia duten zaintzaile ez-profesionalak",
+    gl: "Persoas coidadoras non profesionais cun convenio especial coa Seguridade Social",
+    en: "Non-professional carers with a special Social Security agreement"
+  },
+  "Municipios con mociones aprobadas a favor del Pacto": {
+    ca: "Municipis que han aprovat mocions a favor del Pacte",
+    eu: "Itunaren aldeko mozioak onartu dituzten udalerriak",
+    gl: "Concellos que aprobaron mocións a favor do Pacto",
+    en: "Municipalities that have approved motions in support of the Pact"
+  }
+});

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Panel } from "@/components/page-header";
-import { useI18n } from "@/lib/i18n";
+import { INTL_LOCALE, useI18n } from "@/lib/i18n";
 import { AdhesionCount } from "@/lib/adhesions";
 import {
   LiveCount,
@@ -97,7 +97,7 @@ function Home() {
               {t("home.badge")}
             </p>
             <h1 className="mt-6 font-display text-4xl leading-[1.03] tracking-tight md:text-6xl">
-              {locale === "en" ? t("For a State Pact on Dependency and Care") : locale === "ca" ? <>Per un Pacte d’Estat per la{" "}<span className="text-primary italic">dependència</span> i les cures</> : locale === "eu" ? <>Mendekotasunaren eta zaintzen aldeko{" "}<span className="text-primary italic">Estatu-ituna</span></> : locale === "gl" ? <>Por un Pacto de Estado pola{" "}<span className="text-primary italic">dependencia</span> e os coidados</> : <>Por un Pacto de Estado por la{" "}<span className="text-primary italic">dependencia</span> y los cuidados</>}
+              {locale === "en" ? t("For a State Pact on Dependency and Care") : locale === "ca" || locale === "va" ? <>Per un Pacte d’Estat per la{" "}<span className="text-primary italic">dependència</span> i les cures</> : locale === "fr" ? <>Pour un Pacte d’État pour la{" "}<span className="text-primary italic">dépendance</span> et les soins</> : locale === "de" ? <>Für einen Staatspakt für{" "}<span className="text-primary italic">Pflegebedürftigkeit</span> und Pflege</> : locale === "eu" ? <>Mendekotasunaren eta zaintzen aldeko{" "}<span className="text-primary italic">Estatu-ituna</span></> : locale === "gl" ? <>Por un Pacto de Estado pola{" "}<span className="text-primary italic">dependencia</span> e os coidados</> : <>Por un Pacto de Estado por la{" "}<span className="text-primary italic">dependencia</span> y los cuidados</>}
             </h1>
             <div className="mt-6 max-w-xl space-y-3 text-base md:text-[1.05rem] leading-relaxed text-muted-foreground">
               <p>{t("Queremos un sistema que cuide de verdad.")}</p>
@@ -372,7 +372,7 @@ function Home() {
                     <span className="font-display text-xl font-bold leading-none">
                       {new Date(`${nextEvent.date}T12:00:00`).getDate()}
                       <span className="mt-1 block text-[10px] tracking-wide">
-                        {new Date(`${nextEvent.date}T12:00:00`).toLocaleDateString(locale === "en" ? "en-GB" : locale === "ca" ? "ca-ES" : locale === "eu" ? "eu-ES" : locale === "gl" ? "gl-ES" : "es-ES", { month: "short" }).replace(".", "").toUpperCase()}
+                        {new Date(`${nextEvent.date}T12:00:00`).toLocaleDateString(INTL_LOCALE[locale], { month: "short" }).replace(".", "").toUpperCase()}
                       </span>
                     </span>
                   </div>

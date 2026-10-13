@@ -1,4 +1,4 @@
-// Textos legales de Plataforma Dorada en los cuatro idiomas de la web.
+// Textos legales de Plataforma Dorada en todos los idiomas de la web.
 //
 // ESTADO: BORRADOR pendiente de revisión jurídica. Plataforma Dorada es, de momento,
 // un movimiento ciudadano sin personalidad jurídica propia; los textos están escritos
@@ -10,16 +10,18 @@
 // castellano en los cuatro idiomas para poder localizarlos fácilmente (buscar "[").
 // {email} se sustituye automáticamente por el correo de contacto de la web.
 //
-// Las versiones en euskera y gallego deben ser revisadas por hablantes nativos.
+// Las versiones en euskera, gallego, valenciano, francés y alemán deben ser revisadas por hablantes nativos.
 // La versión en inglés es una traducción de trabajo; conviene que la revise también quien haga la revisión jurídica.
 
 import type { Locale } from "./i18n";
+import { LEGAL_DE } from "./legal-de";
+import { LEGAL_FR } from "./legal-fr";
 
 export type LegalSection = { heading: string; paragraphs?: string[]; items?: string[] };
 export type LegalDoc = { title: string; lead: string; sections: LegalSection[] };
 export type LegalKey = "aviso" | "privacidad" | "cookies" | "accesibilidad";
 
-export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
+const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, LegalDoc>> = {
   // ─────────────────────────────────────────────────────────── CASTELLANO
   es: {
     aviso: {
@@ -208,14 +210,14 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Contraste suficiente y textos alternativos en las imágenes.",
             "Diseño adaptable, con zoom hasta el 200 %.",
             "Respeto a la preferencia del sistema de reducir animaciones.",
-            "Web disponible en castellano, catalán, euskera, gallego e inglés.",
+            "Web disponible en castellano, catalán, valenciano, euskera, gallego, inglés, francés y alemán.",
           ],
         },
         {
           heading: "Limitaciones conocidas",
           items: [
             "Los contenidos incrustados de Instagram, TikTok y Spotify y los formularios de Google son de terceros; su accesibilidad no depende de nosotros. Ofrecemos siempre un enlace alternativo.",
-            "Las traducciones al euskera y al gallego están pendientes de revisión por personas hablantes nativas.",
+            "Las traducciones al euskera, gallego, valenciano, francés y alemán están pendientes de revisión por personas hablantes nativas.",
             "Algunas partes, como gráficos, mapas o documentos descargables, pueden no ser todavía plenamente accesibles.",
           ],
         },
@@ -418,14 +420,14 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Contrast suficient i textos alternatius a les imatges.",
             "Disseny adaptable, amb zoom fins al 200 %.",
             "Respecte a la preferència del sistema de reduir animacions.",
-            "Web disponible en castellà, català, èuscar, gallec i anglès.",
+            "Web disponible en castellà, català, valencià, èuscar, gallec, anglès, francès i alemany.",
           ],
         },
         {
           heading: "Limitacions conegudes",
           items: [
             "Els continguts incrustats d'Instagram, TikTok i Spotify i els formularis de Google són de tercers; la seva accessibilitat no depèn de nosaltres. Oferim sempre un enllaç alternatiu.",
-            "Les traduccions a l'èuscar i al gallec estan pendents de revisió per part de persones parlants natives.",
+            "Les traduccions a l'èuscar, gallec, valencià, francès i alemany estan pendents de revisió per part de persones parlants natives.",
             "Algunes parts, com gràfics, mapes o documents descarregables, poden no ser encara plenament accessibles.",
           ],
         },
@@ -628,14 +630,14 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Kontraste nahikoa eta irudietan ordezko testuak.",
             "Diseinu moldagarria, %200 arteko zoomarekin.",
             "Animazioak murrizteko sistemaren lehentasunarekiko errespetua.",
-            "Webgunea gaztelaniaz, katalanez, euskaraz, galegoz eta ingelesez eskuragarri dago.",
+            "Webgunea gaztelaniaz, katalanez, valentzieraz, euskaraz, galegoz, ingelesez, frantsesez eta alemanez eskuragarri dago.",
           ],
         },
         {
           heading: "Ezagutzen ditugun mugak",
           items: [
             "Instagram, TikTok eta Spotifyko edukiak eta Googleren inprimakiak hirugarrenenak dira; haien irisgarritasuna ez dago gure esku. Beti eskaintzen dugu ordezko esteka bat.",
-            "Euskarazko eta galegozko itzulpenak hiztun natiboek berrikusi behar dituzte.",
+            "Euskarazko, galegozko, valentzierazko, frantsesezko eta alemanezko itzulpenak hiztun natiboek berrikusi behar dituzte.",
             "Baliteke zenbait zati (grafikoak, mapak edo deskarga daitezkeen dokumentuak) oraindik guztiz irisgarriak ez izatea.",
           ],
         },
@@ -838,14 +840,14 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Contraste suficiente e textos alternativos nas imaxes.",
             "Deseño adaptable, con zoom ata o 200 %.",
             "Respecto á preferencia do sistema de reducir animacións.",
-            "Web dispoñible en castelán, catalán, éuscaro, galego e inglés.",
+            "Web dispoñible en castelán, catalán, valenciano, éuscaro, galego, inglés, francés e alemán.",
           ],
         },
         {
           heading: "Limitacións coñecidas",
           items: [
             "Os contidos incrustados de Instagram, TikTok e Spotify e os formularios de Google son de terceiros; a súa accesibilidade non depende de nós. Ofrecemos sempre unha ligazón alternativa.",
-            "As traducións ao éuscaro e ao galego están pendentes de revisión por persoas falantes nativas.",
+            "As traducións ao éuscaro, galego, valenciano, francés e alemán están pendentes de revisión por persoas falantes nativas.",
             "Algunhas partes, como gráficos, mapas ou documentos descargables, poden non ser aínda plenamente accesibles.",
           ],
         },
@@ -1047,14 +1049,14 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Sufficient contrast and alternative text for images.",
             "Responsive design, with zoom up to 200%.",
             "Respect for the system preference to reduce motion.",
-            "Website available in Spanish, Catalan, Basque, Galician and English.",
+            "Website available in Spanish, Catalan, Valencian, Basque, Galician, English, French and German.",
           ],
         },
         {
           heading: "Known limitations",
           items: [
             "Embedded content from Instagram, TikTok and Spotify and Google forms are third-party; their accessibility does not depend on us. We always provide an alternative link.",
-            "The Basque and Galician translations are pending review by native speakers.",
+            "The Basque, Galician, Valencian, French and German translations are pending review by native speakers.",
             "Some parts, such as charts, maps or downloadable documents, may not yet be fully accessible.",
           ],
         },
@@ -1068,4 +1070,45 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
       ],
     },
   },
+};
+
+// Valenciano (normativa de la AVL): se parte del texto catalán y se aplican las formas propias
+// (demostrativos, subjuntivos y algunas palabras). Debe revisarlo una persona valencianohablante.
+const VA_WORDS: Record<string, string> = {
+  aquest: "este", aquesta: "esta", aquests: "estos", aquestes: "estes",
+  revisi: "revise", constitueixi: "constituïsca", sigui: "siga", retiris: "retires", pugui: "puga",
+  permetin: "permeten", intentis: "intentes", indiquin: "indiquen", incloguis: "inclogues",
+  hagi: "haja", estigui: "estiga", demanis: "demanes", autoritzi: "autoritze", afecti: "afecte",
+  tingui: "tinga", cuidi: "cuide", disposis: "disposes", garanteixi: "garantisca", garanteixin: "garantisquen", introdueixin: "introduïsquen", necessitin: "necessiten", omplis: "òmpliga", resideixi: "residisca", transcendeixi: "transcendisca", vagi: "vaja", visquis: "visques", vulguis: "vulgues", propers: "pròxims", proper: "pròxim", vés: "ves",
+};
+function toValencian(text: string): string {
+  return text.replace(/[A-Za-zÀ-ÿ]+/g, (word) => {
+    const hit = VA_WORDS[word.toLowerCase()];
+    if (!hit) return word;
+    return word[0] === word[0].toUpperCase() ? hit[0].toUpperCase() + hit.slice(1) : hit;
+  });
+}
+function valencianDocs(source: Record<LegalKey, LegalDoc>): Record<LegalKey, LegalDoc> {
+  const out = {} as Record<LegalKey, LegalDoc>;
+  for (const key of Object.keys(source) as LegalKey[]) {
+    const doc = source[key];
+    out[key] = {
+      title: toValencian(doc.title),
+      lead: toValencian(doc.lead),
+      sections: doc.sections.map((section) => {
+        const next: LegalSection = { heading: toValencian(section.heading) };
+        if (section.paragraphs) next.paragraphs = section.paragraphs.map(toValencian);
+        if (section.items) next.items = section.items.map(toValencian);
+        return next;
+      }),
+    };
+  }
+  return out;
+}
+
+export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
+  ...LEGAL_BASE,
+  va: valencianDocs(LEGAL_BASE.ca),
+  fr: LEGAL_FR,
+  de: LEGAL_DE,
 };

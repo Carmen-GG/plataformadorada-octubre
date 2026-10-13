@@ -1,10 +1,10 @@
 import { Fragment } from "react";
 import { PageHeader, Panel } from "@/components/page-header";
-import { useI18n } from "@/lib/i18n";
+import { HTML_LANG, useI18n } from "@/lib/i18n";
 import { LEGAL, type LegalKey } from "@/lib/legal-content";
 import { SITE } from "@/lib/content";
 
-const EYEBROW = { es: "Legal", ca: "Legal", eu: "Lege-informazioa", gl: "Legal", en: "Legal" } as const;
+const EYEBROW = { es: "Legal", ca: "Legal", eu: "Lege-informazioa", gl: "Legal", en: "Legal", va: "Legal", fr: "Informations légales", de: "Rechtliches" } as const;
 
 /** Sustituye {email} y resalta los marcadores [ENTRE CORCHETES] pendientes de completar. */
 function Rich({ text }: { text: string }) {
@@ -30,7 +30,7 @@ export function LegalPage({ doc }: { doc: LegalKey }) {
   return (
     // data-no-translate: el texto ya está escrito en el idioma elegido; el traductor
     // automático de la interfaz no debe tocarlo.
-    <div data-no-translate lang={locale}>
+    <div data-no-translate lang={HTML_LANG[locale]}>
       <PageHeader eyebrow={EYEBROW[locale]} title={content.title} lead={content.lead} />
       <section className="mx-auto w-full max-w-3xl px-4 pb-14 sm:px-6">
         <Panel className="space-y-8">

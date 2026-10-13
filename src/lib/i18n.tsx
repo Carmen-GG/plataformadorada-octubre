@@ -1133,7 +1133,23 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     if (typeof window !== "undefined") window.location.reload();
   }, []);
   const t = useCallback(
-    (key: string) => dictionaries[locale][key] ?? dictionaries[DEFAULT_LOCALE][key] ?? key,
+    (key: string) => {
+      const current = dictionaries[locale];
+      const fallback = dictionaries[DEFAULT_LOCALE];
+      const exact = current[key] ?? fallback[key];
+      if (exact !== undefined) return exact;
+
+      // Tolerar claves con mayúsculas/minúsculas distintas en componentes antiguos.
+      // Por ejemplo, HOME.BADGE y home.badge deben resolver la misma traducción.
+      const normalizedKey = key.replace(/[^a-z0-9]/gi, "").toLowerCase();
+      const findKey = (dictionary: Dictionary) => {
+        const match = Object.keys(dictionary).find(
+          (candidate) => candidate.replace(/[^a-z0-9]/gi, "").toLowerCase() === normalizedKey,
+        );
+        return match === undefined ? undefined : dictionary[match];
+      };
+      return findKey(current) ?? findKey(fallback) ?? key;
+    },
     [locale],
   );
   const value = useMemo(() => ({ locale, setLocale, t }), [locale, setLocale, t]);

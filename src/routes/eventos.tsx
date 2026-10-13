@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { useCmsContent } from "@/lib/cms";
-import { useI18n } from "@/lib/i18n";
+import { INTL_LOCALE, useI18n, type Locale } from "@/lib/i18n";
 import { events as fallbackEvents } from "@/lib/content";
 
 export const Route = createFileRoute("/eventos")({
@@ -15,15 +15,11 @@ export const Route = createFileRoute("/eventos")({
   component: Page,
 });
 
-type EventLocale = "es" | "ca" | "eu" | "gl" | "en";
+type EventLocale = Locale;
 
 function dateParts(date: string, locale: EventLocale = "es") {
   const d = new Date(`${date}T12:00:00`);
-  const localeTag =
-    locale === "ca" ? "ca-ES" :
-    locale === "eu" ? "eu-ES" :
-    locale === "gl" ? "gl-ES" :
-    locale === "en" ? "en-GB" : "es-ES";
+  const localeTag = INTL_LOCALE[locale];
   return {
     day: Number.isNaN(d.getTime()) ? date.slice(-2) : String(d.getDate()).padStart(2, "0"),
     month: Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString(localeTag, { month: "short" }).replace(".", "").toUpperCase(),

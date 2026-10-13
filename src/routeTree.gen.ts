@@ -21,6 +21,8 @@ import { Route as EventosRouteImport } from './routes/eventos'
 import { Route as ImagenPerfilRouteImport } from './routes/imagen-perfil'
 import { Route as LaDependenciaRouteImport } from './routes/la-dependencia'
 import { Route as LaPlataformaRouteImport } from './routes/la-plataforma'
+import { Route as MapaWebRouteImport } from './routes/mapa-web'
+import { Route as MocionesAyuntamientosRouteImport } from './routes/mociones-ayuntamientos'
 import { Route as NovedadesRouteImport } from './routes/novedades'
 import { Route as PrensaRouteImport } from './routes/prensa'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
@@ -31,8 +33,9 @@ import { Route as TestimoniosRouteImport } from './routes/testimonios'
 import { Route as UneteRouteImport } from './routes/unete'
 import { Route as VoluntariadoRouteImport } from './routes/voluntariado'
 import { Route as ApiCmsRouteImport } from './routes/api/cms'
-import { Route as MocionesAyuntamientosRouteImport } from './routes/mociones-ayuntamientos'
 import { Route as ApiMocionesMunicipiosRouteImport } from './routes/api/mociones-municipios'
+import { Route as ApiPublicStatsRouteImport } from './routes/api/public-stats'
+import { Route as ApiInstagramLatestRouteImport } from './routes/api/instagram/latest'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -94,6 +97,16 @@ const LaPlataformaRoute = LaPlataformaRouteImport.update({
   path: '/la-plataforma',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MapaWebRoute = MapaWebRouteImport.update({
+  id: '/mapa-web',
+  path: '/mapa-web',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MocionesAyuntamientosRoute = MocionesAyuntamientosRouteImport.update({
+  id: '/mociones-ayuntamientos',
+  path: '/mociones-ayuntamientos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NovedadesRoute = NovedadesRouteImport.update({
   id: '/novedades',
   path: '/novedades',
@@ -144,20 +157,23 @@ const ApiCmsRoute = ApiCmsRouteImport.update({
   path: '/api/cms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MocionesAyuntamientosRoute = MocionesAyuntamientosRouteImport.update({
-  id: '/mociones-ayuntamientos',
-  path: '/mociones-ayuntamientos',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiMocionesMunicipiosRoute = ApiMocionesMunicipiosRouteImport.update({
   id: '/api/mociones-municipios',
   path: '/api/mociones-municipios',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicStatsRoute = ApiPublicStatsRouteImport.update({
+  id: '/api/public-stats',
+  path: '/api/public-stats',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiInstagramLatestRoute = ApiInstagramLatestRouteImport.update({
+  id: '/api/instagram/latest',
+  path: '/api/instagram/latest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/mociones-ayuntamientos': typeof MocionesAyuntamientosRoute
-  '/api/mociones-municipios': typeof ApiMocionesMunicipiosRoute
   '/': typeof IndexRoute
   '/accesibilidad': typeof AccesibilidadRoute
   '/admin': typeof AdminRoute
@@ -170,6 +186,8 @@ export interface FileRoutesByFullPath {
   '/imagen-perfil': typeof ImagenPerfilRoute
   '/la-dependencia': typeof LaDependenciaRoute
   '/la-plataforma': typeof LaPlataformaRoute
+  '/mapa-web': typeof MapaWebRoute
+  '/mociones-ayuntamientos': typeof MocionesAyuntamientosRoute
   '/novedades': typeof NovedadesRoute
   '/prensa': typeof PrensaRoute
   '/privacidad': typeof PrivacidadRoute
@@ -180,10 +198,11 @@ export interface FileRoutesByFullPath {
   '/unete': typeof UneteRoute
   '/voluntariado': typeof VoluntariadoRoute
   '/api/cms': typeof ApiCmsRoute
+  '/api/mociones-municipios': typeof ApiMocionesMunicipiosRoute
+  '/api/public-stats': typeof ApiPublicStatsRoute
+  '/api/instagram/latest': typeof ApiInstagramLatestRoute
 }
 export interface FileRoutesByTo {
-  '/mociones-ayuntamientos': typeof MocionesAyuntamientosRoute
-  '/api/mociones-municipios': typeof ApiMocionesMunicipiosRoute
   '/': typeof IndexRoute
   '/accesibilidad': typeof AccesibilidadRoute
   '/admin': typeof AdminRoute
@@ -196,6 +215,8 @@ export interface FileRoutesByTo {
   '/imagen-perfil': typeof ImagenPerfilRoute
   '/la-dependencia': typeof LaDependenciaRoute
   '/la-plataforma': typeof LaPlataformaRoute
+  '/mapa-web': typeof MapaWebRoute
+  '/mociones-ayuntamientos': typeof MocionesAyuntamientosRoute
   '/novedades': typeof NovedadesRoute
   '/prensa': typeof PrensaRoute
   '/privacidad': typeof PrivacidadRoute
@@ -206,10 +227,11 @@ export interface FileRoutesByTo {
   '/unete': typeof UneteRoute
   '/voluntariado': typeof VoluntariadoRoute
   '/api/cms': typeof ApiCmsRoute
+  '/api/mociones-municipios': typeof ApiMocionesMunicipiosRoute
+  '/api/public-stats': typeof ApiPublicStatsRoute
+  '/api/instagram/latest': typeof ApiInstagramLatestRoute
 }
 export interface FileRoutesById {
-  '/mociones-ayuntamientos': typeof MocionesAyuntamientosRoute
-  '/api/mociones-municipios': typeof ApiMocionesMunicipiosRoute
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/accesibilidad': typeof AccesibilidadRoute
@@ -223,6 +245,8 @@ export interface FileRoutesById {
   '/imagen-perfil': typeof ImagenPerfilRoute
   '/la-dependencia': typeof LaDependenciaRoute
   '/la-plataforma': typeof LaPlataformaRoute
+  '/mapa-web': typeof MapaWebRoute
+  '/mociones-ayuntamientos': typeof MocionesAyuntamientosRoute
   '/novedades': typeof NovedadesRoute
   '/prensa': typeof PrensaRoute
   '/privacidad': typeof PrivacidadRoute
@@ -233,12 +257,13 @@ export interface FileRoutesById {
   '/unete': typeof UneteRoute
   '/voluntariado': typeof VoluntariadoRoute
   '/api/cms': typeof ApiCmsRoute
+  '/api/mociones-municipios': typeof ApiMocionesMunicipiosRoute
+  '/api/public-stats': typeof ApiPublicStatsRoute
+  '/api/instagram/latest': typeof ApiInstagramLatestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/mociones-ayuntamientos'
-    | '/api/mociones-municipios'
     | '/'
     | '/accesibilidad'
     | '/admin'
@@ -251,6 +276,8 @@ export interface FileRouteTypes {
     | '/imagen-perfil'
     | '/la-dependencia'
     | '/la-plataforma'
+    | '/mapa-web'
+    | '/mociones-ayuntamientos'
     | '/novedades'
     | '/prensa'
     | '/privacidad'
@@ -261,10 +288,11 @@ export interface FileRouteTypes {
     | '/unete'
     | '/voluntariado'
     | '/api/cms'
+    | '/api/mociones-municipios'
+    | '/api/public-stats'
+    | '/api/instagram/latest'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/mociones-ayuntamientos'
-    | '/api/mociones-municipios'
     | '/'
     | '/accesibilidad'
     | '/admin'
@@ -277,6 +305,8 @@ export interface FileRouteTypes {
     | '/imagen-perfil'
     | '/la-dependencia'
     | '/la-plataforma'
+    | '/mapa-web'
+    | '/mociones-ayuntamientos'
     | '/novedades'
     | '/prensa'
     | '/privacidad'
@@ -287,9 +317,10 @@ export interface FileRouteTypes {
     | '/unete'
     | '/voluntariado'
     | '/api/cms'
-  id:
-    | '/mociones-ayuntamientos'
     | '/api/mociones-municipios'
+    | '/api/public-stats'
+    | '/api/instagram/latest'
+  id:
     | '__root__'
     | '/'
     | '/accesibilidad'
@@ -303,6 +334,8 @@ export interface FileRouteTypes {
     | '/imagen-perfil'
     | '/la-dependencia'
     | '/la-plataforma'
+    | '/mapa-web'
+    | '/mociones-ayuntamientos'
     | '/novedades'
     | '/prensa'
     | '/privacidad'
@@ -313,6 +346,9 @@ export interface FileRouteTypes {
     | '/unete'
     | '/voluntariado'
     | '/api/cms'
+    | '/api/mociones-municipios'
+    | '/api/public-stats'
+    | '/api/instagram/latest'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -328,6 +364,8 @@ export interface RootRouteChildren {
   ImagenPerfilRoute: typeof ImagenPerfilRoute
   LaDependenciaRoute: typeof LaDependenciaRoute
   LaPlataformaRoute: typeof LaPlataformaRoute
+  MapaWebRoute: typeof MapaWebRoute
+  MocionesAyuntamientosRoute: typeof MocionesAyuntamientosRoute
   NovedadesRoute: typeof NovedadesRoute
   PrensaRoute: typeof PrensaRoute
   PrivacidadRoute: typeof PrivacidadRoute
@@ -338,9 +376,10 @@ export interface RootRouteChildren {
   UneteRoute: typeof UneteRoute
   VoluntariadoRoute: typeof VoluntariadoRoute
   ApiCmsRoute: typeof ApiCmsRoute
-}  MocionesAyuntamientosRoute: typeof MocionesAyuntamientosRoute
   ApiMocionesMunicipiosRoute: typeof ApiMocionesMunicipiosRoute
-
+  ApiPublicStatsRoute: typeof ApiPublicStatsRoute
+  ApiInstagramLatestRoute: typeof ApiInstagramLatestRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -428,6 +467,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LaPlataformaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mapa-web': {
+      id: '/mapa-web'
+      path: '/mapa-web'
+      fullPath: '/mapa-web'
+      preLoaderRoute: typeof MapaWebRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mociones-ayuntamientos': {
+      id: '/mociones-ayuntamientos'
+      path: '/mociones-ayuntamientos'
+      fullPath: '/mociones-ayuntamientos'
+      preLoaderRoute: typeof MocionesAyuntamientosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/novedades': {
       id: '/novedades'
       path: '/novedades'
@@ -498,18 +551,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCmsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mociones-ayuntamientos': {
-      id: '/mociones-ayuntamientos'
-      path: '/mociones-ayuntamientos'
-      fullPath: '/mociones-ayuntamientos'
-      preLoaderRoute: typeof MocionesAyuntamientosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/mociones-municipios': {
       id: '/api/mociones-municipios'
       path: '/api/mociones-municipios'
       fullPath: '/api/mociones-municipios'
       preLoaderRoute: typeof ApiMocionesMunicipiosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public-stats': {
+      id: '/api/public-stats'
+      path: '/api/public-stats'
+      fullPath: '/api/public-stats'
+      preLoaderRoute: typeof ApiPublicStatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/instagram/latest': {
+      id: '/api/instagram/latest'
+      path: '/api/instagram/latest'
+      fullPath: '/api/instagram/latest'
+      preLoaderRoute: typeof ApiInstagramLatestRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -528,6 +588,8 @@ const rootRouteChildren: RootRouteChildren = {
   ImagenPerfilRoute: ImagenPerfilRoute,
   LaDependenciaRoute: LaDependenciaRoute,
   LaPlataformaRoute: LaPlataformaRoute,
+  MapaWebRoute: MapaWebRoute,
+  MocionesAyuntamientosRoute: MocionesAyuntamientosRoute,
   NovedadesRoute: NovedadesRoute,
   PrensaRoute: PrensaRoute,
   PrivacidadRoute: PrivacidadRoute,
@@ -538,9 +600,10 @@ const rootRouteChildren: RootRouteChildren = {
   UneteRoute: UneteRoute,
   VoluntariadoRoute: VoluntariadoRoute,
   ApiCmsRoute: ApiCmsRoute,
-}  MocionesAyuntamientosRoute: MocionesAyuntamientosRoute,
   ApiMocionesMunicipiosRoute: ApiMocionesMunicipiosRoute,
-
+  ApiPublicStatsRoute: ApiPublicStatsRoute,
+  ApiInstagramLatestRoute: ApiInstagramLatestRoute,
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

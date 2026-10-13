@@ -1,4 +1,7 @@
 import { extraTranslations } from "./i18n-extra";
+import { deTexts } from "./i18n-de";
+import { frTexts } from "./i18n-fr";
+import { vaTexts } from "./i18n-va";
 import {
   createContext,
   useCallback,
@@ -9,16 +12,50 @@ import {
   type ReactNode,
 } from "react";
 
-export const LOCALES = ["es", "ca", "eu", "gl", "en"] as const;
+export const LOCALES = ["es", "ca", "va", "eu", "gl", "en", "fr", "de"] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "es";
-export const LOCALE_LABELS: Record<Locale, string> = { es: "ES", ca: "CA", eu: "EU", gl: "GL", en: "EN" };
+export const LOCALE_LABELS: Record<Locale, string> = {
+  es: "ES",
+  ca: "CA",
+  va: "VA",
+  eu: "EU",
+  gl: "GL",
+  en: "EN",
+  fr: "FR",
+  de: "DE",
+};
 export const LOCALE_NAMES: Record<Locale, string> = {
   es: "Castellano",
   ca: "Català",
+  va: "Valencià",
   eu: "Euskara",
   gl: "Galego",
   en: "English",
+  fr: "Français",
+  de: "Deutsch",
+};
+// Código BCP 47 que se escribe en <html lang>.
+export const HTML_LANG: Record<Locale, string> = {
+  es: "es",
+  ca: "ca",
+  va: "ca-valencia",
+  eu: "eu",
+  gl: "gl",
+  en: "en",
+  fr: "fr",
+  de: "de",
+};
+// Código para Intl (fechas y números).
+export const INTL_LOCALE: Record<Locale, string> = {
+  es: "es-ES",
+  ca: "ca-ES",
+  va: "ca-ES-valencia",
+  eu: "eu-ES",
+  gl: "gl-ES",
+  en: "en-GB",
+  fr: "fr-FR",
+  de: "de-DE",
 };
 type Dictionary = Record<string, string>;
 
@@ -262,11 +299,21 @@ const en: Dictionary = {
   "Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.": "Aggregated data. Personal data and individual locations are never published.",
   "Cifras del movimiento": "Movement figures",
 };
-const dictionaries: Record<Locale, Dictionary> = { es, ca, eu, gl, en };
+const dictionaries: Record<Locale, Dictionary> = {
+  es,
+  ca,
+  va: { ...vaTexts },
+  eu,
+  gl,
+  en,
+  fr: { ...frTexts },
+  de: { ...deTexts },
+};
 
 // "Etiqueta 1 de 3" con el conector propio de cada idioma, en un único texto.
 export function countLabel(locale: Locale, label: string, index: number, total: number) {
-  const connector = locale === "en" ? "of" : locale === "eu" ? "/" : "de";
+  const connector =
+    locale === "en" ? "of" : locale === "eu" ? "/" : locale === "fr" ? "sur" : locale === "de" ? "von" : "de";
   return `${label} ${index} ${connector} ${total}`;
 }
 
@@ -667,7 +714,6 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     en: "Cookie policy",
   },
   "Aviso legal": { ca: "Avís legal", eu: "Lege-oharra", gl: "Aviso legal" },
-    en: "Legal notice",
 };
 
 mergePageTranslations({
@@ -917,7 +963,7 @@ mergePageTranslations({
   },
   "Próximos encuentros, concentraciones y actos de la Plataforma Dorada, y eventos ya realizados.":
     {
-      ca: "Propers trobades, concentracions i actes de Plataforma Dorada, i esdeveniments ja realitzats.",
+      ca: "Properes trobades, concentracions i actes de Plataforma Dorada, i esdeveniments ja realitzats.",
       eu: "Plataforma Dorada mugimenduaren datozen topaketak, elkarretaratzeak eta ekitaldiak, eta dagoeneko egindako ekitaldiak.",
       gl: "Próximos encontros, concentracións e actos de Plataforma Dorada, e eventos xa realizados.",
     en: "Upcoming meetings, gatherings and Plataforma Dorada events, as well as past events.",
@@ -1073,13 +1119,25 @@ mergePageTranslations({
 });
 
 mergePageTranslations(extraTranslations);
+// Valenciano, francés y alemán traen todas sus claves en ficheros propios; se incorporan a la misma
+// tabla que usa la traducción del DOM.
+for (const [locale, texts] of [
+  ["va", vaTexts],
+  ["fr", frTexts],
+  ["de", deTexts],
+] as const) {
+  mergePageTranslations(Object.fromEntries(Object.entries(texts).map(([k, v]) => [k, { [locale]: v }])));
+}
 
-const dictionariesWithPageText: Record<Locale, Dictionary> = { es, ca, eu, gl, en };
+const dictionariesWithPageText = dictionaries;
 for (const [source, variants] of Object.entries(pageTranslations)) {
   if (!(source in dictionariesWithPageText.es)) dictionariesWithPageText.es[source] = source;
   for (const locale of ["ca", "eu", "gl", "en"] as Locale[])
     if (variants[locale]) dictionariesWithPageText[locale][source] = variants[locale]!;
 }
+// fr, de y va ya traen todas sus claves (textos de página y claves con punto).
+for (const source of [...Object.keys(frTexts), ...Object.keys(deTexts), ...Object.keys(vaTexts)])
+  if (!(source in dictionariesWithPageText.es)) dictionariesWithPageText.es[source] = source;
 
 const textOriginals = new WeakMap<Text, string>();
 const STORAGE_KEY = "pd-locale";
@@ -1110,7 +1168,7 @@ function translateText(text: string, locale: Locale) {
   // al ordenar por longitud, quede protegida antes de aplicar entradas genéricas como "Plataforma".
   const entries = Object.entries(pageTranslations);
   if (!pageTranslations[BRAND_NAME]) {
-    entries.push([BRAND_NAME, { ca: BRAND_NAME, eu: BRAND_NAME, gl: BRAND_NAME, en: BRAND_NAME }]);
+    entries.push([BRAND_NAME, Object.fromEntries(LOCALES.map((l) => [l, BRAND_NAME]))]);
   }
   for (const [source, variants] of entries.sort((a, b) => b[0].length - a[0].length)) {
     const target = variants[locale];
@@ -1210,7 +1268,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   // translating React-owned text nodes, and then forcing React to reconcile them in English.
   const [locale, setLocaleState] = useState<Locale>(readInitialLocale);
   useEffect(() => {
-    document.documentElement.lang = locale;
+    document.documentElement.lang = HTML_LANG[locale];
     translateDom(locale);
     const observer = new MutationObserver(() => translateDom(locale));
     observer.observe(document.body, { childList: true, subtree: true, characterData: true });

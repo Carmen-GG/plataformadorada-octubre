@@ -104,6 +104,56 @@ const TEXTS: Record<
       "We have downloaded the image and copied the link. Upload it to Instagram from your phone and paste the link into your story or your bio.",
     help: "Instagram does not let websites send links: we share an image and copy the link for you to paste.",
   },
+  va: {
+    group: "Opcions per a compartir",
+    message: "Suma't a Plataforma Dorada: per un Pacte d'Estat per la Dependència i les Cures.",
+    whatsapp: "WhatsApp",
+    instagram: "Instagram",
+    copy: "Copiar enllaç",
+    more: "Més opcions",
+    newTab: "(s'obri en una altra pestanya)",
+    copied: "Enllaç copiat.",
+    copyFailed: "No s'ha pogut copiar. Copia l'adreça des de la barra del navegador.",
+    igMobile:
+      "Hem copiat l'enllaç. En publicar a Instagram, apega'l a la teua història (adhesiu «Enllaç») o a la biografia.",
+    igDesktop:
+      "Hem descarregat la imatge i copiat l'enllaç. Puja-la a Instagram des del mòbil i apega l'enllaç a la història o a la biografia.",
+    help: "Instagram no permet enviar enllaços des d'un web: compartim una imatge i copiem l'enllaç perquè l'apegues.",
+  },
+  fr: {
+    group: "Options de partage",
+    message:
+      "Rejoignez Plataforma Dorada : pour un Pacte d'État pour la dépendance et les soins.",
+    whatsapp: "WhatsApp",
+    instagram: "Instagram",
+    copy: "Copier le lien",
+    more: "Plus d'options",
+    newTab: "(s'ouvre dans un nouvel onglet)",
+    copied: "Lien copié.",
+    copyFailed: "La copie a échoué. Copiez l'adresse depuis la barre du navigateur.",
+    igMobile:
+      "Nous avons copié le lien. En publiant sur Instagram, collez-le dans votre story (sticker « Lien ») ou dans votre biographie.",
+    igDesktop:
+      "Nous avons téléchargé l'image et copié le lien. Importez-la sur Instagram depuis votre mobile et collez le lien dans votre story ou votre biographie.",
+    help: "Instagram n'accepte pas l'envoi de liens depuis un site web : nous partageons une image et copions le lien pour que vous le colliez.",
+  },
+  de: {
+    group: "Optionen zum Teilen",
+    message:
+      "Machen Sie mit bei Plataforma Dorada: für einen Staatspakt für Pflegebedürftigkeit und Pflege.",
+    whatsapp: "WhatsApp",
+    instagram: "Instagram",
+    copy: "Link kopieren",
+    more: "Weitere Optionen",
+    newTab: "(öffnet in einem neuen Tab)",
+    copied: "Link kopiert.",
+    copyFailed: "Das Kopieren ist fehlgeschlagen. Kopieren Sie die Adresse aus der Adressleiste des Browsers.",
+    igMobile:
+      "Wir haben den Link kopiert. Fügen Sie ihn beim Veröffentlichen auf Instagram in Ihre Story (Sticker „Link“) oder in Ihre Biografie ein.",
+    igDesktop:
+      "Wir haben das Bild heruntergeladen und den Link kopiert. Laden Sie es mit Ihrem Handy auf Instagram hoch und fügen Sie den Link in Ihre Story oder Biografie ein.",
+    help: "Instagram erlaubt es nicht, Links von einer Website zu senden: Wir teilen ein Bild und kopieren den Link, damit Sie ihn einfügen können.",
+  },
 };
 
 const buttonClass =

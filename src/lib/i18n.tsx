@@ -1061,7 +1061,7 @@ mergePageTranslations(extraTranslations);
 
 const dictionariesWithPageText: Record<Locale, Dictionary> = { es, ca, eu, gl, en };
 for (const [source, variants] of Object.entries(pageTranslations)) {
-  dictionariesWithPageText.es[source] = source;
+  if (!(source in dictionariesWithPageText.es)) dictionariesWithPageText.es[source] = source;
   for (const locale of ["ca", "eu", "gl", "en"] as Locale[])
     if (variants[locale]) dictionariesWithPageText[locale][source] = variants[locale]!;
 }

@@ -319,7 +319,7 @@ function deleteLema(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreate
 
 function getPublicContent_(){
   var p=readProposals_();
-  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),videos:readVideos_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,lemas:readLemas_(),actualizado:new Date().toISOString()};
+  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),videos:readVideos_(),videoCategories:readVideoCategories_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,lemas:readLemas_(),actualizado:new Date().toISOString()};
 }
 function getPublicContent(){return getPublicContent_();}
 function obtenerContenidoPublico(){return getPublicContent_();}

@@ -145,8 +145,8 @@ const gl: Dictionary = {
   "cta.joinNow": "Adhírete agora",
   "cta.collaborate": "Quero colaborar",
   "cta.share": "Comparte esta páxina",
-  "home.badge": "Movemento cidadán · non partidista",
-  "home.title": "Plataforma Dorada: Por un Pacto de Estado pola Dependencia e os Coidados",
+  "home.badge": "Movemento cidadán · apartidista",
+  "home.title": "Plataforma Dorada: Por un Pacto de Estado pola dependencia e os coidados",
   "home.lead":
     "A dependencia non pode esperar. Miles de familias agardan meses ou anos por unha valoración, unha axuda ou unha praza. Pedimos un compromiso estable, apartidista e financiado con quen coida e con quen é coidado.",
   "home.countersTitle": "Adhesións en directo",

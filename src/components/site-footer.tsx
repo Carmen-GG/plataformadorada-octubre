@@ -15,14 +15,13 @@ export function SiteFooter() {
             <div className="flex items-center gap-3">
               <img
                 src={logo}
-                alt="Logo de Plataforma Dorada"
+                alt={t("Logo de Plataforma Dorada")}
                 className="size-12 rounded-full object-cover"
               />
               <p className="font-display text-xl font-semibold">Plataforma Dorada</p>
             </div>
             <p className="mt-3 max-w-[32ch] text-sm text-primary-foreground/75">
-              Por un Pacto de Estado por la Dependencia y los Cuidados. Movimiento ciudadano y
-              apartidista.
+              {t("Por un Pacto de Estado por la Dependencia y los Cuidados. Movimiento ciudadano y apartidista.")}
             </p>
             <Link
               to="/unete"
@@ -34,22 +33,22 @@ export function SiteFooter() {
 
           <nav aria-label="Navegación del pie">
             <h2 className="font-display text-sm font-semibold tracking-[0.15em] text-accent uppercase">
-              Navegación
+              {t("Navegación")}
             </h2>
             <ul className="mt-4 space-y-2 text-sm text-primary-foreground/85">
-              <li><Link to="/la-plataforma" className="hover:text-accent">Plataforma</Link></li>
-              <li><Link to="/la-dependencia" className="hover:text-accent">Dependencia</Link></li>
-              <li><Link to="/unete" className="hover:text-accent">Participa</Link></li>
-              <li><Link to="/datos" className="hover:text-accent">Datos</Link></li>
-              <li><Link to="/prensa" className="hover:text-accent">Prensa</Link></li>
-              <li><Link to="/redes-sociales" className="hover:text-accent">Conecta</Link></li>
-              <li><Link to="/mapa-web" className="hover:text-accent">Mapa web</Link></li>
+              <li><Link to="/la-plataforma" className="hover:text-accent">{t("Plataforma")}</Link></li>
+              <li><Link to="/la-dependencia" className="hover:text-accent">{t("Dependencia")}</Link></li>
+              <li><Link to="/unete" className="hover:text-accent">{t("Participa")}</Link></li>
+              <li><Link to="/datos" className="hover:text-accent">{t("Datos")}</Link></li>
+              <li><Link to="/prensa" className="hover:text-accent">{t("Prensa")}</Link></li>
+              <li><Link to="/redes-sociales" className="hover:text-accent">{t("Conecta")}</Link></li>
+              <li><Link to="/mapa-web" className="hover:text-accent">{t("Mapa web")}</Link></li>
             </ul>
           </nav>
 
           <div>
             <h2 className="font-display text-sm font-semibold tracking-[0.15em] text-accent uppercase">
-              Contacto
+              {t("Contacto")}
             </h2>
             <ul className="mt-4 space-y-2 text-sm text-primary-foreground/85">
               <li><a href={"mailto:" + SITE.email} className="break-words hover:text-accent" aria-label={"Enviar correo a " + SITE.email}>{SITE.email}</a></li>
@@ -70,7 +69,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link to="/contacto" className="hover:text-accent">
-                  Formulario de contacto
+                  {t("Formulario de contacto")}
                 </Link>
               </li>
             </ul>
@@ -78,27 +77,27 @@ export function SiteFooter() {
 
           <div>
             <h2 className="font-display text-sm font-semibold tracking-[0.15em] text-accent uppercase">
-              Legal
+              {t("Legal")}
             </h2>
             <ul className="mt-4 space-y-2 text-sm text-primary-foreground/85">
               <li>
                 <Link to="/aviso-legal" className="hover:text-accent">
-                  Aviso legal
+                  {t("Aviso legal")}
                 </Link>
               </li>
               <li>
                 <Link to="/privacidad" className="hover:text-accent">
-                  Política de privacidad
+                  {t("Política de privacidad")}
                 </Link>
               </li>
               <li>
                 <Link to="/cookies" className="hover:text-accent">
-                  Política de cookies
+                  {t("Política de cookies")}
                 </Link>
               </li>
               <li>
                 <Link to="/accesibilidad" className="hover:text-accent">
-                  Accesibilidad
+                  {t("Accesibilidad")}
                 </Link>
               </li>
               <li>
@@ -107,7 +106,7 @@ export function SiteFooter() {
                   onClick={openCookieSettings}
                   className="text-left hover:text-accent"
                 >
-                  Cambiar preferencias de cookies
+                  {t("Cambiar preferencias de cookies")}
                 </button>
               </li>
             </ul>
@@ -115,7 +114,7 @@ export function SiteFooter() {
         </div>
 
         <p className="mt-9 border-t border-primary-foreground/20 pt-5 text-sm text-primary-foreground/70">
-          Plataforma Dorada — Por un Pacto de Estado por la Dependencia y los Cuidados.
+          {t("Plataforma Dorada — Por un Pacto de Estado por la Dependencia y los Cuidados.")}
         </p>
       </div>
     </footer>

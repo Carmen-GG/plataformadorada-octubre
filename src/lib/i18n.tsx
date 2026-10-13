@@ -1009,7 +1009,10 @@ function translateText(text: string, locale: Locale) {
   const clean = text.replace(/\s+/g, " ").trim();
   if (!clean) return text;
   const direct = pageTranslations[clean]?.[locale];
-  if (direct) return text.replace(clean, direct);
+  // El texto original puede contener saltos de línea o espacios múltiples: `clean` ya los normalizó.
+  // Devolver la traducción directamente evita que falle el replace cuando el texto normalizado
+  // no aparece literalmente dentro del nodo DOM.
+  if (direct) return direct;
   let out = text;
   const replacements: Array<[string, string, string]> = [];
   for (const [source, variants] of Object.entries(pageTranslations).sort(

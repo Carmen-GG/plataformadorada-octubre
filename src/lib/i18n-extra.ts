@@ -1211,4 +1211,16 @@ Object.assign(extraTranslations, {
   "Eventos realizados": { eu: "Egindako ekitaldiak" },
   "Más información": { eu: "Informazio gehiago" },
   "Abrir / descargar cartel": { eu: "Kartela ireki / deskargatu" },
+
+  // Footer navigation: ensure every item is translated in English.
+  "Plataforma": { en: "The Platform" },
+  "Dependencia": { en: "Dependency support" },
+  "Participa": { en: "Get involved" },
+  "Datos": { en: "Data" },
+  "Prensa": { en: "Press" },
+  "Conecta": { en: "Connect" },
+  "Mapa web": { en: "Sitemap" },
+  "Legal": { en: "Legal" },
+  "Formulario de contacto": { en: "Contact form" },
+  "Cambiar preferencias de cookies": { en: "Change cookie preferences" },
 });

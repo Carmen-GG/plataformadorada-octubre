@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { PageHeader, Panel } from "@/components/page-header";
 import { TerritoryMap } from "@/components/territory-map";
 import { pageHead } from "@/lib/seo";
+import { useI18n } from "@/lib/i18n";
 import { counters, indicators } from "@/lib/content";
 import { formatCount, formatNumberEs, type CounterKey, type PublicStats } from "@/lib/public-stats";
 
@@ -45,6 +46,7 @@ export const Route = createFileRoute("/datos")({
 });
 
 function Page() {
+  const { t } = useI18n();
   const [stats, setStats] = useState<PublicStats | null>(null);
 
   // Load directly on this page, bypassing the shared store that has remained stuck in loading.
@@ -88,7 +90,7 @@ function Page() {
             const data = stats?.indicadores?.[i.key];
             const loading = !stats;
             const value = data?.valor != null ? formatNumberEs(data.valor) : null;
-            const displayValue = loading ? "Cargando…" : value && value !== "—" ? `${value}${data?.unidad === "meses" ? " meses" : data?.unidad === "%" ? " %" : data?.unidad === "días" ? " días" : ""}` : "Dato no disponible";
+            const displayValue = loading ? "Cargando…" : value && value !== "—" ? `${value}${data?.unidad === "meses" ? ` ${t("home.months")}` : data?.unidad === "%" ? " %" : data?.unidad === "días" ? ` ${t("home.days")}` : ""}` : "Dato no disponible";
             return (
               <Panel key={i.key}>
                 <p className="font-display text-3xl font-semibold text-primary" aria-live="polite">

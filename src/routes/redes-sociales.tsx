@@ -280,7 +280,7 @@ function VideosLibrary({ videos, categories }: { videos: CmsVideo[]; categories:
       <div><h3 className="mb-3 font-display text-xl font-semibold">Listas de actualidad</h3>
       <div className="mb-4 grid grid-cols-2 gap-2" role="group" aria-label="Filtrar vídeos por tema">
         {visibleCategories.map((category) => <button key={category.id} type="button" onClick={() => setSelectedCategory(category.id)} aria-pressed={activeCategory === category.id} className={"rounded-xl border p-3 text-left transition-colors " + (activeCategory === category.id ? "border-primary bg-accent/25 text-primary" : "border-border bg-background/65 hover:bg-accent/15")}>
-          <span className="block text-sm font-semibold">{category.short}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{category.description}</span>
+          <span className="block text-sm font-semibold">{category.name}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{category.description}</span>
         </button>)}
       </div>
       <h4 className="mb-3 font-display text-lg font-semibold">{visibleCategories.find((category) => category.id === activeCategory)?.name}</h4>

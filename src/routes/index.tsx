@@ -42,12 +42,12 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const cms = useCmsContent();
   const state = usePublicStats();
   const stats = state.stats;
 
-  const recentJoins = (stats?.ultimasAdhesiones ?? []).slice(0, 8);
+  const recentJoins = (stats?.ultimas{t("Adhesiones")} ?? []).slice(0, 8);
   const joinsStatus = listStatus(
     state,
     recentJoins.length,
@@ -97,18 +97,16 @@ function Home() {
               {t("home.badge")}
             </p>
             <h1 className="mt-6 font-display text-4xl leading-[1.03] tracking-tight md:text-6xl">
-              Por un Pacto de Estado por la{" "}
-              <span className="text-primary italic">dependencia</span> y los
-              cuidados
+              {locale === "en" ? t("For a State Pact on Dependency and Care") : <>Por un Pacto de Estado por la{" "}<span className="text-primary italic">dependencia</span> y los cuidados</>}
             </h1>
             <div className="mt-6 max-w-xl space-y-3 text-base md:text-[1.05rem] leading-relaxed text-muted-foreground">
-              <p>Queremos un sistema que cuide de verdad.</p>
-              <p>Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.</p>
-              <p>Para eso hace falta una financiación suficiente, estable y pensada para durar. Centrada en dar respuesta a las necesidades reales de las personas, y que no dependa de cambios presupuestarios, tiempos electorales e intereses partidistas.</p>
-              <p>El cuidado no puede ser un negocio. Tiene que ser transparente, sin especulación, con calidad asistencial comprobada y comprobable, poniendo a las personas en el centro, respetando sus preferencias y sus proyectos vitales.</p>
-              <p>Necesitamos una cartera básica de servicios de calidad que se adapte a cada territorio, garantizando la accesibilidad a los servicios independientemente de donde resida y de los cambios que pueda haber en su vida.</p>
-              <p>Y, sobre todo, que las personas puedan elegir de verdad.</p>
-              <p>Porque cuidar no debería ser una lucha constante. Debería ser un derecho que se cumple.</p>
+              <p>{t("Queremos un sistema que cuide de verdad.")}</p>
+              <p>{t("Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.")}</p>
+              <p>{t("Para eso hace falta una financiación suficiente, estable y pensada para durar. Centrada en dar respuesta a las necesidades reales de las personas, y que no dependa de cambios presupuestarios, tiempos electorales e intereses partidistas.")}</p>
+              <p>{t("El cuidado no puede ser un negocio. Tiene que ser transparente, sin especulación, con calidad asistencial comprobada y comprobable, poniendo a las personas en el centro, respetando sus preferencias y sus proyectos vitales.")}</p>
+              <p>{t("Necesitamos una cartera básica de servicios de calidad que se adapte a cada territorio, garantizando la accesibilidad a los servicios independientemente de donde resida y de los cambios que pueda haber en su vida.")}</p>
+              <p>{t("Y, sobre todo, que las personas puedan elegir de verdad.")}</p>
+              <p>{t("Porque cuidar no debería ser una lucha constante. Debería ser un derecho que se cumple.")}</p>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
@@ -209,16 +207,16 @@ function Home() {
             </h2>
             <div className="mt-4 space-y-4 leading-relaxed text-muted-foreground">
               <p>
-                Cuidar no puede seguir recayendo en las familias y dependiendo de la vocación de los cuidadores.
+                {t("Cuidar no puede seguir recayendo en las familias y dependiendo de la vocación de los cuidadores.")}
               </p>
               <p>
-                Miles de personas en situación de dependencia: mayores, personas con discapacidad o con enfermedades crónicas, esperan meses para una valoración y vuelven a esperar para obtener un recurso insuficiente. Mientras tanto, sus familiares y cuidadores sostienen el día a día a costa de su tiempo, su salud y su proyecto vital.
+                {t("Miles de personas en situación de dependencia: mayores, personas con discapacidad o con enfermedades crónicas, esperan meses para una valoración y vuelven a esperar para obtener un recurso insuficiente. Mientras tanto, sus familiares y cuidadores sostienen el día a día a costa de su tiempo, su salud y su proyecto vital.")}
               </p>
               <p>
-                Negocio a costa de precariedad laboral de las profesionales, baja calidad asistencial hacia las personas dependientes, servicios diseñados en función del mayor beneficio económico, obviando el hecho de la vulnerabilidad extrema en la que se encuentran sus “clientes”.
+                {t("Negocio a costa de precariedad laboral de las profesionales, baja calidad asistencial hacia las personas dependientes, servicios diseñados en función del mayor beneficio económico, obviando el hecho de la vulnerabilidad extrema en la que se encuentran sus “clientes”.")}
               </p>
               <p>
-                Profesionales del ámbito sociosanitario trabajando con un alto compromiso y asumiendo una gran responsabilidad, con medios escasos y exigencias altas para cumplir unos objetivos… pero.. los objetivos de quién?
+                {t("Profesionales del ámbito sociosanitario trabajando con un alto compromiso y asumiendo una gran responsabilidad, con medios escasos y exigencias altas para cumplir unos objetivos… pero.. los objetivos de quién?")}
               </p>
               <p>
                 El sistema necesita más medios, mejor coordinación sociosanitaria y una respuesta que no dependa de dónde vivas.
@@ -289,7 +287,7 @@ function Home() {
             to="/datos"
             className="font-semibold text-primary underline underline-offset-4"
           >
-            Ver todos los datos e indicadores
+            {t("Ver todos los datos e indicadores")}
           </Link>
         </p>
       </section>
@@ -301,10 +299,10 @@ function Home() {
           <Panel as="section" className="lg:col-span-7">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="font-display text-2xl font-semibold">
-                Mapa de adhesiones
+                {t("Mapa de adhesiones")}
               </h2>
               <span className="text-xs text-muted-foreground">
-                Datos agregados por territorio
+                {t("Datos agregados por territorio")}
               </span>
             </div>
             <div className="mt-5 overflow-x-auto rounded-2xl border border-border">
@@ -315,7 +313,7 @@ function Home() {
                 <thead>
                   <tr className="bg-muted text-left">
                     <th className="px-4 py-3 font-semibold">
-                      Comunidad autónoma
+                      {t("Comunidad autónoma")}
                     </th>
                     <th className="px-4 py-3 text-right font-semibold">
                       Adhesiones
@@ -357,7 +355,7 @@ function Home() {
                 to="/datos"
                 className="font-semibold text-primary underline underline-offset-4"
               >
-                Ver el mapa completo por comunidad autónoma
+                {t("Ver el mapa completo por comunidad autónoma")}
               </Link>
             </p>
           </Panel>
@@ -366,7 +364,7 @@ function Home() {
           <div className="grid gap-6 lg:col-span-5">
             <Panel as="section" className="min-w-0 overflow-hidden">
               <h2 className="font-display text-2xl font-semibold">
-                Próximo evento
+                {t("Próximo evento")}
               </h2>
               {nextEvent ? (
                 <div className="glass-soft mt-5 flex min-w-0 items-center gap-4 overflow-hidden rounded-2xl p-4">
@@ -374,7 +372,7 @@ function Home() {
                     <span className="font-display text-xl font-bold leading-none">
                       {new Date(`${nextEvent.date}T12:00:00`).getDate()}
                       <span className="mt-1 block text-[10px] tracking-wide">
-                        {new Date(`${nextEvent.date}T12:00:00`).toLocaleDateString("es-ES", { month: "short" }).replace(".", "").toUpperCase()}
+                        {new Date(`${nextEvent.date}T12:00:00`).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES", { month: "short" }).replace(".", "").toUpperCase()}
                       </span>
                     </span>
                   </div>
@@ -389,19 +387,19 @@ function Home() {
                 </div>
               ) : (
                 <p className="mt-4 text-sm text-muted-foreground">
-                  Próximamente anunciaremos nuevos eventos.
+                  {t("Próximamente anunciaremos nuevos eventos.")}
                 </p>
               )}
               <p className="mt-4 text-sm">
                 <Link to="/eventos" className="font-semibold text-primary underline underline-offset-4">
-                  Ver todos los eventos
+                  {t("Ver todos los eventos")}
                 </Link>
               </p>
             </Panel>
 
             <Panel as="section">
               <h2 className="font-display text-2xl font-semibold">
-                Últimas entidades adheridas
+                {t("Últimas entidades adheridas")}
               </h2>
               {entitiesStatus ? (
                 <p
@@ -427,7 +425,7 @@ function Home() {
                   to="/entidades"
                   className="font-semibold text-primary underline underline-offset-4"
                 >
-                  Ver todas las entidades
+                  {t("Ver todas las entidades")}
                 </Link>
               </p>
             </Panel>
@@ -441,7 +439,7 @@ function Home() {
         className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6"
       >
         <h2 id="testimonios" className="font-display text-3xl font-semibold">
-          Testimonios
+          {t("Testimonios")}
         </h2>
         {voicesStatus ? (
           <p className="mt-6 text-muted-foreground" role="status">
@@ -455,7 +453,7 @@ function Home() {
             to="/testimonios"
             className="font-semibold text-primary underline underline-offset-4"
           >
-            Leer y compartir testimonios
+            {t("Leer y compartir testimonios")}
           </Link>
         </p>
       </section>
@@ -464,9 +462,9 @@ function Home() {
       <section className="mx-auto w-full max-w-6xl px-4 py-8 pb-14 sm:px-6">
         <div className="grid gap-6 lg:grid-cols-3">
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">Últimas adhesiones</h2>
+            <h2 className="font-display text-xl font-semibold">{t("Últimas adhesiones")}</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Solo aparecen las personas que han autorizado expresamente la publicación de sus datos.
+              {t("Solo aparecen las personas que han autorizado expresamente la publicación de sus datos.")}
             </p>
             {joinsStatus ? (
               <p className="mt-4 text-sm text-muted-foreground" role="status">{joinsStatus}</p>
@@ -475,27 +473,25 @@ function Home() {
             )}
             <p className="mt-4 text-sm">
               <Link to="/datos" className="font-semibold text-primary underline underline-offset-4">
-                Ver adhesiones
+                {t("Ver adhesiones")}
               </Link>
             </p>
           </Panel>
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">Rincón de prensa</h2>
+            <h2 className="font-display text-xl font-semibold">{t("Rincón de prensa")}</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Logotipos, dossier de prensa, noticias y materiales para descargar y difundir el movimiento.
+              {t("Logotipos, dossier de prensa, noticias y materiales para descargar y difundir el movimiento.")}
             </p>
             <Link to="/prensa" className="glass-soft mt-4 inline-block rounded-full px-5 py-2.5 text-sm font-semibold text-primary">
-              Ir a prensa/descargables
+              {t("Ir a prensa/descargables")}
             </Link>
           </Panel>
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">Contacto</h2>
+            <h2 className="font-display text-xl font-semibold">{t("Contacto")}</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              ¿Eres periodista, entidad o ayuntamiento? Escríbenos.
+              {t("¿Eres periodista, entidad o ayuntamiento? Escríbenos.")}
             </p>
-            <Link to="/contacto" className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground">
-              Escríbenos
-            </Link>
+            <Link to="/contacto" className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground">{t("Escríbenos")}</Link>
           </Panel>
         </div>
       </section>

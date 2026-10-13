@@ -97,18 +97,16 @@ function Home() {
               {t("home.badge")}
             </p>
             <h1 className="mt-6 font-display text-4xl leading-[1.03] tracking-tight md:text-6xl">
-              Por un Pacto de Estado por la{" "}
-              <span className="text-primary italic">dependencia</span> y los
-              cuidados
+              {locale === "en" ? t("For a State Pact on Dependency and Care") : <>Por un Pacto de Estado por la{" "}<span className="text-primary italic">dependencia</span> y los cuidados</>}
             </h1>
             <div className="mt-6 max-w-xl space-y-3 text-base md:text-[1.05rem] leading-relaxed text-muted-foreground">
-              <p>Queremos un sistema que cuide de verdad.</p>
-              <p>Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.</p>
-              <p>Para eso hace falta una financiación suficiente, estable y pensada para durar. Centrada en dar respuesta a las necesidades reales de las personas, y que no dependa de cambios presupuestarios, tiempos electorales e intereses partidistas.</p>
-              <p>El cuidado no puede ser un negocio. Tiene que ser transparente, sin especulación, con calidad asistencial comprobada y comprobable, poniendo a las personas en el centro, respetando sus preferencias y sus proyectos vitales.</p>
-              <p>Necesitamos una cartera básica de servicios de calidad que se adapte a cada territorio, garantizando la accesibilidad a los servicios independientemente de donde resida y de los cambios que pueda haber en su vida.</p>
-              <p>Y, sobre todo, que las personas puedan elegir de verdad.</p>
-              <p>Porque cuidar no debería ser una lucha constante. Debería ser un derecho que se cumple.</p>
+              <p>{t("Queremos un sistema que cuide de verdad.")}</p>
+              <p>{t("Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.")}</p>
+              <p>{t("Para eso hace falta una financiación suficiente, estable y pensada para durar. Centrada en dar respuesta a las necesidades reales de las personas, y que no dependa de cambios presupuestarios, tiempos electorales e intereses partidistas.")}</p>
+              <p>{t("El cuidado no puede ser un negocio. Tiene que ser transparente, sin especulación, con calidad asistencial comprobada y comprobable, poniendo a las personas en el centro, respetando sus preferencias y sus proyectos vitales.")}</p>
+              <p>{t("Necesitamos una cartera básica de servicios de calidad que se adapte a cada territorio, garantizando la accesibilidad a los servicios independientemente de donde resida y de los cambios que pueda haber en su vida.")}</p>
+              <p>{t("Y, sobre todo, que las personas puedan elegir de verdad.")}</p>
+              <p>{t("Porque cuidar no debería ser una lucha constante. Debería ser un derecho que se cumple.")}</p>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
@@ -209,16 +207,16 @@ function Home() {
             </h2>
             <div className="mt-4 space-y-4 leading-relaxed text-muted-foreground">
               <p>
-                Cuidar no puede seguir recayendo en las familias y dependiendo de la vocación de los cuidadores.
+                {t("Cuidar no puede seguir recayendo en las familias y dependiendo de la vocación de los cuidadores.")}
               </p>
               <p>
-                Miles de personas en situación de dependencia: mayores, personas con discapacidad o con enfermedades crónicas, esperan meses para una valoración y vuelven a esperar para obtener un recurso insuficiente. Mientras tanto, sus familiares y cuidadores sostienen el día a día a costa de su tiempo, su salud y su proyecto vital.
+                {t("Miles de personas en situación de dependencia: mayores, personas con discapacidad o con enfermedades crónicas, esperan meses para una valoración y vuelven a esperar para obtener un recurso insuficiente. Mientras tanto, sus familiares y cuidadores sostienen el día a día a costa de su tiempo, su salud y su proyecto vital.")}
               </p>
               <p>
-                Negocio a costa de precariedad laboral de las profesionales, baja calidad asistencial hacia las personas dependientes, servicios diseñados en función del mayor beneficio económico, obviando el hecho de la vulnerabilidad extrema en la que se encuentran sus “clientes”.
+                {t("Negocio a costa de precariedad laboral de las profesionales, baja calidad asistencial hacia las personas dependientes, servicios diseñados en función del mayor beneficio económico, obviando el hecho de la vulnerabilidad extrema en la que se encuentran sus “clientes”.")}
               </p>
               <p>
-                Profesionales del ámbito sociosanitario trabajando con un alto compromiso y asumiendo una gran responsabilidad, con medios escasos y exigencias altas para cumplir unos objetivos… pero.. los objetivos de quién?
+                {t("Profesionales del ámbito sociosanitario trabajando con un alto compromiso y asumiendo una gran responsabilidad, con medios escasos y exigencias altas para cumplir unos objetivos… pero.. los objetivos de quién?")}
               </p>
               <p>
                 El sistema necesita más medios, mejor coordinación sociosanitaria y una respuesta que no dependa de dónde vivas.

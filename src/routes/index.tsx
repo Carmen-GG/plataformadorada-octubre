@@ -47,7 +47,7 @@ function Home() {
   const state = usePublicStats();
   const stats = state.stats;
 
-  const recentJoins = (stats?.ultimasAdhesiones ?? []).slice(0, 8);
+  const recentJoins = (stats?.ultimas{t("Adhesiones")} ?? []).slice(0, 8);
   const joinsStatus = listStatus(
     state,
     recentJoins.length,
@@ -289,7 +289,7 @@ function Home() {
             to="/datos"
             className="font-semibold text-primary underline underline-offset-4"
           >
-            Ver todos los datos e indicadores
+            {t("Ver todos los datos e indicadores")}
           </Link>
         </p>
       </section>
@@ -301,10 +301,10 @@ function Home() {
           <Panel as="section" className="lg:col-span-7">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="font-display text-2xl font-semibold">
-                Mapa de adhesiones
+                {t("Mapa de adhesiones")}
               </h2>
               <span className="text-xs text-muted-foreground">
-                Datos agregados por territorio
+                {t("Datos agregados por territorio")}
               </span>
             </div>
             <div className="mt-5 overflow-x-auto rounded-2xl border border-border">
@@ -315,7 +315,7 @@ function Home() {
                 <thead>
                   <tr className="bg-muted text-left">
                     <th className="px-4 py-3 font-semibold">
-                      Comunidad autónoma
+                      {t("Comunidad autónoma")}
                     </th>
                     <th className="px-4 py-3 text-right font-semibold">
                       Adhesiones
@@ -357,7 +357,7 @@ function Home() {
                 to="/datos"
                 className="font-semibold text-primary underline underline-offset-4"
               >
-                Ver el mapa completo por comunidad autónoma
+                {t("Ver el mapa completo por comunidad autónoma")}
               </Link>
             </p>
           </Panel>
@@ -366,7 +366,7 @@ function Home() {
           <div className="grid gap-6 lg:col-span-5">
             <Panel as="section" className="min-w-0 overflow-hidden">
               <h2 className="font-display text-2xl font-semibold">
-                Próximo evento
+                {t("Próximo evento")}
               </h2>
               {nextEvent ? (
                 <div className="glass-soft mt-5 flex min-w-0 items-center gap-4 overflow-hidden rounded-2xl p-4">
@@ -389,19 +389,19 @@ function Home() {
                 </div>
               ) : (
                 <p className="mt-4 text-sm text-muted-foreground">
-                  Próximamente anunciaremos nuevos eventos.
+                  {t("Próximamente anunciaremos nuevos eventos.")}
                 </p>
               )}
               <p className="mt-4 text-sm">
                 <Link to="/eventos" className="font-semibold text-primary underline underline-offset-4">
-                  Ver todos los eventos
+                  {t("Ver todos los eventos")}
                 </Link>
               </p>
             </Panel>
 
             <Panel as="section">
               <h2 className="font-display text-2xl font-semibold">
-                Últimas entidades adheridas
+                {t("Últimas entidades adheridas")}
               </h2>
               {entitiesStatus ? (
                 <p
@@ -427,7 +427,7 @@ function Home() {
                   to="/entidades"
                   className="font-semibold text-primary underline underline-offset-4"
                 >
-                  Ver todas las entidades
+                  {t("Ver todas las entidades")}
                 </Link>
               </p>
             </Panel>
@@ -441,7 +441,7 @@ function Home() {
         className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6"
       >
         <h2 id="testimonios" className="font-display text-3xl font-semibold">
-          Testimonios
+          {t("Testimonios")}
         </h2>
         {voicesStatus ? (
           <p className="mt-6 text-muted-foreground" role="status">
@@ -455,7 +455,7 @@ function Home() {
             to="/testimonios"
             className="font-semibold text-primary underline underline-offset-4"
           >
-            Leer y compartir testimonios
+            {t("Leer y compartir testimonios")}
           </Link>
         </p>
       </section>
@@ -464,9 +464,9 @@ function Home() {
       <section className="mx-auto w-full max-w-6xl px-4 py-8 pb-14 sm:px-6">
         <div className="grid gap-6 lg:grid-cols-3">
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">Últimas adhesiones</h2>
+            <h2 className="font-display text-xl font-semibold">{t("Últimas adhesiones")}</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Solo aparecen las personas que han autorizado expresamente la publicación de sus datos.
+              {t("Solo aparecen las personas que han autorizado expresamente la publicación de sus datos.")}
             </p>
             {joinsStatus ? (
               <p className="mt-4 text-sm text-muted-foreground" role="status">{joinsStatus}</p>
@@ -475,27 +475,25 @@ function Home() {
             )}
             <p className="mt-4 text-sm">
               <Link to="/datos" className="font-semibold text-primary underline underline-offset-4">
-                Ver adhesiones
+                {t("Ver adhesiones")}
               </Link>
             </p>
           </Panel>
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">Rincón de prensa</h2>
+            <h2 className="font-display text-xl font-semibold">{t("Rincón de prensa")}</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Logotipos, dossier de prensa, noticias y materiales para descargar y difundir el movimiento.
+              {t("Logotipos, dossier de prensa, noticias y materiales para descargar y difundir el movimiento.")}
             </p>
             <Link to="/prensa" className="glass-soft mt-4 inline-block rounded-full px-5 py-2.5 text-sm font-semibold text-primary">
-              Ir a prensa/descargables
+              {t("Ir a prensa/descargables")}
             </Link>
           </Panel>
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">Contacto</h2>
+            <h2 className="font-display text-xl font-semibold">{t("Contacto")}</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              ¿Eres periodista, entidad o ayuntamiento? Escríbenos.
+              {t("¿Eres periodista, entidad o ayuntamiento? Escríbenos.")}
             </p>
-            <Link to="/contacto" className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground">
-              Escríbenos
-            </Link>
+            <Link to="/contacto" className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground">{t("Escríbenos")}</Link>
           </Panel>
         </div>
       </section>

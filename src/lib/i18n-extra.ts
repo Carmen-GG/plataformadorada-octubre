@@ -1746,3 +1746,50 @@ Object.assign(extraTranslations, {
   "Ceuta": { gl: "Ceuta" },
   "Melilla": { gl: "Melilla" }
 });
+
+
+/* Textos completos baixo o título principal da home: versións revisadas en ca, eu, gl e en. */
+Object.assign(extraTranslations, {
+  "Queremos un sistema que cuide de verdad.": {
+    ca: "Volem un sistema que cuidi de veritat.",
+    eu: "Benetan zaintzen duen sistema bat nahi dugu.",
+    gl: "Queremos un sistema que coide de verdade.",
+    en: "We want a system that truly cares."
+  },
+  "Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.": {
+    ca: "Volem que les persones en situació de dependència, les seves famílies i les persones que les cuiden tinguin la certesa que l'ajuda no els fallarà ni desapareixerà d'un dia per l'altre.",
+    eu: "Mendekotasuna duten pertsonek, haien familiek eta zaintzaileek jakin behar dute laguntzak ez diela huts egingo eta ez direla egun batetik bestera desagertuko.",
+    gl: "As persoas en situación de dependencia, as súas familias e quen as coida deben ter a certeza de que as axudas non lles van fallar nin desaparecer dun día para outro.",
+    en: "People who need support, their families and those who care for them should be able to trust that help will not fail them or disappear overnight."
+  },
+  "Para eso hace falta una financiación suficiente, estable y pensada para durar. Centrada en dar respuesta a las necesidades reales de las personas, y que no dependa de cambios presupuestarios, tiempos electorales e intereses partidistas.": {
+    ca: "Per això cal un finançament suficient, estable i pensat per durar, centrat a donar resposta a les necessitats reals de les persones i que no depengui de canvis pressupostaris, calendaris electorals ni interessos partidistes.",
+    eu: "Horretarako, finantzaketa nahikoa, egonkorra eta epe luzerako pentsatua behar da. Pertsonen benetako beharrei erantzun behar die, eta ez da aurrekontu-aldaketen, hauteskunde-egutegien edo alderdien interesen mende egon behar.",
+    gl: "Para iso cómpre un financiamento suficiente, estable e pensado para durar, centrado nas necesidades reais das persoas e que non dependa de cambios orzamentarios, calendarios electorais nin intereses partidistas.",
+    en: "That requires sufficient, stable, long-term funding focused on people's real needs—not funding that depends on budget changes, election cycles or party interests."
+  },
+  "El cuidado no puede ser un negocio. Tiene que ser transparente, sin especulación, con calidad asistencial comprobada y comprobable, poniendo a las personas en el centro, respetando sus preferencias y sus proyectos vitales.": {
+    ca: "Les cures no poden ser un negoci. Han de ser transparents, sense especulació i amb una qualitat assistencial comprovada i comprovable, posant les persones al centre i respectant-ne les preferències i els projectes de vida.",
+    eu: "Zaintza ezin da negozio izan. Gardena eta espekulaziorik gabea izan behar du, arreta-kalitate egiaztatu eta egiaztagarriarekin; pertsonak erdigunean jarri behar ditu, haien lehentasunak eta bizi-proiektuak errespetatuz.",
+    gl: "O coidado non pode ser un negocio. Debe ser transparente, sen especulación e cunha calidade asistencial comprobada e comprobable, poñendo as persoas no centro e respectando as súas preferencias e os seus proxectos vitais.",
+    en: "Care must not be a business. It must be transparent and free from speculation, with care quality that is independently assessed and verifiable, putting people first and respecting their preferences and life plans."
+  },
+  "Necesitamos una cartera básica de servicios de calidad que se adapte a cada territorio, garantizando la accesibilidad a los servicios independientemente de donde resida y de los cambios que pueda haber en su vida.": {
+    ca: "Necessitem una cartera bàsica de serveis de qualitat que s'adapti a cada territori i garanteixi l'accés als serveis independentment d'on resideixi cada persona i dels canvis que hi pugui haver en la seva vida.",
+    eu: "Lurralde bakoitzera egokitutako kalitatezko oinarrizko zerbitzu-zorroa behar dugu, zerbitzuetarako sarbidea bermatzeko, pertsona non bizi den edo haren bizitzan zer aldaketa gertatzen diren kontuan hartu gabe.",
+    gl: "Precisamos unha carteira básica de servizos de calidade adaptada a cada territorio, que garanta o acceso aos servizos con independencia do lugar de residencia e dos cambios que poidan producirse na vida de cada persoa.",
+    en: "We need a core set of quality services adapted to each region, ensuring access regardless of where people live or how their circumstances change."
+  },
+  "Y, sobre todo, que las personas puedan elegir de verdad.": {
+    ca: "I, sobretot, que les persones puguin triar de veritat.",
+    eu: "Eta, batez ere, pertsonek benetan aukeratu ahal izatea.",
+    gl: "E, sobre todo, que as persoas poidan elixir de verdade.",
+    en: "Above all, people must have a genuine choice."
+  },
+  "Porque cuidar no debería ser una lucha constante. Debería ser un derecho que se cumple.": {
+    ca: "Perquè cuidar no hauria de ser una lluita constant. Hauria de ser un dret que es compleix.",
+    eu: "Zaintzea ez litzateke etengabeko borroka izan behar; bete beharreko eskubidea da.",
+    gl: "Porque coidar non debería ser unha loita constante. Debería ser un dereito que se cumpra.",
+    en: "Because caring should not be a constant struggle. It should be a right that is upheld."
+  }
+});

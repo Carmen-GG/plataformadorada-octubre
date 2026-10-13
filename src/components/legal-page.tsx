@@ -4,7 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { LEGAL, type LegalKey } from "@/lib/legal-content";
 import { SITE } from "@/lib/content";
 
-const EYEBROW = { es: "Legal", ca: "Legal", eu: "Lege-informazioa", gl: "Legal" } as const;
+const EYEBROW = { es: "Legal", ca: "Legal", eu: "Lege-informazioa", gl: "Legal", en: "Legal" } as const;
 
 /** Sustituye {email} y resalta los marcadores [ENTRE CORCHETES] pendientes de completar. */
 function Rich({ text }: { text: string }) {

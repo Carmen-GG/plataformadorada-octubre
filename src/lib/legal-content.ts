@@ -11,6 +11,7 @@
 // {email} se sustituye automáticamente por el correo de contacto de la web.
 //
 // Las versiones en euskera y gallego deben ser revisadas por hablantes nativos.
+// La versión en inglés es una traducción de trabajo; conviene que la revise también quien haga la revisión jurídica.
 
 import type { Locale } from "./i18n";
 
@@ -207,7 +208,7 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Contraste suficiente y textos alternativos en las imágenes.",
             "Diseño adaptable, con zoom hasta el 200 %.",
             "Respeto a la preferencia del sistema de reducir animaciones.",
-            "Web disponible en castellano, catalán, euskera y gallego.",
+            "Web disponible en castellano, catalán, euskera, gallego e inglés.",
           ],
         },
         {
@@ -417,7 +418,7 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Contrast suficient i textos alternatius a les imatges.",
             "Disseny adaptable, amb zoom fins al 200 %.",
             "Respecte a la preferència del sistema de reduir animacions.",
-            "Web disponible en castellà, català, èuscar i gallec.",
+            "Web disponible en castellà, català, èuscar, gallec i anglès.",
           ],
         },
         {
@@ -627,7 +628,7 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Kontraste nahikoa eta irudietan ordezko testuak.",
             "Diseinu moldagarria, %200 arteko zoomarekin.",
             "Animazioak murrizteko sistemaren lehentasunarekiko errespetua.",
-            "Webgunea gaztelaniaz, katalanez, euskaraz eta galegoz eskuragarri dago.",
+            "Webgunea gaztelaniaz, katalanez, euskaraz, galegoz eta ingelesez eskuragarri dago.",
           ],
         },
         {
@@ -837,7 +838,7 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
             "Contraste suficiente e textos alternativos nas imaxes.",
             "Deseño adaptable, con zoom ata o 200 %.",
             "Respecto á preferencia do sistema de reducir animacións.",
-            "Web dispoñible en castelán, catalán, éuscaro e galego.",
+            "Web dispoñible en castelán, catalán, éuscaro, galego e inglés.",
           ],
         },
         {
@@ -853,6 +854,215 @@ export const LEGAL: Record<Locale, Record<LegalKey, LegalDoc>> = {
           paragraphs: [
             "Escríbenos a {email} indicando a páxina e o problema. Procuraremos responderche canto antes e corrixilo.",
             "Última revisión desta declaración: [FECHA].",
+          ],
+        },
+      ],
+    },
+  },
+  // ─────────────────────────────────────────────────────────── ENGLISH
+  en: {
+    aviso: {
+      title: "Legal notice",
+      lead: "Provisional text pending legal review.",
+      sections: [
+        {
+          heading: "Who is behind this website",
+          paragraphs: [
+            "Plataforma Dorada is a citizens' movement, non-partisan and not-for-profit. It is not yet a constituted organisation and has no legal personality of its own. This website is maintained, in a personal capacity, by the volunteers who drive the movement.",
+            "Person responsible for the website: [RESPONSABLE].",
+            "Address for communications: [DOMICILIO].",
+            "Contact email: {email}.",
+            "When the movement is constituted as an association or other organisation, we will update this notice with its identification details.",
+          ],
+        },
+        {
+          heading: "Purpose of the site",
+          paragraphs: [
+            "This website provides information about the movement and its call for a State Pact on Dependency and Care, and lets you pledge your support, volunteer, share testimonies and get in touch. It does not sell products or services and has no commercial purpose.",
+          ],
+        },
+        {
+          heading: "Terms of use",
+          paragraphs: [
+            "Access is free and open. We ask you to use the website respectfully and lawfully, and not to try to damage or overload it or to access its management systems without authorisation.",
+          ],
+        },
+        {
+          heading: "Intellectual property",
+          paragraphs: [
+            "The name, logo and own materials of Plataforma Dorada are protected by intellectual property law. [CONDICIONES DE USO DE LOS MATERIALES].",
+            "For news from other media, we show only the headline, a short summary and a link to the original publication, whose rights belong to its authors and outlets.",
+          ],
+        },
+        {
+          heading: "Third-party links and content",
+          paragraphs: [
+            "This website links to or embeds third-party content (for example Google Forms, Instagram, TikTok or Spotify). When you use it you leave our website and the terms and privacy policies of those services apply; we are not responsible for them.",
+          ],
+        },
+        {
+          heading: "Informational nature",
+          paragraphs: [
+            "The information on this website is for general awareness. It is not individual legal, health or social advice. We try to cite the source of data and figures and to keep information accurate, but we cannot guarantee that there will be no errors or service interruptions.",
+          ],
+        },
+        {
+          heading: "Applicable law",
+          paragraphs: ["This notice is governed by Spanish law."],
+        },
+      ],
+    },
+    privacidad: {
+      title: "Privacy policy",
+      lead: "Provisional text pending legal review.",
+      sections: [
+        {
+          heading: "Who is the data controller",
+          paragraphs: [
+            "Plataforma Dorada is a citizens' movement without legal personality of its own. The personal data we collect is processed by the people who drive the movement, who act as controllers: [RESPONSABLE].",
+            "Address: [DOMICILIO]. Email: {email}.",
+            "When the movement is constituted as an organisation, that organisation will become the controller and we will let you know about the change.",
+          ],
+        },
+        {
+          heading: "What data we process and why",
+          items: [
+            "Pledge: the data we ask for in the form ([DATOS DEL FORMULARIO DE ADHESIÓN]). We use it to count support for the movement and show aggregate figures. Legal basis: your consent.",
+            "Appearing publicly (optional): only if you expressly authorise it in the form, we show your name, the initial of your first surname and your city on the website. This is a separate consent from the one for your pledge: if you do not give it, you do not appear.",
+            "Volunteering: the data in the form ([DATOS DEL FORMULARIO DE VOLUNTARIADO]), to contact you and coordinate your collaboration. Legal basis: your consent.",
+            "Testimonies: your testimony and your contact details. A testimony may reveal health or dependency data, which is specially protected: we only process it with your explicit consent. There are two separate consents: one to send us the testimony and another, optional, to publish it.",
+            "Contact: the name, email and message you send us, in order to reply. Legal basis: your consent when submitting the form.",
+            "Member organisations: data about the organisation, its contact person and its logo, to display it as a member organisation. Legal basis: consent.",
+          ],
+          paragraphs: [
+            "We do not sell your data, we do not use it for advertising and we do not make automated decisions with it.",
+          ],
+        },
+        {
+          heading: "Testimonies that mention other people",
+          paragraphs: [
+            "If you describe another person's situation (for example a dependent relative), please do so without details that could identify them, or make sure you have their permission. We may hide or edit a testimony to protect the privacy of third parties.",
+            "Please do not include health information in the contact form: the testimony form exists for that.",
+          ],
+        },
+        {
+          heading: "Who we share data with",
+          paragraphs: [
+            "We do not hand your data to third parties for their own purposes. To run the website we use Google services (Forms, Sheets, Drive, Apps Script and Gmail), which process data on our behalf and may involve transfers outside the European Economic Area with the safeguards provided by the GDPR.",
+            "Access to the data is limited to the volunteers the movement authorises [CONFIRMAR ACCESO].",
+            "What you authorise us to publish (pledge or testimony) is visible to anyone on the Internet.",
+          ],
+        },
+        {
+          heading: "How long we keep it",
+          paragraphs: [
+            "We keep your data while the movement is active or until you withdraw your consent or ask for it to be deleted. Contact messages are kept [PLAZO]. After that we delete them or, if the law requires us to keep them, we block them.",
+          ],
+        },
+        {
+          heading: "Your rights",
+          items: [
+            "Access your data and obtain a copy.",
+            "Have it corrected if it is inaccurate.",
+            "Ask for it to be deleted.",
+            "Object to processing or ask us to restrict it.",
+            "Receive it in a reusable format (portability).",
+            "Withdraw your consent at any time, without affecting what has already been done.",
+          ],
+          paragraphs: [
+            "Write to {email} saying which right you want to exercise; we will reply within a maximum of one month. If you withdraw your authorisation to appear publicly or to publish your testimony, we will remove it from the website.",
+            "If you believe we have not handled your data properly, you can complain to the Spanish Data Protection Agency (www.aepd.es).",
+          ],
+        },
+        {
+          heading: "Minors",
+          paragraphs: [
+            "This website is not aimed at children under 14. If you are under that age, you need the authorisation of your parent or legal guardian to give us your data.",
+          ],
+        },
+        {
+          heading: "Security",
+          paragraphs: [
+            "We apply reasonable measures to protect data: restricted access, services with authentication, and publishing on the website only aggregate data or data expressly authorised. No measure is infallible; if you notice a problem, let us know at {email}.",
+          ],
+        },
+      ],
+    },
+    cookies: {
+      title: "Cookie policy",
+      lead: "Provisional text pending legal review.",
+      sections: [
+        {
+          heading: "What they are",
+          paragraphs: [
+            "They are small files or pieces of data that a website stores in your browser. Here we refer to cookies and equivalent technologies, such as the browser's local storage.",
+          ],
+        },
+        {
+          heading: "What we use",
+          items: [
+            "Language preference (pd-locale): remembers the language you choose. It is technical and is stored only in your browser.",
+            "Cookie preference (pd-cookie-consent): remembers your choice in the cookie notice. It is technical.",
+            "We do not use analytics or advertising cookies or tracking tools.",
+          ],
+        },
+        {
+          heading: "Social media content",
+          paragraphs: [
+            "On the social media page, Instagram, TikTok and Spotify may set their own cookies when their posts or playlist are displayed. We only load that content if you accept third-party cookies. If you reject them, you will see a link to open the content on the network or service itself.",
+            "When you click links to Google Forms or other sites you leave our website and those services' policies apply.",
+          ],
+        },
+        {
+          heading: "How to manage your preferences",
+          paragraphs: [
+            "You can accept, reject or keep only the essential ones in the cookie notice. To change your choice, use the “Change cookie preferences” link in the footer. You can also delete or block cookies from your browser settings.",
+            "If we add analytics or other tools in the future, we will update this policy and ask for your consent first.",
+          ],
+        },
+      ],
+    },
+    accesibilidad: {
+      title: "Accessibility statement",
+      lead: "Provisional text. Status: under continuous improvement.",
+      sections: [
+        {
+          heading: "Our commitment",
+          paragraphs: [
+            "We want anyone to be able to use this website, including people who browse with a keyboard, a screen reader, text magnification or reading difficulties. Our goal is to meet the WCAG 2.1 level AA guidelines.",
+          ],
+        },
+        {
+          heading: "Current status",
+          paragraphs: [
+            "A full, independent accessibility audit has not yet been carried out, so we do not claim full conformance with WCAG 2.1 AA. We keep reviewing and fixing the website.",
+          ],
+        },
+        {
+          heading: "Measures we apply",
+          items: [
+            "Structure with well-defined headings and page regions.",
+            "Full keyboard navigation and visible focus.",
+            "Link to skip to the main content.",
+            "Sufficient contrast and alternative text for images.",
+            "Responsive design, with zoom up to 200%.",
+            "Respect for the system preference to reduce motion.",
+            "Website available in Spanish, Catalan, Basque, Galician and English.",
+          ],
+        },
+        {
+          heading: "Known limitations",
+          items: [
+            "Embedded content from Instagram, TikTok and Spotify and Google forms are third-party; their accessibility does not depend on us. We always provide an alternative link.",
+            "The Basque and Galician translations are pending review by native speakers.",
+            "Some parts, such as charts, maps or downloadable documents, may not yet be fully accessible.",
+          ],
+        },
+        {
+          heading: "If you find a barrier",
+          paragraphs: [
+            "Write to us at {email} stating the page and the problem. We will try to reply as soon as possible and fix it.",
+            "Last review of this statement: [FECHA].",
           ],
         },
       ],

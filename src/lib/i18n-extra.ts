@@ -1911,3 +1911,62 @@ Object.assign(extraTranslations, {
     en: "Municipalities that have approved motions in support of the Pact"
   }
 });
+
+
+/* Traduccions dels blocs de mapa territorial, esdeveniment i entitats adherides. */
+Object.assign(extraTranslations, {
+  "Mapa de adhesiones": {
+    ca: "Mapa d’adhesions",
+    eu: "Atxikimenduen mapa",
+    gl: "Mapa de adhesións",
+    en: "Pledge map"
+  },
+  "Datos agregados por territorio": {
+    ca: "Dades agregades per territori",
+    eu: "Lurraldeka agregatutako datuak",
+    gl: "Datos agregados por territorio",
+    en: "Aggregated data by region"
+  },
+  "Comunidad autónoma": {
+    ca: "Comunitat autònoma",
+    eu: "Autonomia-erkidegoa",
+    gl: "Comunidade autónoma",
+    en: "Autonomous community"
+  },
+  "Adhesiones": {
+    ca: "Adhesions",
+    eu: "Atxikimenduak",
+    gl: "Adhesións",
+    en: "Pledges"
+  },
+  "Ver el mapa completo por comunidad autónoma": {
+    ca: "Consulta el mapa complet per comunitat autònoma",
+    eu: "Ikusi autonomia-erkidego guztien mapa",
+    gl: "Ver o mapa completo por comunidade autónoma",
+    en: "View the full map by autonomous community"
+  },
+  "Próximo evento": {
+    ca: "Proper esdeveniment",
+    eu: "Hurrengo ekitaldia",
+    gl: "Próximo evento",
+    en: "Upcoming event"
+  },
+  "Ver todos los eventos": {
+    ca: "Consulta tots els esdeveniments",
+    eu: "Ikusi ekitaldi guztiak",
+    gl: "Ver todos os eventos",
+    en: "View all events"
+  },
+  "Últimas entidades adheridas": {
+    ca: "Darreres entitats adherides",
+    eu: "Atxikitako azken erakundeak",
+    gl: "Últimas entidades adheridas",
+    en: "Latest supporting organisations"
+  },
+  "Ver todas las entidades": {
+    ca: "Consulta totes les entitats",
+    eu: "Ikusi erakunde guztiak",
+    gl: "Ver todas as entidades",
+    en: "View all organisations"
+  }
+});

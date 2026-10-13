@@ -56,6 +56,9 @@ const es: Dictionary = {
   "carousel.volunteer": "Voluntario/a",
   "carousel.latestPublic": "Últimas incorporaciones públicas",
   "carousel.select": "Seleccionar",
+  "pager.page": "Página",
+  "pager.news": "noticias",
+  "video.openIn": "Abrir vídeo en {p} si no se reproduce",
   "home.goal": "Objetivo",
   "common.updated": "Actualizado",
   "common.viewAll": "Ver todo",
@@ -102,6 +105,9 @@ const ca: Dictionary = {
   "carousel.volunteer": "Persona voluntària",
   "carousel.latestPublic": "Darreres incorporacions públiques",
   "carousel.select": "Selecciona",
+  "pager.page": "Pàgina",
+  "pager.news": "notícies",
+  "video.openIn": "Obre el vídeo a {p} si no es reprodueix",
   "home.goal": "Objectiu",
   "common.updated": "Actualitzat",
   "common.viewAll": "Veure-ho tot",
@@ -148,6 +154,9 @@ const eu: Dictionary = {
   "carousel.volunteer": "Boluntarioa",
   "carousel.latestPublic": "Azken gehitze publikoak",
   "carousel.select": "Hautatu",
+  "pager.page": "Orria",
+  "pager.news": "albiste",
+  "video.openIn": "Ireki bideoa {p} plataforman erreproduzitzen ez bada",
   "home.goal": "Helburua",
   "common.updated": "Eguneratuta",
   "common.viewAll": "Dena ikusi",
@@ -193,6 +202,9 @@ const gl: Dictionary = {
   "carousel.volunteer": "Voluntario/a",
   "carousel.latestPublic": "Últimas incorporacións públicas",
   "carousel.select": "Seleccionar",
+  "pager.page": "Páxina",
+  "pager.news": "novas",
+  "video.openIn": "Abre o vídeo en {p} se non se reproduce",
   "home.goal": "Obxectivo",
   "common.updated": "Actualizado",
   "common.viewAll": "Ver todo",
@@ -237,6 +249,9 @@ const en: Dictionary = {
   "carousel.volunteer": "Volunteer",
   "carousel.latestPublic": "Latest public additions",
   "carousel.select": "Select",
+  "pager.page": "Page",
+  "pager.news": "news items",
+  "video.openIn": "Open the video on {p} if it does not play",
   "home.goal": "Goal",
   "common.updated": "Updated",
   "common.viewAll": "View all",
@@ -1079,6 +1094,8 @@ function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+const BRAND_NAME = "Plataforma Dorada";
+
 function translateText(text: string, locale: Locale) {
   const clean = text.replace(/\s+/g, " ").trim();
   if (!clean) return text;
@@ -1089,9 +1106,13 @@ function translateText(text: string, locale: Locale) {
   if (direct) return direct;
   let out = text;
   const replacements: Array<[string, string, string]> = [];
-  for (const [source, variants] of Object.entries(pageTranslations).sort(
-    (a, b) => b[0].length - a[0].length,
-  )) {
+  // La marca "Plataforma Dorada" nunca se traduce: se registra como entrada propia para que,
+  // al ordenar por longitud, quede protegida antes de aplicar entradas genéricas como "Plataforma".
+  const entries = Object.entries(pageTranslations);
+  if (!pageTranslations[BRAND_NAME]) {
+    entries.push([BRAND_NAME, { ca: BRAND_NAME, eu: BRAND_NAME, gl: BRAND_NAME, en: BRAND_NAME }]);
+  }
+  for (const [source, variants] of entries.sort((a, b) => b[0].length - a[0].length)) {
     const target = variants[locale];
     if (!target || !out.includes(source)) continue;
     const token = `__PD_I18N_${replacements.length}__`;

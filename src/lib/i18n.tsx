@@ -54,6 +54,11 @@ const es: Dictionary = {
   "common.viewAll": "Ver todo",
   "common.placeholderNote":
     "Contenido de ejemplo. Los datos reales se cargarán desde el backoffice.",
+  "Organizaciones": "Organizaciones",
+  "Ayuntamientos": "Ayuntamientos",
+  "Comunidades autónomas": "Comunidades autónomas",
+  "Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.": "Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.",
+  "Cifras del movimiento": "Cifras del movimiento",
 };
 
 const ca: Dictionary = {
@@ -88,6 +93,11 @@ const ca: Dictionary = {
   "common.viewAll": "Veure-ho tot",
   "common.placeholderNote":
     "Contingut d'exemple. Les dades reals es carregaran des del backoffice.",
+  "Organizaciones": "Organitzacions",
+  "Ayuntamientos": "Ajuntaments",
+  "Comunidades autónomas": "Comunitats autònomes",
+  "Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.": "Dades agregades. No es publiquen mai dades personals ni ubicacions individuals.",
+  "Cifras del movimiento": "Xifres del moviment",
 };
 
 const eu: Dictionary = {
@@ -121,6 +131,11 @@ const eu: Dictionary = {
   "common.updated": "Eguneratuta",
   "common.viewAll": "Dena ikusi",
   "common.placeholderNote": "Adibidezko edukia. Benetako datuak backoffice-tik kargatuko dira.",
+  "Organizaciones": "Erakundeak",
+  "Ayuntamientos": "Udalak",
+  "Comunidades autónomas": "Autonomia-erkidegoak",
+  "Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.": "Datu agregatuak. Ez dira inoiz datu pertsonalik edo banakako kokapenik argitaratzen.",
+  "Cifras del movimiento": "Mugimenduaren zifrak",
 };
 
 const gl: Dictionary = {
@@ -154,6 +169,11 @@ const gl: Dictionary = {
   "common.updated": "Actualizado",
   "common.viewAll": "Ver todo",
   "common.placeholderNote": "Contido de exemplo. Os datos reais cargaranse desde o backoffice.",
+  "Organizaciones": "Organizacións",
+  "Ayuntamientos": "Concellos",
+  "Comunidades autónomas": "Comunidades autónomas",
+  "Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.": "Datos agregados. Nunca se publican datos persoais nin localizacións individuais.",
+  "Cifras del movimiento": "Cifras do movemento",
 };
 
 const en: Dictionary = {
@@ -186,6 +206,11 @@ const en: Dictionary = {
   "common.updated": "Updated",
   "common.viewAll": "View all",
   "common.placeholderNote": "Sample content. Live data will be loaded from the back office.",
+  "Organizaciones": "Organisations",
+  "Ayuntamientos": "Local councils",
+  "Comunidades autónomas": "Autonomous communities",
+  "Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.": "Aggregated data. Personal data and individual locations are never published.",
+  "Cifras del movimiento": "Movement figures",
 };
 const dictionaries: Record<Locale, Dictionary> = { es, ca, eu, gl, en };
 

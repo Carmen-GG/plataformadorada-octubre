@@ -1211,4 +1211,9 @@ Object.assign(extraTranslations, {
   "Eventos realizados": { eu: "Egindako ekitaldiak" },
   "Más información": { eu: "Informazio gehiago" },
   "Abrir / descargar cartel": { eu: "Kartela ireki / deskargatu" },
+  "Rincón de prensa": { en: "Press corner" },
+  "Logotipos, dossier de prensa, noticias y materiales para descargar y difundir el movimiento.": { en: "Logos, press kit, news and materials to download and share the movement." },
+  "Ir a prensa/descargables": { en: "Press and downloads" },
+  "¿Eres periodista, entidad o ayuntamiento? Escríbenos.": { en: "Are you a journalist, organisation or local council? Get in touch." },
+  "Escríbenos": { en: "Get in touch" },
 });

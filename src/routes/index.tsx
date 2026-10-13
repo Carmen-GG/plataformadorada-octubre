@@ -140,7 +140,7 @@ function Home() {
                     <LiveCount name="entidades" />
                   </dd>
                   <dt className="mt-1 text-[11px] text-muted-foreground">
-                    Organizaciones
+                    {t("Organizaciones")}
                   </dt>
                 </div>
                 <div className="glass-soft rounded-2xl p-3">
@@ -148,7 +148,7 @@ function Home() {
                     <LiveCount name="ayuntamientos" />
                   </dd>
                   <dt className="mt-1 text-[11px] text-muted-foreground">
-                    Ayuntamientos
+                    {t("Ayuntamientos")}
                   </dt>
                 </div>
                 <div className="glass-soft rounded-2xl p-3">
@@ -156,13 +156,12 @@ function Home() {
                     {formatCount(regionsWithData)}
                   </dd>
                   <dt className="mt-1 text-[11px] text-muted-foreground">
-                    Comunidades autónomas
+                    {t("Comunidades autónomas")}
                   </dt>
                 </div>
               </dl>
               <p className="mt-5 text-xs text-muted-foreground">
-                Datos agregados. Nunca se publican datos personales ni
-                ubicaciones individuales.
+                {t("Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.")}
               </p>
             </Panel>
           </div>

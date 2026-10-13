@@ -250,7 +250,7 @@ function Home() {
             const d = stats?.indicadores?.[i.key];
             const fallback: Record<string, string> = {
               lista_espera: "142.887",
-              tiempo_tramitacion: "10,5 meses",
+              tiempo_tramitacion: `10,5 ${t("home.months")}`,
               cuidadores_convenio: "101.702",
               municipios_mociones_aprobadas: "—",
             };

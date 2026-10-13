@@ -1272,4 +1272,16 @@ Object.assign(extraTranslations, {
   "La Rioja": { en: "La Rioja" },
   "Ceuta": { en: "Ceuta" },
   "Melilla": { en: "Melilla" },
+
+  // Homepage editorial copy reviewed for the English version.
+  "For a State Pact on Dependency and Care": { en: "For a State Pact on Dependency and Care" },
+  "Queremos un sistema que cuide de verdad.": { en: "We want a system that truly cares." },
+  "Que las personas dependientes, sus familias y quienes las cuidan sepan que la ayuda no va a fallar ni a desaparecer de un día para otro.": { en: "People who need support, their families and those who care for them should be able to trust that help will not fail them or disappear overnight." },
+  "Para eso hace falta una financiación suficiente, estable y pensada para durar. Centrada en dar respuesta a las necesidades reales de las personas, y que no dependa de cambios presupuestarios, tiempos electorales e intereses partidistas.": { en: "That requires sufficient, stable and long-term funding focused on people's real needs—not on budget changes, election cycles or party interests." },
+  "El cuidado no puede ser un negocio. Tiene que ser transparente, sin especulación, con calidad asistencial comprobada y comprobable, poniendo a las personas en el centro, respetando sus preferencias y sus proyectos vitales.": { en: "Care must not be a business. It must be transparent and free from speculation, with quality that is independently assessed and verifiable. People must come first, with their preferences and life plans respected." },
+  "Necesitamos una cartera básica de servicios de calidad que se adapte a cada territorio, garantizando la accesibilidad a los servicios independientemente de donde resida y de los cambios que pueda haber en su vida.": { en: "We need a core package of quality services adapted to each region, ensuring access regardless of where people live or how their circumstances change." },
+  "Y, sobre todo, que las personas puedan elegir de verdad.": { en: "Above all, people must have a real choice." },
+  "Porque cuidar no debería ser una lucha constante. Debería ser un derecho que se cumple.": { en: "Care should not be a constant struggle. It should be a right that is upheld." },
+  "Negocio a costa de precariedad laboral de las profesionales, baja calidad asistencial hacia las personas dependientes, servicios diseñados en función del mayor beneficio económico, obviando el hecho de la vulnerabilidad extrema en la que se encuentran sus “clientes”.": { en: "A business model built on precarious working conditions for care professionals, poor quality of care and services designed to maximise profit—ignoring the extreme vulnerability of the people they serve." },
+  "Profesionales del ámbito sociosanitario trabajando con un alto compromiso y asumiendo una gran responsabilidad, con medios escasos y exigencias altas para cumplir unos objetivos… pero.. los objetivos de quién?": { en: "Health and social care professionals work with great commitment and responsibility, yet face limited resources and high demands to meet targets… but whose targets are they?" },
 });

@@ -88,6 +88,22 @@ const TEXTS: Record<
       "Descargamos a imaxe e copiamos a ligazón. Súbea a Instagram desde o móbil e pega a ligazón na historia ou na biografía.",
     help: "Instagram non permite enviar ligazóns desde unha web: compartimos unha imaxe e copiamos a ligazón para que a pegues.",
   },
+  en: {
+    group: "Sharing options",
+    message: "Join Plataforma Dorada: for a State Pact on Dependency and Care.",
+    whatsapp: "WhatsApp",
+    instagram: "Instagram",
+    copy: "Copy link",
+    more: "More options",
+    newTab: "(opens in a new tab)",
+    copied: "Link copied.",
+    copyFailed: "Could not copy. Copy the address from your browser's address bar.",
+    igMobile:
+      "We have copied the link. When you post on Instagram, paste it into your story (\"Link\" sticker) or your bio.",
+    igDesktop:
+      "We have downloaded the image and copied the link. Upload it to Instagram from your phone and paste the link into your story or your bio.",
+    help: "Instagram does not let websites send links: we share an image and copy the link for you to paste.",
+  },
 };
 
 const buttonClass =
@@ -125,7 +141,7 @@ async function copyText(text: string): Promise<boolean> {
 /** Botones para compartir la página en WhatsApp, Instagram y por otros medios. */
 export function ShareButtons({ path }: { path: string }) {
   const { locale } = useI18n();
-  const t = TEXTS[locale];
+  const t = TEXTS[locale] ?? TEXTS.es;
   const [status, setStatus] = useState("");
   const [url, setUrl] = useState(SITE_URL ? pageUrl(path) : "");
   const [canNativeShare, setCanNativeShare] = useState(false);

@@ -992,6 +992,11 @@ for (const [source, variants] of Object.entries(pageTranslations)) {
     if (variants[locale]) dictionariesWithPageText[locale][source] = variants[locale]!;
 }
 
+// Ordenar una sola vez: translateText se ejecuta para muchos nodos del DOM.
+const sortedPageTranslations = Object.entries(pageTranslations).sort(
+  (a, b) => b[0].length - a[0].length,
+);
+
 const textOriginals = new WeakMap<Text, string>();
 const STORAGE_KEY = "pd-locale";
 type I18nValue = {
@@ -1012,9 +1017,7 @@ function translateText(text: string, locale: Locale) {
   if (direct) return text.replace(clean, direct);
   let out = text;
   const replacements: Array<[string, string, string]> = [];
-  for (const [source, variants] of Object.entries(pageTranslations).sort(
-    (a, b) => b[0].length - a[0].length,
-  )) {
+  for (const [source, variants] of sortedPageTranslations) {
     const target = variants[locale];
     if (!target || !out.includes(source)) continue;
     const token = `__PD_I18N_${replacements.length}__`;
@@ -1114,8 +1117,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.lang = locale;
     translateDom(locale);
-    const observer = new MutationObserver(() => translateDom(locale));
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    const observeDom = () =>
+      observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    // translateDom cambia nodos de texto y atributos; desconectar durante esa pasada
+    // evita que sus propias traducciones provoquen otra pasada completa innecesaria.
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      translateDom(locale);
+      observeDom();
+    });
+    observeDom();
     return () => observer.disconnect();
   }, [locale]);
   const setLocale = useCallback((next: Locale) => {

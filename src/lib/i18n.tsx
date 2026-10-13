@@ -113,7 +113,7 @@ const eu: Dictionary = {
   "cta.collaborate": "Lagundu nahi dut",
   "cta.share": "Partekatu orri hau",
   "home.badge": "Herritarren mugimendua · alderdikeriarik gabe",
-  "home.title": "Plataforma Dorada: Mendekotasunaren eta Zaintzen aldeko Estatu Itun baten alde",
+  "home.title": "Plataforma Dorada: Mendekotasunaren eta zaintzen aldeko Estatu-ituna",
   "home.lead":
     "Mendekotasunak ezin du itxaron. Milaka familiak hilabeteak edo urteak ematen dituzte balorazio, laguntza edo plaza baten zain. Konpromiso egonkorra, alderdikeriarik gabekoa eta finantzatua eskatzen dugu, zaintzen duenarekin eta zaindua denarekin.",
   "home.countersTitle": "Atxikimenduak zuzenean",

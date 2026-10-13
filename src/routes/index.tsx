@@ -97,7 +97,7 @@ function Home() {
               {t("home.badge")}
             </p>
             <h1 className="mt-6 font-display text-4xl leading-[1.03] tracking-tight md:text-6xl">
-              {locale === "en" ? t("For a State Pact on Dependency and Care") : locale === "ca" ? <>Per un Pacte d’Estat per la{" "}<span className="text-primary italic">dependència</span> i les cures</> : locale === "eu" ? <>Mendekotasunaren eta zaintzen aldeko{" "}<span className="text-primary italic">Estatu Itun</span> baten alde</> : <>Por un Pacto de Estado por la{" "}<span className="text-primary italic">dependencia</span> y los cuidados</>}
+              {locale === "en" ? t("For a State Pact on Dependency and Care") : locale === "ca" ? <>Per un Pacte d’Estat per la{" "}<span className="text-primary italic">dependència</span> i les cures</> : locale === "eu" ? <>Mendekotasunaren eta zaintzen aldeko{" "}<span className="text-primary italic">Estatu-ituna</span></> : <>Por un Pacto de Estado por la{" "}<span className="text-primary italic">dependencia</span> y los cuidados</>}
             </h1>
             <div className="mt-6 max-w-xl space-y-3 text-base md:text-[1.05rem] leading-relaxed text-muted-foreground">
               <p>{t("Queremos un sistema que cuide de verdad.")}</p>
@@ -172,7 +172,7 @@ function Home() {
         className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6"
       >
         <h2 id="contadores" className="sr-only">
-          Cifras del movimiento
+          {t("Cifras del movimiento")}
         </h2>
         <dl className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {counters.map((c) => (
@@ -185,7 +185,7 @@ function Home() {
                 )}
               </dd>
               <dt className="mt-1 text-sm text-muted-foreground">
-                {c.label}
+                {t(c.label)}
               </dt>
             </div>
           ))}
@@ -271,7 +271,7 @@ function Home() {
               <div key={i.key} className="glass-panel rounded-3xl p-6">
                 <dd
                   className="font-display text-4xl font-bold leading-none tabular-nums text-primary sm:text-5xl"
-                  aria-label={`${value}. ${i.label}`}
+                  aria-label={`${value}. ${t(i.label)}`}
                 >
                   {value}
                 </dd>

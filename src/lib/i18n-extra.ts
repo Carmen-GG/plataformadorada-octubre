@@ -1793,3 +1793,38 @@ Object.assign(extraTranslations, {
     en: "Because caring should not be a constant struggle. It should be a right that is upheld."
   }
 });
+
+
+/* Etiquetas da tarxeta de cifras da portada: textos dispoñibles nos catro idiomas. */
+Object.assign(extraTranslations, {
+  "home.countersTitle": {
+    ca: "Adhesions en directe",
+    eu: "Atxikimenduak zuzenean",
+    gl: "Adhesións en directo",
+    en: "Live sign-ups"
+  },
+  "Organizaciones": {
+    ca: "Organitzacions",
+    eu: "Erakundeak",
+    gl: "Organizacións",
+    en: "Organisations"
+  },
+  "Ayuntamientos": {
+    ca: "Ajuntaments",
+    eu: "Udalak",
+    gl: "Concellos",
+    en: "Local councils"
+  },
+  "Comunidades autónomas": {
+    ca: "Comunitats autònomes",
+    eu: "Autonomia-erkidegoak",
+    gl: "Comunidades autónomas",
+    en: "Autonomous communities"
+  },
+  "Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.": {
+    ca: "Dades agregades. No es publiquen mai dades personals ni ubicacions individuals.",
+    eu: "Datu agregatuak baino ez dira erakusten; ez da inoiz datu pertsonalik edo banakako kokapenik argitaratzen.",
+    gl: "Só se amosan datos agregados. Nunca se publican datos persoais nin localizacións individuais.",
+    en: "Aggregated data only. Personal data and individual locations are never published."
+  }
+});

@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const cms = useCmsContent();
   const state = usePublicStats();
   const stats = state.stats;
@@ -374,7 +374,7 @@ function Home() {
                     <span className="font-display text-xl font-bold leading-none">
                       {new Date(`${nextEvent.date}T12:00:00`).getDate()}
                       <span className="mt-1 block text-[10px] tracking-wide">
-                        {new Date(`${nextEvent.date}T12:00:00`).toLocaleDateString("es-ES", { month: "short" }).replace(".", "").toUpperCase()}
+                        {new Date(`${nextEvent.date}T12:00:00`).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES", { month: "short" }).replace(".", "").toUpperCase()}
                       </span>
                     </span>
                   </div>

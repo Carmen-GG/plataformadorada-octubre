@@ -47,7 +47,7 @@ function Home() {
   const state = usePublicStats();
   const stats = state.stats;
 
-  const recentJoins = (stats?.ultimas{t("Adhesiones")} ?? []).slice(0, 8);
+  const recentJoins = (stats?.ultimasAdhesiones ?? []).slice(0, 8);
   const joinsStatus = listStatus(
     state,
     recentJoins.length,
@@ -97,7 +97,7 @@ function Home() {
               {t("home.badge")}
             </p>
             <h1 className="mt-6 font-display text-4xl leading-[1.03] tracking-tight md:text-6xl">
-              {locale === "en" ? t("For a State Pact on Dependency and Care") : <>Por un Pacto de Estado por la{" "}<span className="text-primary italic">dependencia</span> y los cuidados</>}
+              {locale === "en" ? t("For a State Pact on Dependency and Care") : locale === "ca" ? <>Per un Pacte d’Estat per la{" "}<span className="text-primary italic">dependència</span> i les cures</> : <>Por un Pacto de Estado por la{" "}<span className="text-primary italic">dependencia</span> y los cuidados</>}
             </h1>
             <div className="mt-6 max-w-xl space-y-3 text-base md:text-[1.05rem] leading-relaxed text-muted-foreground">
               <p>{t("Queremos un sistema que cuide de verdad.")}</p>
@@ -203,7 +203,7 @@ function Home() {
               id="situacion-actual"
               className="font-display text-3xl font-semibold"
             >
-              La situación actual
+              {t("La situación actual")}
             </h2>
             <div className="mt-4 space-y-4 leading-relaxed text-muted-foreground">
               <p>
@@ -219,13 +219,13 @@ function Home() {
                 {t("Profesionales del ámbito sociosanitario trabajando con un alto compromiso y asumiendo una gran responsabilidad, con medios escasos y exigencias altas para cumplir unos objetivos… pero.. los objetivos de quién?")}
               </p>
               <p>
-                El sistema necesita más medios, mejor coordinación sociosanitaria y una respuesta que no dependa de dónde vivas.
+                {t("El sistema necesita más medios, mejor coordinación sociosanitaria y una respuesta que no dependa de dónde vivas.")}
               </p>
               <p>
-                Por eso nace y trabaja Plataforma Dorada, para conseguir un Pacto de Estado por la Dependencia y los Cuidados.
+                {t("Por eso nace y trabaja Plataforma Dorada, para conseguir un Pacto de Estado por la Dependencia y los Cuidados.")}
               </p>
               <p>
-                Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores principales y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.
+                {t("Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores principales y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.")}
               </p>
             </div>
           </div>
@@ -233,10 +233,10 @@ function Home() {
           <div>
             <Panel as="section">
               <h2 className="font-display text-2xl font-semibold">
-                Último vídeo de Instagram
+                {t("Último vídeo de Instagram")}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Se actualiza automáticamente con el contenido más reciente de
+                {t("Se actualiza automáticamente con el contenido más reciente de")}
                 @assumptaserna.
               </p>
               <LatestInstagramVideo />
@@ -372,7 +372,7 @@ function Home() {
                     <span className="font-display text-xl font-bold leading-none">
                       {new Date(`${nextEvent.date}T12:00:00`).getDate()}
                       <span className="mt-1 block text-[10px] tracking-wide">
-                        {new Date(`${nextEvent.date}T12:00:00`).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES", { month: "short" }).replace(".", "").toUpperCase()}
+                        {new Date(`${nextEvent.date}T12:00:00`).toLocaleDateString(locale === "en" ? "en-GB" : locale === "ca" ? "ca-ES" : "es-ES", { month: "short" }).replace(".", "").toUpperCase()}
                       </span>
                     </span>
                   </div>

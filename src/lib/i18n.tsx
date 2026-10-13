@@ -40,7 +40,7 @@ const es: Dictionary = {
   "nav.close": "Cerrar",
   "nav.language": "Idioma",
   "nav.skip": "Saltar al contenido principal",
-  "cta.join": "Adhiérete",
+  "cta.join": "Adhiérete ahora",
   "cta.joinNow": "Adhiérete ahora",
   "cta.collaborate": "Quiero colaborar",
   "cta.share": "Comparte esta página",

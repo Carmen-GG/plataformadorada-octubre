@@ -219,7 +219,7 @@ function RedesSociales(){
           <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Archivo audiovisual</p>
           <h2 className="mt-1 font-display text-2xl font-semibold">Plataforma Dorada en vídeo</h2>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">Vídeos de actualidad organizados en cuatro temas para seguir las noticias, los testimonios y las iniciativas sobre residencias, cuidados y dependencia.</p>
-          <VideosLibrary videos={cms?.videos?.length ? cms.videos : videoSearches} />
+          <VideosLibrary videos={cms?.videos?.length ? cms.videos : videoSearches} categories={cms?.videoCategories?.length ? cms.videoCategories : fallbackVideoCategories} />
         </article>
       </div>
     </section>
@@ -245,18 +245,20 @@ function getYouTubeId(value: string) {
   return null;
 }
 
-const videoCategories = [
+const fallbackVideoCategories = [
   { id: "residencias", label: "Residencias y cuidados de larga duración", short: "Residencias", description: "Calidad asistencial, listas de espera, condiciones de vida, inspecciones y alternativas." },
   { id: "cuidadores", label: "Familias cuidadoras y cuidadores profesionales", short: "Cuidadores/as", description: "Sobrecarga, conciliación, salud emocional, derechos laborales y reconocimiento." },
   { id: "dependencia", label: "Dependencia, derechos y servicios públicos", short: "Dependencia", description: "Ley de Dependencia, valoraciones, ayudas, atención domiciliaria y financiación." },
   { id: "actualidad", label: "Actualidad y movimiento por los cuidados", short: "Actualidad", description: "Noticias, propuestas políticas, iniciativas ciudadanas, movilizaciones y pactos." },
-] as const;
+] ;
 
-function VideosLibrary({ videos }: { videos: CmsVideo[] }) {
+function VideosLibrary({ videos, categories }: { videos: CmsVideo[]; categories: Array<{id:string;name:string;description:string;order:number;published:boolean}> }) {
   const { t } = useI18n();
   const [selectedVideo, setSelectedVideo] = useState<CmsVideo | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<(typeof videoCategories)[number]["id"]>("actualidad");
-  const categoryVideos = videos.filter((item) => item.published && (item.category ?? "actualidad") === selectedCategory).sort((a, b) => a.order - b.order);
+  const [selectedCategory, setSelectedCategory] = useState<string>("actualidad");
+  const visibleCategories = categories.filter((category) => category.published).sort((a, b) => a.order - b.order);
+  const activeCategory = visibleCategories.some((category) => category.id === selectedCategory) ? selectedCategory : (visibleCategories[0]?.id ?? "");
+  const categoryVideos = videos.filter((item) => item.published && item.category === activeCategory).sort((a, b) => a.order - b.order);
   const embedUrl = selectedVideo
     ? selectedVideo.platform === "youtube"
       ? "https://www.youtube-nocookie.com/embed/" + (getYouTubeId(selectedVideo.url) ?? "") + "?autoplay=0&rel=0"
@@ -277,11 +279,11 @@ function VideosLibrary({ videos }: { videos: CmsVideo[] }) {
     <div className="space-y-4">
       <div><h3 className="mb-3 font-display text-xl font-semibold">Listas de actualidad</h3>
       <div className="mb-4 grid grid-cols-2 gap-2" role="group" aria-label="Filtrar vídeos por tema">
-        {videoCategories.map((category) => <button key={category.id} type="button" onClick={() => setSelectedCategory(category.id)} aria-pressed={selectedCategory === category.id} className={"rounded-xl border p-3 text-left transition-colors " + (selectedCategory === category.id ? "border-primary bg-accent/25 text-primary" : "border-border bg-background/65 hover:bg-accent/15")}>
+        {visibleCategories.map((category) => <button key={category.id} type="button" onClick={() => setSelectedCategory(category.id)} aria-pressed={activeCategory === category.id} className={"rounded-xl border p-3 text-left transition-colors " + (activeCategory === category.id ? "border-primary bg-accent/25 text-primary" : "border-border bg-background/65 hover:bg-accent/15")}>
           <span className="block text-sm font-semibold">{category.short}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{category.description}</span>
         </button>)}
       </div>
-      <h4 className="mb-3 font-display text-lg font-semibold">{videoCategories.find((category) => category.id === selectedCategory)?.label}</h4>
+      <h4 className="mb-3 font-display text-lg font-semibold">{visibleCategories.find((category) => category.id === activeCategory)?.name}</h4>
       <ul className="space-y-2">
         {categoryVideos.map((item) => <li key={item.id || item.url}><button type="button" onClick={() => setSelectedVideo(item)} aria-pressed={selectedVideo?.url === item.url} className={"group flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-colors " + (selectedVideo?.url === item.url ? "border-primary bg-accent/20" : "border-border bg-background/65 hover:bg-accent/15")}><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">{item.platform === "youtube" ? <Youtube size={20} aria-hidden="true" /> : <span className="text-xs font-bold">f</span>}</span><span className="min-w-0"><span className="block text-sm font-semibold group-hover:text-primary">{item.title}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{item.description}</span><span className="mt-1 block text-xs font-semibold text-primary">▶ Reproducir en el televisor</span></span></button></li>)}
       </ul>{categoryVideos.length === 0 && <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground">Todavía no hay vídeos publicados en esta lista. Añádelos desde el backoffice de Plataforma Dorada.</p>}<p className="mt-3 text-xs leading-relaxed text-muted-foreground">Pulsa cualquier elemento de la lista para cargar el vídeo en la pantalla central. Los vídeos de Facebook dependen de que su autor permita la reproducción incrustada.</p></div></div>

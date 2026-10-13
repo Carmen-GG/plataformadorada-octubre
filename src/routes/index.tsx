@@ -481,21 +481,21 @@ function Home() {
             </p>
           </Panel>
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">Rincón de prensa</h2>
+            <h2 className="font-display text-xl font-semibold">{t("Rincón de prensa")}</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Logotipos, dossier de prensa, noticias y materiales para descargar y difundir el movimiento.
+              {t("Logotipos, dossier de prensa, noticias y materiales para descargar y difundir el movimiento.")}
             </p>
             <Link to="/prensa" className="glass-soft mt-4 inline-block rounded-full px-5 py-2.5 text-sm font-semibold text-primary">
-              Ir a prensa/descargables
+              {t("Ir a prensa/descargables")}
             </Link>
           </Panel>
           <Panel as="section">
-            <h2 className="font-display text-xl font-semibold">Contacto</h2>
+            <h2 className="font-display text-xl font-semibold">{t("Contacto")}</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              ¿Eres periodista, entidad o ayuntamiento? Escríbenos.
+              {t("¿Eres periodista, entidad o ayuntamiento? Escríbenos.")}
             </p>
             <Link to="/contacto" className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground">
-              Escríbenos
+              {t("Escríbenos")}
             </Link>
           </Panel>
         </div>

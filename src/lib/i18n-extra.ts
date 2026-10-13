@@ -2143,3 +2143,13 @@ mergeTranslationVariants({
     en: "A non-partisan civic movement demanding a State Pact on Dependency and Care. Pledge your support, volunteer and share your testimony.",
   },
 });
+
+// --- Plantilla general (cabecera, pie y metadatos): huecos detectados en la revisión ---
+mergeTranslationVariants({
+  "Enviar correo a": { eu: "Bidali mezua hona:", gl: "Enviar correo a", en: "Send an email to" },
+  "Movimiento ciudadano y apartidista que reclama un Pacto de Estado por la Dependencia y los Cuidados en España. Adhiérete, colabora y comparte tu testimonio.": {
+    eu: "Mendekotasunaren eta zaintzen aldeko Estatu-ituna eskatzen duen herritarren mugimendu alderdikeriarik gabea Espainian. Atxiki zaitez, lagundu eta partekatu zure testigantza.",
+    gl: "Movemento cidadán e apartidista que reclama un Pacto de Estado pola Dependencia e os Coidados en España. Adhírete, colabora e comparte o teu testemuño.",
+    en: "A non-partisan civic movement calling for a State Pact on Dependency and Care in Spain. Pledge your support, get involved and share your testimony.",
+  },
+});

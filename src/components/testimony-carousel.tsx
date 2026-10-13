@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { countLabel, useI18n } from "@/lib/i18n";
 
 export type PublicTestimony = { texto: string; autor: string; contexto: string };
 
 export function TestimonyCarousel({ items }: { items: PublicTestimony[] }) {
   const [index, setIndex] = useState(0);
+  const { t, locale } = useI18n();
   const [paused, setPaused] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   useEffect(() => {
@@ -26,7 +28,7 @@ export function TestimonyCarousel({ items }: { items: PublicTestimony[] }) {
   return (
     <div className="mt-6" aria-roledescription="carrusel" aria-label="Voces del cuidado">
       <div key={index} className="glass-panel rounded-3xl p-7 sm:p-10" tabIndex={0} onKeyDown={(e) => { if (e.key === "ArrowLeft") previous(); if (e.key === "ArrowRight") next(); if (e.key === " ") { e.preventDefault(); setPaused(v => !v); } }}>
-        <p className="text-sm font-semibold text-primary">Testimonio {index + 1} de {items.length}</p>
+        <p className="text-sm font-semibold text-primary">{countLabel(locale, t("carousel.testimony"), index + 1, items.length)}</p>
         <blockquote className="mt-4 text-base leading-relaxed italic whitespace-pre-wrap">“{item.texto}”</blockquote>
         <figcaption className="mt-6 text-sm font-semibold">{item.autor}{item.contexto && <span className="block font-normal text-muted-foreground">{item.contexto}</span>}</figcaption>
       </div>
@@ -36,7 +38,7 @@ export function TestimonyCarousel({ items }: { items: PublicTestimony[] }) {
         <button type="button" className="rounded-full border border-border px-4 py-2 text-sm font-semibold" onClick={next} aria-label="Siguiente testimonio">Siguiente</button>
       </div>
       <div className="mt-3 flex justify-center gap-1.5" aria-label="Seleccionar testimonio">
-        {items.map((_, i) => <button key={i} type="button" onClick={() => setIndex(i)} aria-label={`Ir al testimonio ${i + 1}`} aria-current={i === index} className={`h-2.5 w-2.5 rounded-full border ${i === index ? "bg-primary" : "bg-transparent"}`} />)}
+        {items.map((_, i) => <button key={i} type="button" onClick={() => setIndex(i)} aria-label={`${t("carousel.testimony")} ${i + 1}`} aria-current={i === index} className={`h-2.5 w-2.5 rounded-full border ${i === index ? "bg-primary" : "bg-transparent"}`} />)}
       </div>
     </div>
   );

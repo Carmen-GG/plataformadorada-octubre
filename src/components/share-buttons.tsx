@@ -58,7 +58,7 @@ const TEXTS: Record<
   eu: {
     group: "Partekatzeko aukerak",
     message:
-      "Batu zaitez Plataforma Doradara: Mendekotasunaren eta Zaintzen aldeko Estatu Itun baten alde.",
+      "Batu zaitez Plataforma Dorada mugimendura: Mendekotasunaren eta Zaintzen aldeko Estatu Itun baten alde.",
     whatsapp: "WhatsApp",
     instagram: "Instagram",
     copy: "Esteka kopiatu",

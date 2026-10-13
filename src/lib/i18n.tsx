@@ -49,6 +49,13 @@ const es: Dictionary = {
   "home.lead":
     "La dependencia no puede esperar. Miles de familias esperan meses o años una valoración, una ayuda o una plaza. Pedimos un compromiso estable, apartidista y financiado con quien cuida y con quien es cuidado.",
   "home.countersTitle": "Adhesiones en vivo",
+  "home.months": "meses",
+  "home.days": "días",
+  "carousel.testimony": "Testimonio",
+  "carousel.pledge": "Adhesión",
+  "carousel.volunteer": "Voluntario/a",
+  "carousel.latestPublic": "Últimas incorporaciones públicas",
+  "carousel.select": "Seleccionar",
   "home.goal": "Objetivo",
   "common.updated": "Actualizado",
   "common.viewAll": "Ver todo",
@@ -88,6 +95,13 @@ const ca: Dictionary = {
   "home.lead":
     "La dependència no pot esperar. Milers de famílies esperen mesos o anys una valoració, una ajuda o una plaça. Demanem un compromís estable, apartidista i finançat amb qui cuida i amb qui és cuidat.",
   "home.countersTitle": "Adhesions en directe",
+  "home.months": "mesos",
+  "home.days": "dies",
+  "carousel.testimony": "Testimoni",
+  "carousel.pledge": "Adhesió",
+  "carousel.volunteer": "Persona voluntària",
+  "carousel.latestPublic": "Darreres incorporacions públiques",
+  "carousel.select": "Selecciona",
   "home.goal": "Objectiu",
   "common.updated": "Actualitzat",
   "common.viewAll": "Veure-ho tot",
@@ -127,6 +141,13 @@ const eu: Dictionary = {
   "home.lead":
     "Mendekotasunak ezin du itxaron. Milaka familiak hilabeteak edo urteak ematen dituzte balorazio, laguntza edo plaza baten zain. Konpromiso egonkorra, alderdikeriarik gabekoa eta finantzatua eskatzen dugu, zaintzen duenarekin eta zaindua denarekin.",
   "home.countersTitle": "Atxikimenduak zuzenean",
+  "home.months": "hilabete",
+  "home.days": "egun",
+  "carousel.testimony": "Testigantza",
+  "carousel.pledge": "Atxikimendua",
+  "carousel.volunteer": "Boluntarioa",
+  "carousel.latestPublic": "Azken gehitze publikoak",
+  "carousel.select": "Hautatu",
   "home.goal": "Helburua",
   "common.updated": "Eguneratuta",
   "common.viewAll": "Dena ikusi",
@@ -165,6 +186,13 @@ const gl: Dictionary = {
   "home.lead":
     "A dependencia non pode esperar. Miles de familias agardan meses ou anos por unha valoración, unha axuda ou unha praza. Pedimos un compromiso estable, apartidista e financiado con quen coida e con quen é coidado.",
   "home.countersTitle": "Adhesións en directo",
+  "home.months": "meses",
+  "home.days": "días",
+  "carousel.testimony": "Testemuño",
+  "carousel.pledge": "Adhesión",
+  "carousel.volunteer": "Voluntario/a",
+  "carousel.latestPublic": "Últimas incorporacións públicas",
+  "carousel.select": "Seleccionar",
   "home.goal": "Obxectivo",
   "common.updated": "Actualizado",
   "common.viewAll": "Ver todo",
@@ -202,6 +230,13 @@ const en: Dictionary = {
   "home.title": "Plataforma Dorada: For a State Pact on Dependency and Care",
   "home.lead": "Dependency care cannot wait. Thousands of families wait months or years for an assessment, support or a place in a care facility. We call for a stable, non-partisan and properly funded commitment to both people who provide care and those who receive it.",
   "home.countersTitle": "Live pledges",
+  "home.months": "months",
+  "home.days": "days",
+  "carousel.testimony": "Testimonial",
+  "carousel.pledge": "Pledge",
+  "carousel.volunteer": "Volunteer",
+  "carousel.latestPublic": "Latest public additions",
+  "carousel.select": "Select",
   "home.goal": "Goal",
   "common.updated": "Updated",
   "common.viewAll": "View all",
@@ -214,8 +249,22 @@ const en: Dictionary = {
 };
 const dictionaries: Record<Locale, Dictionary> = { es, ca, eu, gl, en };
 
+// "Etiqueta 1 de 3" con el conector propio de cada idioma, en un único texto.
+export function countLabel(locale: Locale, label: string, index: number, total: number) {
+  const connector = locale === "en" ? "of" : locale === "eu" ? "/" : "de";
+  return `${label} ${index} ${connector} ${total}`;
+}
+
 // Textos visibles del sitio. Se mantienen fuera de los componentes para que el cambio de idioma
 // afecte también al contenido que todavía procede de componentes existentes del proyecto.
+// Combina variantes por idioma en lugar de reemplazar la entrada completa: así un bloque posterior
+// que solo aporta el inglés no borra el catalán, el euskera o el gallego ya definidos.
+function mergePageTranslations(additions: Record<string, Partial<Record<Locale, string>>>) {
+  for (const [key, variants] of Object.entries(additions)) {
+    pageTranslations[key] = { ...(pageTranslations[key] ?? {}), ...variants };
+  }
+}
+
 const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
   "Por un Pacto de Estado por la dependencia y los cuidados": {
     ca: "Per un Pacte d'Estat per la Dependència i les Cures",
@@ -412,7 +461,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
   Adhesión: { ca: "Adhesió", eu: "Atxikimendua", gl: "Adhesión" },
   "Únete a Plataforma Dorada": {
     ca: "Uneix-te a Plataforma Dorada",
-    eu: "Egin bat Plataforma Doradarekin",
+    eu: "Egin bat Plataforma Dorada mugimenduarekin",
     gl: "Únete a Plataforma Dorada",
     en: "Join Plataforma Dorada",
   },
@@ -606,7 +655,7 @@ const pageTranslations: Record<string, Partial<Record<Locale, string>>> = {
     en: "Legal notice",
 };
 
-Object.assign(pageTranslations, {
+mergePageTranslations({
   "Personas adheridas": {
     ca: "Persones adherides",
     eu: "Atxikitako pertsonak",
@@ -840,7 +889,7 @@ Object.assign(pageTranslations, {
   },
 });
 
-Object.assign(pageTranslations, {
+mergePageTranslations({
   "Cifras del sistema de dependencia y del avance del movimiento. Cada dato indica su fuente.": {
     ca: "Xifres del sistema de dependència i de l'avanç del moviment. Cada dada indica la seva font.",
     eu: "Mendekotasun-sistemaren eta mugimenduaren aurrerapenaren zifrak. Datu bakoitzak bere iturria adierazten du.",
@@ -854,7 +903,7 @@ Object.assign(pageTranslations, {
   "Próximos encuentros, concentraciones y actos de la Plataforma Dorada, y eventos ya realizados.":
     {
       ca: "Propers trobades, concentracions i actes de Plataforma Dorada, i esdeveniments ja realitzats.",
-      eu: "Plataforma Doradaren datozen topaketak, elkarretaratzeak eta ekitaldiak, eta dagoeneko egindako ekitaldiak.",
+      eu: "Plataforma Dorada mugimenduaren datozen topaketak, elkarretaratzeak eta ekitaldiak, eta dagoeneko egindako ekitaldiak.",
       gl: "Próximos encontros, concentracións e actos de Plataforma Dorada, e eventos xa realizados.",
     en: "Upcoming meetings, gatherings and Plataforma Dorada events, as well as past events.",
     },
@@ -873,19 +922,19 @@ Object.assign(pageTranslations, {
   },
   "Últimas noticias y apariciones en medios de la Plataforma Dorada.": {
     ca: "Últimes notícies i aparicions als mitjans de Plataforma Dorada.",
-    eu: "Plataforma Doradaren azken albisteak eta hedabideetako agerraldiak.",
+    eu: "Plataforma Dorada mugimenduaren azken albisteak eta hedabideetako agerraldiak.",
     gl: "Últimas noticias e aparicións nos medios de Plataforma Dorada.",
     en: "Latest news and media coverage of Plataforma Dorada.",
   },
   "Dossier de prensa, logotipos, carteles y material para redes de la Plataforma Dorada.": {
     ca: "Dossier de premsa, logotips, cartells i material per a xarxes de Plataforma Dorada.",
-    eu: "Plataforma Doradaren prentsa-dosierra, logotipoak, kartelak eta sareetarako materiala.",
+    eu: "Plataforma Dorada mugimenduaren prentsa-dosierra, logotipoak, kartelak eta sareetarako materiala.",
     gl: "Dossier de prensa, logotipos, carteis e material para redes de Plataforma Dorada.",
     en: "Plataforma Dorada press kit, logos, posters and social media materials.",
   },
   "Escribe a la Plataforma Dorada: dudas, propuestas, prensa o colaboración.": {
     ca: "Escriu a Plataforma Dorada: dubtes, propostes, premsa o col·laboració.",
-    eu: "Idatzi Plataforma Doradari: zalantzak, proposamenak, prentsa edo lankidetza.",
+    eu: "Idatzi Plataforma Dorada mugimenduari: zalantzak, proposamenak, prentsa edo lankidetza.",
     gl: "Escribe a Plataforma Dorada: dúbidas, propostas, prensa ou colaboración.",
     en: "Contact Plataforma Dorada with questions, proposals, press enquiries or collaboration offers.",
   },
@@ -1008,11 +1057,11 @@ Object.assign(pageTranslations, {
   },
 });
 
-Object.assign(pageTranslations, extraTranslations);
+mergePageTranslations(extraTranslations);
 
 const dictionariesWithPageText: Record<Locale, Dictionary> = { es, ca, eu, gl, en };
 for (const [source, variants] of Object.entries(pageTranslations)) {
-  dictionariesWithPageText.es[source] = source;
+  if (!(source in dictionariesWithPageText.es)) dictionariesWithPageText.es[source] = source;
   for (const locale of ["ca", "eu", "gl", "en"] as Locale[])
     if (variants[locale]) dictionariesWithPageText[locale][source] = variants[locale]!;
 }

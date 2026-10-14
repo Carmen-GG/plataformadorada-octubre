@@ -788,7 +788,7 @@ export const deTexts: Record<string, string> = {
   "home.badge": "Bürgerbewegung · überparteilich",
   "home.title": "Plataforma Dorada: Für einen Staatspakt für Pflegebedürftigkeit und Pflege",
   "home.lead": "Pflegebedürftigkeit duldet keinen Aufschub. Tausende Familien warten Monate oder Jahre auf eine Begutachtung, eine Leistung oder einen Platz. Wir fordern eine verlässliche, überparteiliche und finanzierte Verpflichtung gegenüber denen, die pflegen, und denen, die gepflegt werden.",
-  "home.countersTitle": "Beitritte live",
+  "home.countersTitle": "Unterschriften für den Staatspakt",
   "home.months": "Monate",
   "home.days": "Tage",
   "carousel.testimony": "Erfahrungsbericht",

@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { formatCount } from "@/lib/public-stats";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Locale } from "@/lib/i18n";
+
+const RECORDS_LABEL: Record<Locale, { count: string; loading: string }> = {
+  es: { count: "municipios con mociones", loading: "Cargando registros…" },
+  ca: { count: "municipis amb mocions", loading: "S’estan carregant els registres…" },
+  va: { count: "municipis amb mocions", loading: "S’estan carregant els registres…" },
+  eu: { count: "mozioak dituzten udalerri", loading: "Erregistroak kargatzen…" },
+  gl: { count: "municipios con mocións", loading: "Cargando rexistros…" },
+  en: { count: "municipalities with motions", loading: "Loading records…" },
+  fr: { count: "communes avec des motions", loading: "Chargement des enregistrements…" },
+  de: { count: "Gemeinden mit Anträgen", loading: "Einträge werden geladen …" },
+};
 
 type MotionStatus = "presentada" | "aprobada" | "rechazada" | "no presentada";
 type MotionRecord = {
@@ -309,7 +320,7 @@ if (mapElement.current) {
             <div className="space-y-3 text-sm text-gray-800">
               {(Object.keys(STATUS) as MotionStatus[]).map((key) => <button type="button" key={key} onClick={() => setStatusFilter(statusFilter === key ? "todas" : key)} className={`flex w-full items-center gap-2 rounded-md text-left ${statusFilter === key ? "font-bold" : ""}`} aria-pressed={statusFilter === key}><span className="size-3.5 shrink-0 rounded-sm border border-gray-300" style={{ backgroundColor: STATUS[key].color }} />{STATUS[key].label}</button>)}
             </div>
-            <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600"><span data-no-translate>{data ? `${formatCount(data.records.length)} ${locale === "ca" ? "municipis amb mocions" : locale === "en" ? "municipalities with motions" : locale === "eu" ? "mozioak dituzten udalerri" : locale === "gl" ? "municipios con mocións" : "municipios con mociones"}` : locale === "ca" ? "S’estan carregant els registres…" : locale === "en" ? "Loading records…" : locale === "eu" ? "Erregistroak kargatzen…" : locale === "gl" ? "Cargando rexistros…" : "Cargando registros…"}</span></div>
+            <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600"><span data-no-translate>{data ? `${formatCount(data.records.length)} ${RECORDS_LABEL[locale].count}` : RECORDS_LABEL[locale].loading}</span></div>
             <p className="mt-2 text-[10px] text-gray-500">Cartografía vectorial oficial: IGN/CNIG</p>
           </aside>
         </div>

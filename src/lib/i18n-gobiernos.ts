@@ -1,0 +1,12 @@
+// Textos de la caja «Gobiernos autonómicos» de la portada (clave = castellano) y algunos textos
+// recientes que faltaban en varios idiomas.
+import type { Locale } from "./i18n";
+
+export const gobiernosTexts: Record<string, Partial<Record<Locale, string>>> = {
+  "Gobiernos autonómicos que apoyan el Pacto": {"ca": "Governs autonòmics que donen suport al Pacte", "va": "Governs autonòmics que donen suport al Pacte", "eu": "Itunaren alde dauden autonomia-gobernuak", "gl": "Gobernos autonómicos que apoian o Pacto", "en": "Regional governments backing the Pact", "fr": "Gouvernements régionaux qui soutiennent le Pacte", "de": "Regionalregierungen, die den Pakt unterstützen"},
+  "{n} de {total} Gobiernos han dado su apoyo": {"ca": "{n} de {total} governs han donat el seu suport", "va": "{n} de {total} governs han donat el seu suport", "eu": "{total} gobernutik {n}ek eman dute babesa", "gl": "{n} de {total} gobernos deron o seu apoio", "en": "{n} of {total} governments have given their support", "fr": "{n} gouvernements sur {total} ont apporté leur soutien", "de": "{n} von {total} Regierungen haben ihre Unterstützung zugesagt"},
+  "Apoya el Pacto": {"ca": "Dona suport al Pacte", "va": "Dona suport al Pacte", "eu": "Itunaren alde dago", "gl": "Apoia o Pacto", "en": "Supports the Pact", "fr": "Soutient le Pacte", "de": "Unterstützt den Pakt"},
+  "Aún sin apoyo": {"ca": "Encara sense suport", "va": "Encara sense suport", "eu": "Oraindik babesik gabe", "gl": "Aínda sen apoio", "en": "No support yet", "fr": "Pas encore de soutien", "de": "Noch keine Unterstützung"},
+  "Cargando registros…": {"va": "S'estan carregant els registres…", "fr": "Chargement des enregistrements…", "de": "Einträge werden geladen …"},
+  "Cómo trata Plataforma Dorada los datos de las personas voluntarias y cómo ejercer tus derechos.": {"ca": "Com tracta Plataforma Dorada les dades de les persones voluntàries i com exercir els teus drets.", "va": "Com tracta Plataforma Dorada les dades de les persones voluntàries i com exercir els teus drets.", "eu": "Plataforma Dorada-k boluntarioen datuak nola tratatzen dituen eta zure eskubideak nola gauzatu.", "gl": "Como trata Plataforma Dorada os datos das persoas voluntarias e como exercer os teus dereitos.", "en": "How Plataforma Dorada handles volunteers' data and how to exercise your rights.", "fr": "Comment Plataforma Dorada traite les données des bénévoles et comment exercer vos droits.", "de": "Wie Plataforma Dorada die Daten von Ehrenamtlichen verarbeitet und wie Sie Ihre Rechte ausüben."},
+};

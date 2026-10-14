@@ -1426,7 +1426,6 @@ mergeTranslationVariants({
   "home.badge": { eu: "HERRITAR-MUGIMENDUA" },
   "cta.joinNow": { eu: "Atxiki zaitez" },
   "cta.collaborate": { eu: "Egin bat gurekin" },
-  "home.countersTitle": { eu: "Mugimenduaren datuak" },
   "cta.join": { eu: "Atxiki zaitez" },
   "Por un Pacto de Estado por la dependencia y los cuidados": { eu: "Mendekotasunaren eta zaintzen aldeko Estatu Itun baten alde" },
   "Por un Pacto de Estado por la": { eu: "Mendekotasunaren aldeko Estatu Itun baten alde" },
@@ -1552,7 +1551,6 @@ mergeTranslationVariants({
   "home.badge": { eu: "HERRITAR-MUGIMENDUA" },
   "cta.joinNow": { eu: "Atxiki zaitez" },
   "cta.collaborate": { eu: "Egin bat gurekin" },
-  "home.countersTitle": { eu: "Atxikimendu kopurua" },
   "cta.join": { eu: "Atxiki zaitez" },
   "Por un Pacto de Estado por la dependencia y los cuidados": { eu: "Mendekotasunaren eta zaintzen aldeko Estatu-ituna" },
   "Por un Pacto de Estado por la": { eu: "Mendekotasunaren eta zaintzen aldeko Estatu-ituna" },
@@ -1637,7 +1635,6 @@ mergeTranslationVariants({
   "home.badge": { gl: "MOVEMENTO CIDADÁN · APARTIDISTA" },
   "home.title": { gl: "Plataforma Dorada: Por un Pacto de Estado pola dependencia e os coidados" },
   "home.lead": { gl: "A dependencia non pode esperar. Miles de familias agardan meses ou anos por unha valoración, unha axuda ou unha praza. Pedimos un compromiso estable, apartidista e con financiamento suficiente para quen coida e para quen recibe coidados." },
-  "home.countersTitle": { gl: "Adhesións en directo" },
   "home.goal": { gl: "Obxectivo" },
   "common.updated": { gl: "Actualizado" },
   "common.viewAll": { gl: "Ver todo" },
@@ -1796,12 +1793,6 @@ mergeTranslationVariants({
 
 /* Etiquetas da tarxeta de cifras da portada: textos dispoñibles nos catro idiomas. */
 mergeTranslationVariants({
-  "home.countersTitle": {
-    ca: "Adhesions en directe",
-    eu: "Atxikimenduak zuzenean",
-    gl: "Adhesións en directo",
-    en: "Live pledges"
-  },
   "Organizaciones": {
     ca: "Organitzacions",
     eu: "Erakundeak",

@@ -11,6 +11,7 @@ import {
   type CounterKey,
 } from "@/lib/public-stats";
 import { useCmsContent } from "@/lib/cms";
+import { GOBIERNOS, matchGobierno } from "@/lib/gobiernos";
 import { LatestInstagramVideo } from "@/components/social-feeds";
 import { TestimonyCarousel } from "@/components/testimony-carousel";
 import { AdhesionCarousel } from "@/components/adhesion-carousel";
@@ -54,12 +55,14 @@ function Home() {
     "Todavía no hay adhesiones públicas.",
   );
 
-  // Comunidades autónomas con al menos una adhesión o entidad (dato agregado).
-  const regionsWithData = stats
-    ? Object.values(stats.porComunidad).filter(
-        (r) => r.adhesiones + r.entidades > 0,
-      ).length
-    : null;
+  // Gobiernos autonómicos: los que figuran con apoyo en la pestaña GobiernosWeb salen con check
+  // y primero; el resto, detrás y sin check.
+  const supportedSheet = (cms?.gobiernos ?? []).filter((x) => x.supports);
+  const govRows = GOBIERNOS.map((g) => ({
+    g,
+    supports: supportedSheet.some((x) => matchGobierno(g, x.community)),
+  })).sort((x, y) => Number(y.supports) - Number(x.supports));
+  const govSupport = govRows.filter((r) => r.supports).length;
 
   const entitiesList = (stats?.entidadesAdheridas ?? []).slice(0, 8);
   const entitiesStatus = listStatus(
@@ -132,32 +135,56 @@ function Home() {
               <p className="mt-2 font-display text-4xl font-bold tabular-nums text-primary sm:text-5xl">
                 <AdhesionCount />
               </p>
-              <dl className="mt-5 grid grid-cols-3 gap-3">
+              <dl className="mt-5">
                 <div className="glass-soft rounded-2xl p-3">
                   <dd className="font-display text-xl font-bold tabular-nums">
-                    <LiveCount name="entidades" />
+                    <LiveCount name="mocionesPresentadas" />
                   </dd>
                   <dt className="mt-1 text-[11px] text-muted-foreground">
-                    {t("Organizaciones")}
-                  </dt>
-                </div>
-                <div className="glass-soft rounded-2xl p-3">
-                  <dd className="font-display text-xl font-bold tabular-nums">
-                    <LiveCount name="ayuntamientos" />
-                  </dd>
-                  <dt className="mt-1 text-[11px] text-muted-foreground">
-                    {t("Ayuntamientos")}
-                  </dt>
-                </div>
-                <div className="glass-soft rounded-2xl p-3">
-                  <dd className="font-display text-xl font-bold tabular-nums">
-                    {formatCount(regionsWithData)}
-                  </dd>
-                  <dt className="mt-1 text-[11px] text-muted-foreground">
-                    {t("Comunidades autónomas")}
+                    {t("Mociones presentadas")}
                   </dt>
                 </div>
               </dl>
+              <div className="mt-5" data-no-translate>
+                <h3 className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
+                  {t("Gobiernos autonómicos que apoyan el Pacto")}
+                </h3>
+                <p className="mt-1 text-sm font-semibold text-primary" aria-live="polite">
+                  {t("{n} de {total} Gobiernos han dado su apoyo")
+                    .replace("{n}", String(govSupport))
+                    .replace("{total}", String(govRows.length))}
+                </p>
+                <ul className="mt-3 grid gap-1.5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                  {govRows.map(({ g, supports }) => (
+                    <li
+                      key={g.key}
+                      className={
+                        supports
+                          ? "flex items-center gap-2 rounded-xl border border-[#39ff14] bg-[#39ff14]/15 px-2.5 py-2 text-xs font-bold text-foreground shadow-[0_0_14px_rgba(57,255,20,0.45)]"
+                          : "flex items-center gap-2 rounded-xl border border-dashed border-border bg-muted/30 px-2.5 py-2 text-xs text-muted-foreground"
+                      }
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={
+                          supports
+                            ? "grid size-6 shrink-0 place-items-center rounded-full bg-[#39ff14] text-base leading-none font-black text-[#053b0c] shadow-[0_0_12px_#39ff14]"
+                            : "grid size-6 shrink-0 place-items-center rounded-full border-2 border-dashed border-muted-foreground/40 text-xs leading-none text-muted-foreground/60"
+                        }
+                      >
+                        {supports ? "✓" : "✕"}
+                      </span>
+                      <span className="min-w-0 leading-snug">
+                        {g.labels[locale]}
+                        <span className="sr-only">
+                          {" — "}
+                          {supports ? t("Apoya el Pacto") : t("Aún sin apoyo")}
+                        </span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <p className="mt-5 text-xs text-muted-foreground">
                 {t("Datos agregados. Nunca se publican datos personales ni ubicaciones individuales.")}
               </p>

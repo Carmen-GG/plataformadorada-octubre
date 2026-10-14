@@ -26,6 +26,7 @@ export type CmsMilestone = { id: string; date: string; title: string; descriptio
 export type CmsVideoCategory = { id: string; name: string; description: string; order: number; published: boolean };
 export type CmsVideo = { id: string; title: string; description: string; url: string; platform: "youtube" | "facebook"; order: number; published: boolean; category: string };
 export type CmsRoadmap = { id: string; phase: string; title: string; detail: string; date?: string; active?: boolean };
+export type CmsGobierno = { community: string; supports: boolean; date: string };
 export type CmsLema = { id: string; text: string; name: string; order: number; published: boolean };
 
 export type CmsPayload = {
@@ -39,6 +40,7 @@ export type CmsPayload = {
   canciones?: Array<{x:string;artist:string}>;
   frases?: Array<{text:string;name:string}>;
   lemas?: CmsLema[];
+  gobiernos?: CmsGobierno[];
   actualizado?: string;
 };
 
@@ -96,6 +98,7 @@ type AppsScriptContentResponse = {
   canciones?: Array<{x?:string;artist?:string}>;
   frases?: Array<{text?:string;name?:string}>;
   lemas?: Array<{id?:string;text?:string;name?:string;autor?:string;author?:string;proponente?:string;order?:number|string;published?:boolean|string}>;
+  gobiernos?: Array<{comunidad?:string;apoya?:boolean|string;fecha?:string}>;
   actualizado?: string;
 };
 
@@ -198,6 +201,8 @@ async function refresh() {
       canciones: (raw.canciones ?? []).map((item) => ({ x:String(item.x??""), artist:String(item.artist??"") })),
       frases: (raw.frases ?? []).map((item) => ({ text:String(item.text??""), name:String(item.name??"") })),
       lemas: (raw.lemas ?? []).map((item) => ({ id:String(item.id??""), text:String(item.text??""), name:[item.name,item.autor,item.author,item.proponente].map((value)=>String(value??"").trim()).find((value)=>value.length>0) ?? "", order:Number(item.order??0), published:item.published !== false && !/^(no|false|0)$/i.test(String(item.published??"Sí")) })),
+
+      gobiernos: (raw.gobiernos ?? []).map((x) => ({ community:String(x.comunidad??""), supports:x.apoya === true || /^(s[ií]|si|true|1|x|✓|✔|ok)$/i.test(String(x.apoya??"").trim()), date:String(x.fecha??"") })),
 
       eventos: (raw.eventos ?? []).map((item) => {
         const rawDate = String(item.fecha ?? item.date ?? "").trim();

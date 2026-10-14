@@ -74,13 +74,29 @@ const MUNICIPALITY_ALIASES: Record<string, string[]> = {
   "roz as de madrid las": ["las rozas de madrid", "rozas de madrid"],
 };
 
+
 function municipalityVariants(value: string) {
+  const original = String(value ?? "").trim().toLocaleLowerCase("es-ES");
   const normalized = normalize(value);
   const aliases = MUNICIPALITY_ALIASES[normalized] || [];
-  const variants = [normalized, ...aliases.map(normalize)];
-  if (normalized.includes(" ")) variants.push(normalized.replace(/^(el|la|los|las) /, ""));
+
+  // La cartografía se compara con nombres en minúsculas,
+  // pero conserva las tildes y los signos originales.
+  const variants = [
+    original,
+    ...aliases.map((alias) => alias.trim().toLocaleLowerCase("es-ES")),
+  ];
+
+  // Añadir variantes sin artículo inicial.
+  variants.forEach((name) => {
+    if (name.includes(" ")) {
+      variants.push(name.replace(/^(el|la|los|las)\s+/, ""));
+    }
+  });
+
   return Array.from(new Set(variants.filter(Boolean)));
 }
+
 
 function normalizeStatus(value: unknown): MotionStatus {
   const status = normalize(value);

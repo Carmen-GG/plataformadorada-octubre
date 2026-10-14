@@ -98,77 +98,72 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
       ],
     },
     privacidad: {
-      title: "Política de privacidad",
-      lead: "Texto provisional pendiente de revisión jurídica.",
+      title: "Política de privacidad del voluntariado",
+      lead: "En Plataforma Dorada nos comprometemos a proteger la privacidad de las personas que desean colaborar con nuestra iniciativa. Tratamos los datos personales de forma responsable, transparente y conforme a la normativa vigente en materia de protección de datos.",
       sections: [
         {
-          heading: "Quién es el responsable del tratamiento",
-          paragraphs: [
-            "Plataforma Dorada es un movimiento ciudadano sin personalidad jurídica propia. Los datos personales que recogemos los tratan las personas que impulsan el movimiento, que actúan como responsables: [RESPONSABLE].",
-            "Domicilio: [DOMICILIO]. Correo electrónico: {email}.",
-            "Cuando el movimiento se constituya como entidad, esta pasará a ser la responsable y te informaremos del cambio.",
-          ],
-        },
-        {
-          heading: "Qué datos tratamos y para qué",
+          heading: "Responsable del tratamiento",
           items: [
-            "Adhesión: los datos que te pedimos en el formulario ([DATOS DEL FORMULARIO DE ADHESIÓN]). Los usamos para contabilizar el apoyo al movimiento y mostrar cifras agregadas. Base: tu consentimiento.",
-            "Aparecer públicamente (opcional): solo si lo autorizas expresamente en el formulario, mostramos en la web tu nombre, la inicial de tu primer apellido y tu ciudad. Es un consentimiento distinto del de adherirte: si no lo das, no apareces.",
-            "Voluntariado: los datos del formulario ([DATOS DEL FORMULARIO DE VOLUNTARIADO]), para contactarte y coordinar la colaboración. Base: tu consentimiento.",
-            "Testimonios: tu testimonio y tus datos de contacto. Un testimonio puede revelar datos de salud o de dependencia, que están especialmente protegidos: solo los tratamos con tu consentimiento explícito. Hay dos consentimientos separados: uno para enviarnos el testimonio y otro, opcional, para publicarlo.",
-            "Contacto: el nombre, el correo y el mensaje que nos envías, para responderte. Base: tu consentimiento al enviar el formulario.",
-            "Entidades adheridas: datos de la entidad, de su persona de contacto y su logotipo, para mostrarla como entidad adherida. Base: consentimiento.",
-          ],
-          paragraphs: [
-            "No vendemos tus datos, no los usamos con fines publicitarios y no tomamos decisiones automatizadas con ellos.",
+            "Responsable: Plataforma Dorada",
+            "Correo electrónico: plataformadoradaes@gmail.com.",
           ],
         },
         {
-          heading: "Testimonios que hablan de otras personas",
+          heading: "¿Qué datos recogemos?",
           paragraphs: [
-            "Si cuentas la situación de otra persona (por ejemplo, un familiar dependiente), hazlo sin datos que permitan identificarla o asegúrate de contar con su permiso. Podemos ocultar o editar un testimonio para proteger la intimidad de terceros.",
-            "Por favor, no incluyas información de salud en el formulario de contacto: para eso existe el formulario de testimonios.",
+            "Podemos recoger datos identificativos y de contacto, como nombre y apellidos, correo electrónico, teléfono y localidad, así como información sobre disponibilidad, experiencia, conocimientos e intereses de colaboración.",
+            "Solo solicitaremos los datos necesarios para organizar y coordinar las actividades de voluntariado.",
           ],
         },
         {
-          heading: "Con quién compartimos los datos",
-          paragraphs: [
-            "No cedemos tus datos a terceros para sus propios fines. Para gestionar la web usamos servicios de Google (Formularios, Hojas de cálculo, Drive, Apps Script y Gmail), que tratan datos por cuenta nuestra y pueden implicar transferencias fuera del Espacio Económico Europeo con las garantías previstas en el RGPD.",
-            "El acceso a los datos se limita a las personas voluntarias que el movimiento autorice [CONFIRMAR ACCESO].",
-            "Lo que autorizas publicar (adhesión o testimonio) es visible para cualquier persona en Internet.",
+          heading: "¿Para qué utilizamos tus datos?",
+          intro: [
+            "Los datos se utilizarán para:",
           ],
-        },
-        {
-          heading: "Cuánto tiempo los conservamos",
-          paragraphs: [
-            "Conservamos tus datos mientras el movimiento esté activo o hasta que retires tu consentimiento o pidas su supresión. Los mensajes de contacto se conservan [PLAZO]. Después los eliminamos o, si una ley nos obliga a guardarlos, los bloqueamos.",
-          ],
-        },
-        {
-          heading: "Tus derechos",
           items: [
-            "Acceder a tus datos y obtener una copia.",
-            "Rectificarlos si son inexactos.",
-            "Pedir su supresión.",
-            "Oponerte a un tratamiento o pedir que lo limitemos.",
-            "Recibirlos en un formato reutilizable (portabilidad).",
-            "Retirar tu consentimiento en cualquier momento, sin que afecte a lo ya realizado.",
+            "Gestionar las solicitudes de incorporación al voluntariado.",
+            "Contactar con las personas interesadas y coordinar su participación.",
+            "Informar sobre campañas, actividades y tareas relacionadas con su colaboración.",
+            "Mantener la organización y el seguimiento de las actividades de voluntariado.",
           ],
           paragraphs: [
-            "Escribe a {email} indicando qué derecho quieres ejercer; te responderemos en el plazo máximo de un mes. Si retiras la autorización para aparecer públicamente o para publicar tu testimonio, lo retiraremos de la web.",
-            "Si crees que no hemos tratado bien tus datos, puedes reclamar ante la Agencia Española de Protección de Datos (www.aepd.es).",
+            "No utilizaremos los datos para finalidades incompatibles con las anteriores ni los incorporaremos a campañas comerciales ajenas a la actividad de la plataforma.",
           ],
         },
         {
-          heading: "Menores de edad",
+          heading: "¿Cuál es la base jurídica del tratamiento?",
           paragraphs: [
-            "Esta web no está dirigida a menores de 14 años. Si eres menor de esa edad, necesitas la autorización de tu padre, madre o tutor legal para darnos tus datos.",
+            "El tratamiento se fundamentará en la gestión de la solicitud de participación y, cuando proceda, de la relación de voluntariado, así como en el consentimiento para aquellos usos que lo requieran.",
+            "Cuando un tratamiento se base en el consentimiento, este podrá retirarse en cualquier momento, sin que ello afecte a la licitud del tratamiento realizado previamente.",
           ],
         },
         {
-          heading: "Seguridad",
+          heading: "¿Con quién compartimos tus datos?",
           paragraphs: [
-            "Aplicamos medidas razonables para proteger los datos: acceso restringido, servicios con autenticación y publicación en la web únicamente de datos agregados o autorizados expresamente. Ninguna medida es infalible; si detectas un problema, avísanos en {email}.",
+            "Los datos no se venderán ni se cederán a terceros para fines comerciales. Solo podrán comunicarse cuando sea necesario para la organización de las actividades, exista una base jurídica válida o resulte exigible legalmente.",
+            "Si se utilizan herramientas externas para gestionar formularios, listas de contactos o comunicaciones, se adoptarán las garantías y medidas de protección que correspondan.",
+          ],
+        },
+        {
+          heading: "¿Durante cuánto tiempo conservamos tus datos?",
+          paragraphs: [
+            "Los datos se conservarán durante el tiempo necesario para gestionar la solicitud y la participación en el voluntariado. Posteriormente, se suprimirán o bloquearán cuando proceda, salvo que deban conservarse durante más tiempo por una obligación legal o para atender posibles responsabilidades.",
+          ],
+        },
+        {
+          heading: "¿Qué derechos tienes?",
+          paragraphs: [
+            "Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y, cuando corresponda, portabilidad de tus datos.",
+            "Para ello, puedes escribir a plataformadoradaes@gmail.com, indicando el derecho que deseas ejercer.",
+            "También puedes presentar una reclamación ante la Agencia Española de Protección de Datos si consideras que el tratamiento de tus datos no se ajusta a la normativa.",
+          ],
+        },
+        {
+          heading: "Seguridad y confidencialidad",
+          paragraphs: [
+            "Plataforma Dorada adoptará las medidas técnicas y organizativas adecuadas para proteger los datos personales frente a accesos no autorizados, pérdida, alteración o divulgación indebida.",
+            "La información de las personas voluntarias se utilizará únicamente para los fines informados y con acceso limitado a quienes la necesiten para desarrollar sus funciones.",
+            "FECHA DE ACTUALIZACIÓN: 13/10/2026",
           ],
         },
       ],
@@ -329,77 +324,72 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
       ],
     },
     privacidad: {
-      title: "Política de privacitat",
-      lead: "Text provisional pendent de revisió jurídica.",
+      title: "Política de privacitat del voluntariat",
+      lead: "A Plataforma Dorada ens comprometem a protegir la privacitat de les persones que volen col·laborar amb la nostra iniciativa. Tractem les dades personals de manera responsable, transparent i d'acord amb la normativa vigent en matèria de protecció de dades.",
       sections: [
         {
-          heading: "Qui és el responsable del tractament",
-          paragraphs: [
-            "Plataforma Dorada és un moviment ciutadà sense personalitat jurídica pròpia. Les dades personals que recollim les tracten les persones que impulsen el moviment, que actuen com a responsables: [RESPONSABLE].",
-            "Domicili: [DOMICILIO]. Correu electrònic: {email}.",
-            "Quan el moviment es constitueixi com a entitat, aquesta passarà a ser la responsable i t'informarem del canvi.",
-          ],
-        },
-        {
-          heading: "Quines dades tractem i per a què",
+          heading: "Responsable del tractament",
           items: [
-            "Adhesió: les dades que et demanem al formulari ([DATOS DEL FORMULARIO DE ADHESIÓN]). Les fem servir per comptabilitzar el suport al moviment i mostrar xifres agregades. Base: el teu consentiment.",
-            "Aparèixer públicament (opcional): només si ho autoritzes expressament al formulari, mostrem al web el teu nom, la inicial del primer cognom i la teva ciutat. És un consentiment diferent del d'adherir-te: si no el dónes, no apareixes.",
-            "Voluntariat: les dades del formulari ([DATOS DEL FORMULARIO DE VOLUNTARIADO]), per contactar amb tu i coordinar la col·laboració. Base: el teu consentiment.",
-            "Testimonis: el teu testimoni i les teves dades de contacte. Un testimoni pot revelar dades de salut o de dependència, que estan especialment protegides: només les tractem amb el teu consentiment explícit. Hi ha dos consentiments separats: un per enviar-nos el testimoni i un altre, opcional, per publicar-lo.",
-            "Contacte: el nom, el correu i el missatge que ens envies, per respondre't. Base: el teu consentiment en enviar el formulari.",
-            "Entitats adherides: dades de l'entitat, de la seva persona de contacte i el seu logotip, per mostrar-la com a entitat adherida. Base: consentiment.",
-          ],
-          paragraphs: [
-            "No venem les teves dades, no les fem servir amb finalitats publicitàries i no prenem decisions automatitzades amb elles.",
+            "Responsable: Plataforma Dorada",
+            "Correu electrònic: plataformadoradaes@gmail.com.",
           ],
         },
         {
-          heading: "Testimonis que parlen d'altres persones",
+          heading: "Quines dades recollim?",
           paragraphs: [
-            "Si expliques la situació d'una altra persona (per exemple, un familiar dependent), fes-ho sense dades que permetin identificar-la o assegura't de tenir el seu permís. Podem ocultar o editar un testimoni per protegir la intimitat de tercers.",
-            "Si us plau, no incloguis informació de salut al formulari de contacte: per a això hi ha el formulari de testimonis.",
+            "Podem recollir dades identificatives i de contacte, com ara nom i cognoms, correu electrònic, telèfon i localitat, així com informació sobre disponibilitat, experiència, coneixements i interessos de col·laboració.",
+            "Només demanarem les dades necessàries per organitzar i coordinar les activitats de voluntariat.",
           ],
         },
         {
-          heading: "Amb qui compartim les dades",
-          paragraphs: [
-            "No cedim les teves dades a tercers per a les seves pròpies finalitats. Per gestionar el web fem servir serveis de Google (Formularis, Fulls de càlcul, Drive, Apps Script i Gmail), que tracten dades per compte nostre i poden implicar transferències fora de l'Espai Econòmic Europeu amb les garanties previstes en el RGPD.",
-            "L'accés a les dades es limita a les persones voluntàries que el moviment autoritzi [CONFIRMAR ACCESO].",
-            "El que autoritzes publicar (adhesió o testimoni) és visible per a qualsevol persona a Internet.",
+          heading: "Per a què fem servir les teves dades?",
+          intro: [
+            "Les dades s'utilitzaran per:",
           ],
-        },
-        {
-          heading: "Quant de temps les conservem",
-          paragraphs: [
-            "Conservem les teves dades mentre el moviment estigui actiu o fins que retiris el consentiment o en demanis la supressió. Els missatges de contacte es conserven [PLAZO]. Després els eliminem o, si una llei ens obliga a guardar-los, els bloquegem.",
-          ],
-        },
-        {
-          heading: "Els teus drets",
           items: [
-            "Accedir a les teves dades i obtenir-ne una còpia.",
-            "Rectificar-les si són inexactes.",
-            "Demanar-ne la supressió.",
-            "Oposar-te a un tractament o demanar que el limitem.",
-            "Rebre-les en un format reutilitzable (portabilitat).",
-            "Retirar el teu consentiment en qualsevol moment, sense que afecti el que ja s'ha fet.",
+            "Gestionar les sol·licituds d'incorporació al voluntariat.",
+            "Contactar amb les persones interessades i coordinar-ne la participació.",
+            "Informar sobre campanyes, activitats i tasques relacionades amb la seva col·laboració.",
+            "Mantenir l'organització i el seguiment de les activitats de voluntariat.",
           ],
           paragraphs: [
-            "Escriu a {email} indicant quin dret vols exercir; et respondrem en un termini màxim d'un mes. Si retires l'autorització per aparèixer públicament o per publicar el teu testimoni, el retirarem del web.",
-            "Si creus que no hem tractat bé les teves dades, pots reclamar davant l'Agència Espanyola de Protecció de Dades (www.aepd.es).",
+            "No farem servir les dades per a finalitats incompatibles amb les anteriors ni les incorporarem a campanyes comercials alienes a l'activitat de la plataforma.",
           ],
         },
         {
-          heading: "Menors d'edat",
+          heading: "Quina és la base jurídica del tractament?",
           paragraphs: [
-            "Aquest web no s'adreça a menors de 14 anys. Si ets menor d'aquesta edat, necessites l'autorització del teu pare, mare o tutor legal per donar-nos les teves dades.",
+            "El tractament es fonamentarà en la gestió de la sol·licitud de participació i, quan escaigui, de la relació de voluntariat, així com en el consentiment per als usos que ho requereixin.",
+            "Quan un tractament es basi en el consentiment, aquest es podrà retirar en qualsevol moment, sense que això afecti la licitud del tractament fet prèviament.",
           ],
         },
         {
-          heading: "Seguretat",
+          heading: "Amb qui compartim les teves dades?",
           paragraphs: [
-            "Apliquem mesures raonables per protegir les dades: accés restringit, serveis amb autenticació i publicació al web únicament de dades agregades o autoritzades expressament. Cap mesura és infal·lible; si detectes un problema, avisa'ns a {email}.",
+            "Les dades no es vendran ni es cediran a tercers amb finalitats comercials. Només es podran comunicar quan sigui necessari per a l'organització de les activitats, hi hagi una base jurídica vàlida o sigui exigible legalment.",
+            "Si s'utilitzen eines externes per gestionar formularis, llistes de contactes o comunicacions, s'adoptaran les garanties i mesures de protecció que corresponguin.",
+          ],
+        },
+        {
+          heading: "Durant quant de temps conservem les teves dades?",
+          paragraphs: [
+            "Les dades es conservaran durant el temps necessari per gestionar la sol·licitud i la participació en el voluntariat. Posteriorment, se suprimiran o es bloquejaran quan escaigui, tret que s'hagin de conservar durant més temps per una obligació legal o per atendre possibles responsabilitats.",
+          ],
+        },
+        {
+          heading: "Quins drets tens?",
+          paragraphs: [
+            "Pots exercir els teus drets d'accés, rectificació, supressió, oposició, limitació del tractament i, quan correspongui, portabilitat de les teves dades.",
+            "Per fer-ho, pots escriure a plataformadoradaes@gmail.com indicant el dret que vols exercir.",
+            "També pots presentar una reclamació davant l'Agència Espanyola de Protecció de Dades si consideres que el tractament de les teves dades no s'ajusta a la normativa.",
+          ],
+        },
+        {
+          heading: "Seguretat i confidencialitat",
+          paragraphs: [
+            "Plataforma Dorada adoptarà les mesures tècniques i organitzatives adequades per protegir les dades personals davant d'accessos no autoritzats, pèrdua, alteració o divulgació indeguda.",
+            "La informació de les persones voluntàries s'utilitzarà únicament per a les finalitats informades i amb accés limitat a qui la necessiti per exercir les seves funcions.",
+            "DATA D'ACTUALITZACIÓ: 13/10/2026",
           ],
         },
       ],
@@ -560,77 +550,72 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
       ],
     },
     privacidad: {
-      title: "Pribatutasun-politika",
-      lead: "Behin-behineko testua, lege-berrikuspenaren zain.",
+      title: "Boluntariotzaren pribatutasun-politika",
+      lead: "Plataforma Dorada mugimenduan konpromisoa hartzen dugu gure ekimenarekin lankidetzan aritu nahi duten pertsonen pribatutasuna babesteko. Datu pertsonalak modu arduratsuan eta gardenean tratatzen ditugu, datuen babesari buruzko indarreko araudiaren arabera.",
       sections: [
         {
-          heading: "Nor da tratamenduaren arduraduna",
-          paragraphs: [
-            "Plataforma Dorada nortasun juridiko propiorik gabeko herritarren mugimendu bat da. Jasotzen ditugun datu pertsonalak mugimendua bultzatzen duten pertsonek tratatzen dituzte, arduradun gisa: [RESPONSABLE].",
-            "Helbidea: [DOMICILIO]. Helbide elektronikoa: {email}.",
-            "Mugimendua erakunde gisa eratzen denean, erakunde hori izango da arduraduna eta aldaketaren berri emango dizugu.",
-          ],
-        },
-        {
-          heading: "Zein datu tratatzen ditugun eta zertarako",
+          heading: "Tratamenduaren arduraduna",
           items: [
-            "Atxikimendua: inprimakian eskatzen dizkizugun datuak ([DATOS DEL FORMULARIO DE ADHESIÓN]). Mugimenduarentzako babesa zenbatzeko eta zifra agregatuak erakusteko erabiltzen ditugu. Oinarria: zure baimena.",
-            "Publikoki agertzea (aukerakoa): inprimakian berariaz baimentzen baduzu bakarrik, webgunean zure izena, lehen abizenaren inizila eta zure hiria erakusten ditugu. Atxikitzeko baimenaz bereizitako baimena da: ematen ez baduzu, ez zara agertuko.",
-            "Boluntariotza: inprimakiko datuak ([DATOS DEL FORMULARIO DE VOLUNTARIADO]), zurekin harremanetan jartzeko eta lankidetza koordinatzeko. Oinarria: zure baimena.",
-            "Testigantzak: zure testigantza eta zure harremanetarako datuak. Testigantza batek osasun- edo mendekotasun-datuak azaleraz ditzake, eta datu horiek bereziki babestuta daude: zure berariazko baimenarekin bakarrik tratatzen ditugu. Bi baimen bereizi daude: bat testigantza bidaltzeko eta bestea, aukerakoa, argitaratzeko.",
-            "Harremana: bidaltzen diguzun izena, posta eta mezua, erantzun ahal izateko. Oinarria: inprimakia bidaltzean ematen duzun baimena.",
-            "Atxikitako erakundeak: erakundearen eta haren harremanetarako pertsonaren datuak eta logotipoa, atxikitako erakunde gisa erakusteko. Oinarria: baimena.",
-          ],
-          paragraphs: [
-            "Ez ditugu zure datuak saltzen, ez ditugu publizitate-helburuetarako erabiltzen eta ez dugu haiekin erabaki automatizaturik hartzen.",
+            "Arduraduna: Plataforma Dorada",
+            "Helbide elektronikoa: plataformadoradaes@gmail.com.",
           ],
         },
         {
-          heading: "Beste pertsona batzuei buruzko testigantzak",
+          heading: "Zer datu biltzen ditugu?",
           paragraphs: [
-            "Beste pertsona baten egoera kontatzen baduzu (adibidez, senide mendeko baten egoera), egin ezazu pertsona hori identifikatzea ahalbidetzen duten daturik gabe edo ziurtatu haren baimena duzula. Testigantza bat ezkutatu edo edita dezakegu hirugarrenen intimitatea babesteko.",
-            "Mesedez, ez sartu osasun-informaziorik harremanetarako inprimakian: horretarako testigantzen inprimakia dago.",
+            "Identifikazio- eta harreman-datuak bil ditzakegu, hala nola izen-abizenak, helbide elektronikoa, telefonoa eta herria, baita erabilgarritasunari, esperientziari, ezagutzei eta lankidetza-interesei buruzko informazioa ere.",
+            "Boluntariotza-jarduerak antolatzeko eta koordinatzeko beharrezkoak diren datuak soilik eskatuko ditugu.",
           ],
         },
         {
-          heading: "Norekin partekatzen ditugun datuak",
-          paragraphs: [
-            "Ez dizkiegu zure datuak hirugarrenei laga haien helburu propioetarako. Webgunea kudeatzeko Google zerbitzuak erabiltzen ditugu (Inprimakiak, Kalkulu-orriak, Drive, Apps Script eta Gmail); zerbitzu horiek gure izenean tratatzen dituzte datuak eta Europako Esparru Ekonomikotik kanpoko transferentziak ekar ditzakete, DBEOn ezarritako bermeekin.",
-            "Datuetarako sarbidea mugimenduak baimentzen dituen boluntarioei mugatzen zaie [CONFIRMAR ACCESO].",
-            "Argitaratzea baimentzen duzuna (atxikimendua edo testigantza) edonorentzat ikusgai dago Internetean.",
+          heading: "Zertarako erabiltzen ditugu zure datuak?",
+          intro: [
+            "Datuak honetarako erabiliko dira:",
           ],
-        },
-        {
-          heading: "Zenbat denboran gordetzen ditugun",
-          paragraphs: [
-            "Zure datuak mugimendua aktibo dagoen bitartean gordetzen ditugu, edo zuk baimena kendu arte edo ezabatzea eskatu arte. Harremanetarako mezuak [PLAZO] gordetzen dira. Ondoren ezabatu egiten ditugu edo, lege batek gordetzera behartzen bagaitu, blokeatu.",
-          ],
-        },
-        {
-          heading: "Zure eskubideak",
           items: [
-            "Zure datuetara sartzea eta kopia bat lortzea.",
-            "Zuzentzea, zehatzak ez badira.",
-            "Ezabatzea eskatzea.",
-            "Tratamendu bati aurka egitea edo mugatzeko eskatzea.",
-            "Berrerabil daitekeen formatu batean jasotzea (eramangarritasuna).",
-            "Baimena edozein unetan kentzea, dagoeneko egindakoari eragin gabe.",
+            "Boluntariotzan sartzeko eskaerak kudeatzeko.",
+            "Interesa duten pertsonekin harremanetan jartzeko eta haien parte-hartzea koordinatzeko.",
+            "Haien lankidetzarekin lotutako kanpainei, jarduerei eta zereginei buruz informatzeko.",
+            "Boluntariotza-jardueren antolaketa eta jarraipena egiteko.",
           ],
           paragraphs: [
-            "Idatzi {email} helbidera, gauzatu nahi duzun eskubidea adieraziz; gehienez hilabeteko epean erantzungo dizugu. Publikoki agertzeko baimena edo testigantza argitaratzekoa kentzen baduzu, webgunetik kenduko dugu.",
-            "Uste baduzu ez ditugula zure datuak behar bezala tratatu, Datuak Babesteko Espainiako Agentziaren (www.aepd.es) aurrean erreklamatu dezakezu.",
+            "Ez ditugu datuak aurreko helburuekin bateraezinak diren helburuetarako erabiliko, ezta plataformaren jardueraz kanpoko kanpaina komertzialetan sartuko ere.",
           ],
         },
         {
-          heading: "Adingabeak",
+          heading: "Zein da tratamenduaren oinarri juridikoa?",
           paragraphs: [
-            "Webgune hau ez dago 14 urtetik beherakoei zuzenduta. Adin horretatik beherakoa bazara, zure aitaren, amaren edo tutore legalaren baimena behar duzu datuak emateko.",
+            "Tratamendua parte hartzeko eskaeraren kudeaketan oinarrituko da eta, hala badagokio, boluntariotza-harremanaren kudeaketan, bai eta baimena behar duten erabileretarako emandako baimenean ere.",
+            "Tratamendu bat baimenean oinarritzen denean, baimen hori edozein unetan kendu ahal izango da, eta horrek ez dio eragingo aurretik egindako tratamenduaren zilegitasunari.",
           ],
         },
         {
-          heading: "Segurtasuna",
+          heading: "Norekin partekatzen ditugu zure datuak?",
           paragraphs: [
-            "Datuak babesteko neurri zentzuzkoak aplikatzen ditugu: sarbide mugatua, autentifikazioa duten zerbitzuak eta webgunean datu agregatuak edo berariaz baimenduak bakarrik argitaratzea. Ez dago neurri erabat segururik; arazoren bat antzematen baduzu, jakinarazi iezaguzu {email} helbidean.",
+            "Datuak ez dira salduko, ezta hirugarrenei lagako ere helburu komertzialetarako. Jarduerak antolatzeko beharrezkoa denean, oinarri juridiko baliozkoa dagoenean edo legez eskatzen denean bakarrik jakinarazi ahal izango dira.",
+            "Inprimakiak, harreman-zerrendak edo komunikazioak kudeatzeko kanpoko tresnak erabiltzen badira, dagozkien bermeak eta babes-neurriak hartuko dira.",
+          ],
+        },
+        {
+          heading: "Zenbat denboraz gordetzen ditugu zure datuak?",
+          paragraphs: [
+            "Datuak eskaera eta boluntariotzako parte-hartzea kudeatzeko behar den denboran gordeko dira. Ondoren, ezabatu edo blokeatu egingo dira hala badagokio, legezko betebehar batengatik edo balizko erantzukizunei erantzuteko denbora gehiagoz gorde behar ez badira.",
+          ],
+        },
+        {
+          heading: "Zer eskubide dituzu?",
+          paragraphs: [
+            "Zure datuak eskuratzeko, zuzentzeko, ezabatzeko, aurka egiteko, tratamendua mugatzeko eta, hala badagokio, eramangarritasunerako eskubideak erabil ditzakezu.",
+            "Horretarako, plataformadoradaes@gmail.com helbidera idatz dezakezu, erabili nahi duzun eskubidea adierazita.",
+            "Halaber, erreklamazio bat aurkez dezakezu Datuak Babesteko Espainiako Agentzian, zure datuen tratamendua araudira egokitzen ez dela uste baduzu.",
+          ],
+        },
+        {
+          heading: "Segurtasuna eta konfidentzialtasuna",
+          paragraphs: [
+            "Plataforma Dorada mugimenduak neurri tekniko eta antolakuntzako egokiak hartuko ditu datu pertsonalak baimenik gabeko sarbideen, galeren, aldaketen edo zabalkunde desegokiaren aurka babesteko.",
+            "Boluntarioen informazioa jakinarazitako helburuetarako soilik erabiliko da, eta sarbidea beren eginkizunak betetzeko behar dutenetara mugatuko da.",
+            "EGUNERATZE-DATA: 2026/10/13",
           ],
         },
       ],
@@ -791,77 +776,72 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
       ],
     },
     privacidad: {
-      title: "Política de privacidade",
-      lead: "Texto provisional pendente de revisión xurídica.",
+      title: "Política de privacidade do voluntariado",
+      lead: "En Plataforma Dorada comprometémonos a protexer a privacidade das persoas que desexan colaborar coa nosa iniciativa. Tratamos os datos persoais de forma responsable, transparente e conforme á normativa vixente en materia de protección de datos.",
       sections: [
         {
-          heading: "Quen é o responsable do tratamento",
-          paragraphs: [
-            "Plataforma Dorada é un movemento cidadán sen personalidade xurídica propia. Os datos persoais que recollemos trátaos as persoas que impulsan o movemento, que actúan como responsables: [RESPONSABLE].",
-            "Domicilio: [DOMICILIO]. Correo electrónico: {email}.",
-            "Cando o movemento se constitúa como entidade, esta pasará a ser a responsable e informarémoste do cambio.",
-          ],
-        },
-        {
-          heading: "Que datos tratamos e para que",
+          heading: "Responsable do tratamento",
           items: [
-            "Adhesión: os datos que che pedimos no formulario ([DATOS DEL FORMULARIO DE ADHESIÓN]). Úsámolos para contabilizar o apoio ao movemento e amosar cifras agregadas. Base: o teu consentimento.",
-            "Aparecer publicamente (opcional): só se o autorizas expresamente no formulario, amosamos na web o teu nome, a inicial do teu primeiro apelido e a túa cidade. É un consentimento distinto do de adherirte: se non o das, non aparecerás.",
-            "Voluntariado: os datos do formulario ([DATOS DEL FORMULARIO DE VOLUNTARIADO]), para contactar contigo e coordinar a colaboración. Base: o teu consentimento.",
-            "Testemuños: o teu testemuño e os teus datos de contacto. Un testemuño pode revelar datos de saúde ou de dependencia, que están especialmente protexidos: só os tratamos co teu consentimento explícito. Hai dous consentimentos separados: un para enviarnos o testemuño e outro, opcional, para publicalo.",
-            "Contacto: o nome, o correo e a mensaxe que nos envías, para responderte. Base: o teu consentimento ao enviar o formulario.",
-            "Entidades adheridas: datos da entidade, da súa persoa de contacto e o seu logotipo, para amosala como entidade adherida. Base: consentimento.",
-          ],
-          paragraphs: [
-            "Non vendemos os teus datos, non os usamos con fins publicitarios e non tomamos decisións automatizadas con eles.",
+            "Responsable: Plataforma Dorada",
+            "Correo electrónico: plataformadoradaes@gmail.com.",
           ],
         },
         {
-          heading: "Testemuños que falan doutras persoas",
+          heading: "Que datos recollemos?",
           paragraphs: [
-            "Se contas a situación doutra persoa (por exemplo, un familiar dependente), faino sen datos que permitan identificala ou asegúrate de contar co seu permiso. Podemos ocultar ou editar un testemuño para protexer a intimidade de terceiros.",
-            "Por favor, non incluías información de saúde no formulario de contacto: para iso existe o formulario de testemuños.",
+            "Podemos recoller datos identificativos e de contacto, como nome e apelidos, correo electrónico, teléfono e localidade, así como información sobre dispoñibilidade, experiencia, coñecementos e intereses de colaboración.",
+            "Só solicitaremos os datos necesarios para organizar e coordinar as actividades de voluntariado.",
           ],
         },
         {
-          heading: "Con quen compartimos os datos",
-          paragraphs: [
-            "Non cedemos os teus datos a terceiros para os seus propios fins. Para xestionar a web usamos servizos de Google (Formularios, Follas de cálculo, Drive, Apps Script e Gmail), que tratan datos por conta noso e poden implicar transferencias fóra do Espazo Económico Europeo coas garantías previstas no RXPD.",
-            "O acceso aos datos limítase ás persoas voluntarias que o movemento autorice [CONFIRMAR ACCESO].",
-            "O que autorizas publicar (adhesión ou testemuño) é visible para calquera persoa en Internet.",
+          heading: "Para que utilizamos os teus datos?",
+          intro: [
+            "Os datos utilizaranse para:",
           ],
-        },
-        {
-          heading: "Canto tempo os conservamos",
-          paragraphs: [
-            "Conservamos os teus datos mentres o movemento estea activo ou ata que retires o consentimento ou pidas a súa supresión. As mensaxes de contacto consérvanse [PLAZO]. Despois eliminámolas ou, se unha lei nos obriga a gardalas, bloqueámolas.",
-          ],
-        },
-        {
-          heading: "Os teus dereitos",
           items: [
-            "Acceder aos teus datos e obter unha copia.",
-            "Rectificalos se son inexactos.",
-            "Pedir a súa supresión.",
-            "Opoñerte a un tratamento ou pedir que o limitemos.",
-            "Recibilos nun formato reutilizable (portabilidade).",
-            "Retirar o teu consentimento en calquera momento, sen que afecte ao xa realizado.",
+            "Xestionar as solicitudes de incorporación ao voluntariado.",
+            "Contactar coas persoas interesadas e coordinar a súa participación.",
+            "Informar sobre campañas, actividades e tarefas relacionadas coa súa colaboración.",
+            "Manter a organización e o seguimento das actividades de voluntariado.",
           ],
           paragraphs: [
-            "Escribe a {email} indicando que dereito queres exercer; responderémosche nun prazo máximo dun mes. Se retiras a autorización para aparecer publicamente ou para publicar o teu testemuño, retirarémolo da web.",
-            "Se pensas que non tratamos ben os teus datos, podes reclamar ante a Axencia Española de Protección de Datos (www.aepd.es).",
+            "Non utilizaremos os datos para finalidades incompatibles coas anteriores nin os incorporaremos a campañas comerciais alleas á actividade da plataforma.",
           ],
         },
         {
-          heading: "Menores de idade",
+          heading: "Cal é a base xurídica do tratamento?",
           paragraphs: [
-            "Esta web non está dirixida a menores de 14 anos. Se es menor desa idade, precisas a autorización do teu pai, nai ou titor legal para nos dar os teus datos.",
+            "O tratamento fundamentarase na xestión da solicitude de participación e, cando proceda, da relación de voluntariado, así como no consentimento para aqueles usos que o requiran.",
+            "Cando un tratamento se base no consentimento, este poderá retirarse en calquera momento, sen que isto afecte á licitude do tratamento realizado previamente.",
           ],
         },
         {
-          heading: "Seguridade",
+          heading: "Con quen compartimos os teus datos?",
           paragraphs: [
-            "Aplicamos medidas razoables para protexer os datos: acceso restrinxido, servizos con autenticación e publicación na web unicamente de datos agregados ou autorizados expresamente. Ningunha medida é infalible; se detectas un problema, avísanos en {email}.",
+            "Os datos non se venderán nin se cederán a terceiros para fins comerciais. Só poderán comunicarse cando sexa necesario para a organización das actividades, exista unha base xurídica válida ou resulte esixible legalmente.",
+            "Se se utilizan ferramentas externas para xestionar formularios, listas de contactos ou comunicacións, adoptaranse as garantías e medidas de protección que correspondan.",
+          ],
+        },
+        {
+          heading: "Durante canto tempo conservamos os teus datos?",
+          paragraphs: [
+            "Os datos conservaranse durante o tempo necesario para xestionar a solicitude e a participación no voluntariado. Posteriormente, suprimiranse ou bloquearanse cando proceda, salvo que deban conservarse durante máis tempo por unha obriga legal ou para atender posibles responsabilidades.",
+          ],
+        },
+        {
+          heading: "Que dereitos tes?",
+          paragraphs: [
+            "Podes exercer os teus dereitos de acceso, rectificación, supresión, oposición, limitación do tratamento e, cando corresponda, portabilidade dos teus datos.",
+            "Para iso, podes escribir a plataformadoradaes@gmail.com indicando o dereito que desexas exercer.",
+            "Tamén podes presentar unha reclamación ante a Axencia Española de Protección de Datos se consideras que o tratamento dos teus datos non se axusta á normativa.",
+          ],
+        },
+        {
+          heading: "Seguridade e confidencialidade",
+          paragraphs: [
+            "Plataforma Dorada adoptará as medidas técnicas e organizativas axeitadas para protexer os datos persoais fronte a accesos non autorizados, perda, alteración ou divulgación indebida.",
+            "A información das persoas voluntarias utilizarase unicamente para os fins informados e con acceso limitado a quen a precise para desenvolver as súas funcións.",
+            "DATA DE ACTUALIZACIÓN: 13/10/2026",
           ],
         },
       ],
@@ -1021,77 +1001,72 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
       ],
     },
     privacidad: {
-      title: "Privacy policy",
-      lead: "Provisional text pending legal review.",
+      title: "Volunteer privacy policy",
+      lead: "At Plataforma Dorada we are committed to protecting the privacy of the people who wish to collaborate with our initiative. We process personal data responsibly, transparently and in accordance with the data protection legislation in force.",
       sections: [
         {
-          heading: "Who is the data controller",
-          paragraphs: [
-            "Plataforma Dorada is a citizens' movement without legal personality of its own. The personal data we collect is processed by the people who drive the movement, who act as controllers: [RESPONSABLE].",
-            "Address: [DOMICILIO]. Email: {email}.",
-            "When the movement is constituted as an organisation, that organisation will become the controller and we will let you know about the change.",
-          ],
-        },
-        {
-          heading: "What data we process and why",
+          heading: "Data controller",
           items: [
-            "Pledge: the data we ask for in the form ([DATOS DEL FORMULARIO DE ADHESIÓN]). We use it to count support for the movement and show aggregate figures. Legal basis: your consent.",
-            "Appearing publicly (optional): only if you expressly authorise it in the form, we show your name, the initial of your first surname and your city on the website. This is a separate consent from the one for your pledge: if you do not give it, you do not appear.",
-            "Volunteering: the data in the form ([DATOS DEL FORMULARIO DE VOLUNTARIADO]), to contact you and coordinate your collaboration. Legal basis: your consent.",
-            "Testimonials: your testimonial and your contact details. A testimonial may reveal health or dependency data, which is specially protected: we only process it with your explicit consent. There are two separate consents: one to send us the testimonial and another, optional, to publish it.",
-            "Contact: the name, email and message you send us, in order to reply. Legal basis: your consent when submitting the form.",
-            "Member organisations: data about the organisation, its contact person and its logo, to display it as a member organisation. Legal basis: consent.",
-          ],
-          paragraphs: [
-            "We do not sell your data, we do not use it for advertising and we do not make automated decisions with it.",
+            "Controller: Plataforma Dorada",
+            "Email: plataformadoradaes@gmail.com.",
           ],
         },
         {
-          heading: "Testimonials that mention other people",
+          heading: "What data do we collect?",
           paragraphs: [
-            "If you describe another person's situation (for example a dependent relative), please do so without details that could identify them, or make sure you have their permission. We may hide or edit a testimonial to protect the privacy of third parties.",
-            "Please do not include health information in the contact form: the testimonial form exists for that.",
+            "We may collect identification and contact details, such as first name and surname, email address, telephone number and town or city, as well as information about availability, experience, knowledge and areas of interest for collaboration.",
+            "We will only ask for the data needed to organise and coordinate volunteer activities.",
           ],
         },
         {
-          heading: "Who we share data with",
-          paragraphs: [
-            "We do not hand your data to third parties for their own purposes. To run the website we use Google services (Forms, Sheets, Drive, Apps Script and Gmail), which process data on our behalf and may involve transfers outside the European Economic Area with the safeguards provided by the GDPR.",
-            "Access to the data is limited to the volunteers the movement authorises [CONFIRMAR ACCESO].",
-            "What you authorise us to publish (pledge or testimonial) is visible to anyone on the Internet.",
+          heading: "What do we use your data for?",
+          intro: [
+            "Your data will be used to:",
           ],
-        },
-        {
-          heading: "How long we keep it",
-          paragraphs: [
-            "We keep your data while the movement is active or until you withdraw your consent or ask for it to be deleted. Contact messages are kept [PLAZO]. After that we delete them or, if the law requires us to keep them, we block them.",
-          ],
-        },
-        {
-          heading: "Your rights",
           items: [
-            "Access your data and obtain a copy.",
-            "Have it corrected if it is inaccurate.",
-            "Ask for it to be deleted.",
-            "Object to processing or ask us to restrict it.",
-            "Receive it in a reusable format (portability).",
-            "Withdraw your consent at any time, without affecting what has already been done.",
+            "Manage requests to join the volunteer programme.",
+            "Contact interested people and coordinate their participation.",
+            "Provide information about campaigns, activities and tasks related to their collaboration.",
+            "Keep volunteer activities organised and followed up.",
           ],
           paragraphs: [
-            "Write to {email} saying which right you want to exercise; we will reply within a maximum of one month. If you withdraw your authorisation to appear publicly or to publish your testimonial, we will remove it from the website.",
-            "If you believe we have not handled your data properly, you can complain to the Spanish Data Protection Agency (www.aepd.es).",
+            "We will not use the data for purposes incompatible with those above, nor include it in commercial campaigns unrelated to the platform's activity.",
           ],
         },
         {
-          heading: "Minors",
+          heading: "What is the legal basis for processing?",
           paragraphs: [
-            "This website is not aimed at children under 14. If you are under that age, you need the authorisation of your parent or legal guardian to give us your data.",
+            "Processing will be based on handling the request to take part and, where applicable, the volunteer relationship, as well as on consent for any uses that require it.",
+            "Where processing is based on consent, consent may be withdrawn at any time, without affecting the lawfulness of processing carried out before its withdrawal.",
           ],
         },
         {
-          heading: "Security",
+          heading: "Who do we share your data with?",
           paragraphs: [
-            "We apply reasonable measures to protect data: restricted access, services with authentication, and publishing on the website only aggregate data or data expressly authorised. No measure is infallible; if you notice a problem, let us know at {email}.",
+            "Your data will not be sold or transferred to third parties for commercial purposes. It may only be disclosed when necessary to organise activities, when there is a valid legal basis or when required by law.",
+            "If external tools are used to manage forms, contact lists or communications, the appropriate safeguards and protection measures will be adopted.",
+          ],
+        },
+        {
+          heading: "How long do we keep your data?",
+          paragraphs: [
+            "Data will be kept for as long as necessary to manage the request and participation in the volunteer programme. It will then be deleted or blocked where appropriate, unless it must be kept longer because of a legal obligation or to deal with possible liabilities.",
+          ],
+        },
+        {
+          heading: "What are your rights?",
+          paragraphs: [
+            "You may exercise your rights of access, rectification, erasure, objection, restriction of processing and, where applicable, data portability.",
+            "To do so, write to plataformadoradaes@gmail.com stating which right you wish to exercise.",
+            "You may also lodge a complaint with the Spanish Data Protection Agency (Agencia Española de Protección de Datos) if you consider that the processing of your data does not comply with the law.",
+          ],
+        },
+        {
+          heading: "Security and confidentiality",
+          paragraphs: [
+            "Plataforma Dorada will adopt appropriate technical and organisational measures to protect personal data against unauthorised access, loss, alteration or improper disclosure.",
+            "Volunteers' information will be used only for the stated purposes, and access will be limited to those who need it to carry out their duties.",
+            "LAST UPDATED: 13/10/2026",
           ],
         },
       ],
@@ -1182,7 +1157,7 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
 // (demostrativos, subjuntivos y algunas palabras). Debe revisarlo una persona valencianohablante.
 const VA_WORDS: Record<string, string> = {
   aquest: "este", aquesta: "esta", aquests: "estos", aquestes: "estes",
-  revisi: "revise", constitueixi: "constituïsca", sigui: "siga", retiris: "retires", pugui: "puga", puguin: "puguen", contactin: "contacten",
+  revisi: "revise", constitueixi: "constituïsca", sigui: "siga", retiris: "retires", pugui: "puga", puguin: "puguen", contactin: "contacten", escaigui: "escaiga", requereixin: "requerisquen", basi: "base", corresponguin: "corresponguen", correspongui: "corresponga", hagin: "hagen", necessiti: "necessite",
   permetin: "permeten", intentis: "intentes", indiquin: "indiquen", incloguis: "inclogues",
   hagi: "haja", estigui: "estiga", demanis: "demanes", autoritzi: "autoritze", afecti: "afecte",
   tingui: "tinga", cuidi: "cuide", disposis: "disposes", garanteixi: "garantisca", garanteixin: "garantisquen", introdueixin: "introduïsquen", necessitin: "necessiten", omplis: "òmpliga", resideixi: "residisca", transcendeixi: "transcendisca", vagi: "vaja", visquis: "visques", vulguis: "vulgues", propers: "pròxims", proper: "pròxim", vés: "ves",

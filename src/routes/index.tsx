@@ -13,6 +13,7 @@ import {
 import { useCmsContent } from "@/lib/cms";
 import { GOBIERNOS, matchGobierno } from "@/lib/gobiernos";
 import { LatestInstagramVideo } from "@/components/social-feeds";
+import { SocialViewsCounter } from "@/components/social-views-counter";
 import { TestimonyCarousel } from "@/components/testimony-carousel";
 import { AdhesionCarousel } from "@/components/adhesion-carousel";
 import { pageHead } from "@/lib/seo";
@@ -268,6 +269,7 @@ function Home() {
               </p>
               <LatestInstagramVideo />
             </Panel>
+            <SocialViewsCounter />
           </div>
         </div>
 

@@ -50,6 +50,27 @@ export const LEGAL_FR: Record<LegalKey, LegalDoc> = {
         ],
       },
       {
+        id: "condiciones-voluntariado",
+        heading: "Mentions légales et conditions de participation",
+        intro: [
+          "La participation au bénévolat de Plataforma Dorada est libre et volontaire. Elle a pour but de contribuer à la défense du droit à la prise en charge de la dépendance et aux soins, ainsi qu'à la promotion du Pacte d'État pour la dépendance et les soins.",
+          "Les bénévoles pourront collaborer, selon leurs disponibilités et leurs compétences, à des tâches de diffusion, de communication et de sensibilisation, à la prise de contact avec des organisations, au soutien de campagnes et à d'autres activités liées aux objectifs de la plateforme.",
+          "L'inscription au moyen du formulaire n'entraîne pas l'intégration automatique au bénévolat et ne crée pas, à elle seule, de lien contraignant avec Plataforma Dorada.",
+          "Les participants et participantes s'engagent à :",
+        ],
+        items: [
+          "Respecter les principes, les objectifs et les valeurs de Plataforma Dorada.",
+          "Exercer leur collaboration de manière responsable, respectueuse et non discriminatoire.",
+          "Préserver la confidentialité des informations personnelles ou sensibles auxquelles ils pourraient avoir accès au cours de leur collaboration.",
+          "Utiliser le matériel et les informations fournis exclusivement pour les activités autorisées.",
+          "Respecter la vie privée et les droits des personnes qu'ils contactent.",
+        ],
+        paragraphs: [
+          "La participation est volontaire et peut prendre fin à tout moment, sur simple communication au groupe moteur de la plateforme.",
+          "Plataforma Dorada pourra établir des consignes spécifiques pour chaque campagne ou activité afin de garantir une collaboration coordonnée, sûre et cohérente avec ses objectifs.",
+        ],
+      },
+      {
         heading: "Droit applicable",
         paragraphs: ["Les présentes mentions sont régies par le droit espagnol."],
       },

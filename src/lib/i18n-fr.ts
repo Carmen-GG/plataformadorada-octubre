@@ -177,6 +177,7 @@ export const frTexts: Record<string, string> = {
   "Envía esta página a tu familia, tu barrio o tu asociación. El boca a boca es nuestra mejor herramienta.": "Envoyez cette page à votre famille, à votre quartier ou à votre association. Le bouche-à-oreille est notre meilleur outil.",
   "El movimiento lo sostienen personas voluntarias. Puedes ayudar desde tu casa, tu municipio o tu entidad, con el tiempo del que dispongas.": "Le mouvement est porté par des bénévoles. Vous pouvez aider depuis chez vous, votre commune ou votre organisation, avec le temps dont vous disposez.",
   "Quiero ser voluntario/a": "Je veux être bénévole",
+  "Condiciones de participación": "Conditions de participation",
   "Difundir el movimiento en tu entorno y en redes sociales.": "Faire connaître le mouvement dans votre entourage et sur les réseaux sociaux.",
   "Recoger y acompañar testimonios de familias.": "Recueillir et accompagner les témoignages de familles.",
   "Ayudar a organizar encuentros y actos públicos.": "Aider à organiser des rencontres et des événements publics.",

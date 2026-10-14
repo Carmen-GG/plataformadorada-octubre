@@ -177,6 +177,7 @@ export const vaTexts: Record<string, string> = {
   "Envía esta página a tu familia, tu barrio o tu asociación. El boca a boca es nuestra mejor herramienta.": "Envia esta pàgina a la teva família, al teu barri o a la teva associació. El boca-orella és la nostra millor eina.",
   "El movimiento lo sostienen personas voluntarias. Puedes ayudar desde tu casa, tu municipio o tu entidad, con el tiempo del que dispongas.": "El moviment el sostenen persones voluntàries. Pots ajudar des de casa, el teu municipi o la teva entitat, amb el temps de què disposes.",
   "Quiero ser voluntario/a": "Vull fer de voluntari/ària",
+  "Condiciones de participación": "Condicions de participació",
   "Difundir el movimiento en tu entorno y en redes sociales.": "Difondre el moviment al teu entorn i a les xarxes socials.",
   "Recoger y acompañar testimonios de familias.": "Recollir i acompanyar testimonis de famílies.",
   "Ayudar a organizar encuentros y actos públicos.": "Ajudar a organitzar trobades i actes públics.",

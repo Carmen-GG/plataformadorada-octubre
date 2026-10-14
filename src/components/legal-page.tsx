@@ -35,8 +35,13 @@ export function LegalPage({ doc }: { doc: LegalKey }) {
       <section className="mx-auto w-full max-w-3xl px-4 pb-14 sm:px-6">
         <Panel className="space-y-8">
           {content.sections.map((section) => (
-            <div key={section.heading}>
+            <div key={section.heading} id={section.id} className="scroll-mt-24">
               <h2 className="font-display text-xl font-semibold">{section.heading}</h2>
+              {section.intro?.map((paragraph) => (
+                <p key={paragraph} className="mt-3 leading-relaxed text-muted-foreground">
+                  <Rich text={paragraph} />
+                </p>
+              ))}
               {section.items && (
                 <ul className="mt-3 list-disc space-y-2 pl-6 leading-relaxed text-muted-foreground">
                   {section.items.map((item) => (

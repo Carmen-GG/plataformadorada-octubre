@@ -77,77 +77,72 @@ export const LEGAL_DE: Record<LegalKey, LegalDoc> = {
     ],
   },
   privacidad: {
-    title: "Datenschutzerklärung",
-    lead: "Vorläufiger Text, die rechtliche Prüfung steht noch aus.",
+    title: "Datenschutzerklärung für Ehrenamtliche",
+    lead: "Plataforma Dorada verpflichtet sich, die Privatsphäre der Menschen zu schützen, die an unserer Initiative mitwirken möchten. Wir verarbeiten personenbezogene Daten verantwortungsvoll, transparent und im Einklang mit den geltenden Datenschutzvorschriften.",
     sections: [
       {
-        heading: "Wer der Verantwortliche ist",
-        paragraphs: [
-          "Plataforma Dorada ist eine Bürgerbewegung ohne eigene Rechtspersönlichkeit. Die von uns erhobenen personenbezogenen Daten werden von den Personen verarbeitet, die die Bewegung tragen und als Verantwortliche handeln: [RESPONSABLE].",
-          "Anschrift: [DOMICILIO]. E-Mail: {email}.",
-          "Sobald die Bewegung als Organisation gegründet ist, wird diese zur Verantwortlichen, und wir informieren Sie über die Änderung.",
-        ],
-      },
-      {
-        heading: "Welche Daten wir verarbeiten und wozu",
+        heading: "Verantwortliche Stelle",
         items: [
-          "Beitritt: die im Formular abgefragten Daten ([DATOS DEL FORMULARIO DE ADHESIÓN]). Wir verwenden sie, um die Unterstützung für die Bewegung zu zählen und aggregierte Zahlen anzuzeigen. Rechtsgrundlage: Ihre Einwilligung.",
-          "Öffentliche Nennung (freiwillig): Nur wenn Sie im Formular ausdrücklich zustimmen, zeigen wir auf der Website Ihren Vornamen, den Anfangsbuchstaben Ihres ersten Nachnamens und Ihren Wohnort an. Dies ist eine gesonderte Einwilligung, getrennt von der für den Beitritt: Wenn Sie sie nicht erteilen, erscheinen Sie nicht.",
-          "Ehrenamt: die Daten aus dem Formular ([DATOS DEL FORMULARIO DE VOLUNTARIADO]), um Sie zu kontaktieren und Ihre Mitarbeit zu koordinieren. Rechtsgrundlage: Ihre Einwilligung.",
-          "Erfahrungsberichte: Ihr Bericht und Ihre Kontaktdaten. Ein Erfahrungsbericht kann Gesundheits- oder Pflegebedürftigkeitsdaten offenbaren, die besonders geschützt sind: Wir verarbeiten sie nur mit Ihrer ausdrücklichen Einwilligung. Es gibt zwei getrennte Einwilligungen: eine, um uns den Bericht zu senden, und eine weitere, freiwillige, um ihn zu veröffentlichen.",
-          "Kontakt: Name, E-Mail-Adresse und Nachricht, die Sie uns senden, um Ihnen zu antworten. Rechtsgrundlage: Ihre Einwilligung beim Absenden des Formulars.",
-          "Beigetretene Organisationen: Daten der Organisation, ihrer Kontaktperson und ihr Logo, um sie als beigetretene Organisation anzuzeigen. Rechtsgrundlage: Einwilligung.",
-        ],
-        paragraphs: [
-          "Wir verkaufen Ihre Daten nicht, verwenden sie nicht für Werbung und treffen auf ihrer Grundlage keine automatisierten Entscheidungen.",
+          "Verantwortlich: Plataforma Dorada",
+          "E-Mail: plataformadoradaes@gmail.com.",
         ],
       },
       {
-        heading: "Erfahrungsberichte, in denen andere Personen erwähnt werden",
+        heading: "Welche Daten erheben wir?",
         paragraphs: [
-          "Wenn Sie die Situation einer anderen Person beschreiben (zum Beispiel eines pflegebedürftigen Angehörigen), tun Sie dies bitte ohne Angaben, die sie identifizieren könnten, oder stellen Sie sicher, dass Sie ihre Erlaubnis haben. Wir können einen Erfahrungsbericht ausblenden oder bearbeiten, um die Privatsphäre Dritter zu schützen.",
-          "Bitte geben Sie im Kontaktformular keine Gesundheitsinformationen an: Dafür gibt es das Formular für Erfahrungsberichte.",
+          "Wir können Identifikations- und Kontaktdaten erheben, etwa Vor- und Nachname, E-Mail-Adresse, Telefonnummer und Wohnort, sowie Angaben zu Verfügbarkeit, Erfahrung, Kenntnissen und Interessen an einer Mitarbeit.",
+          "Wir fragen nur die Daten ab, die zur Organisation und Koordination der ehrenamtlichen Aktivitäten erforderlich sind.",
         ],
       },
       {
-        heading: "An wen wir Daten weitergeben",
-        paragraphs: [
-          "Wir geben Ihre Daten nicht für deren eigene Zwecke an Dritte weiter. Für den Betrieb der Website nutzen wir Google-Dienste (Forms, Sheets, Drive, Apps Script und Gmail), die Daten in unserem Auftrag verarbeiten und Übermittlungen außerhalb des Europäischen Wirtschaftsraums mit den von der DSGVO vorgesehenen Garantien mit sich bringen können.",
-          "Der Zugriff auf die Daten ist auf die Freiwilligen beschränkt, die die Bewegung dazu ermächtigt [CONFIRMAR ACCESO].",
-          "Was Sie uns zu veröffentlichen erlauben (Beitritt oder Erfahrungsbericht), ist für jeden im Internet sichtbar.",
+        heading: "Wofür verwenden wir Ihre Daten?",
+        intro: [
+          "Die Daten werden verwendet, um:",
         ],
-      },
-      {
-        heading: "Wie lange wir sie aufbewahren",
-        paragraphs: [
-          "Wir bewahren Ihre Daten auf, solange die Bewegung aktiv ist oder bis Sie Ihre Einwilligung widerrufen oder ihre Löschung verlangen. Kontaktnachrichten werden [PLAZO] aufbewahrt. Danach löschen wir sie oder, wenn das Gesetz uns zur Aufbewahrung verpflichtet, sperren wir sie.",
-        ],
-      },
-      {
-        heading: "Ihre Rechte",
         items: [
-          "Auskunft über Ihre Daten und eine Kopie erhalten.",
-          "Berichtigung, falls sie unrichtig sind.",
-          "Löschung verlangen.",
-          "Der Verarbeitung widersprechen oder ihre Einschränkung verlangen.",
-          "Sie in einem wiederverwendbaren Format erhalten (Datenübertragbarkeit).",
-          "Ihre Einwilligung jederzeit widerrufen, ohne dass dies das bereits Geschehene berührt.",
+          "Anfragen zur Aufnahme in das Ehrenamt zu bearbeiten.",
+          "Mit interessierten Personen Kontakt aufzunehmen und ihre Mitwirkung zu koordinieren.",
+          "Über Kampagnen, Aktivitäten und Aufgaben im Zusammenhang mit ihrer Mitarbeit zu informieren.",
+          "Die Organisation und Begleitung der ehrenamtlichen Aktivitäten sicherzustellen.",
         ],
         paragraphs: [
-          "Schreiben Sie an {email} und nennen Sie das Recht, das Sie ausüben möchten; wir antworten innerhalb von höchstens einem Monat. Wenn Sie Ihre Erlaubnis zur öffentlichen Nennung oder zur Veröffentlichung Ihres Erfahrungsberichts widerrufen, entfernen wir ihn von der Website.",
-          "Wenn Sie der Ansicht sind, dass wir Ihre Daten nicht ordnungsgemäß behandelt haben, können Sie sich bei der spanischen Datenschutzbehörde (www.aepd.es) beschweren.",
+          "Wir verwenden die Daten nicht für Zwecke, die mit den oben genannten unvereinbar sind, und nehmen sie nicht in kommerzielle Kampagnen auf, die nichts mit der Tätigkeit der Plattform zu tun haben.",
         ],
       },
       {
-        heading: "Minderjährige",
+        heading: "Auf welcher Rechtsgrundlage verarbeiten wir die Daten?",
         paragraphs: [
-          "Diese Website richtet sich nicht an Kinder unter 14 Jahren. Wenn Sie jünger sind, benötigen Sie die Erlaubnis Ihrer Eltern oder Ihres gesetzlichen Vertreters, um uns Ihre Daten mitzuteilen.",
+          "Die Verarbeitung stützt sich auf die Bearbeitung der Anfrage zur Teilnahme und gegebenenfalls auf das ehrenamtliche Verhältnis sowie auf die Einwilligung für Verwendungen, die eine solche erfordern.",
+          "Beruht eine Verarbeitung auf einer Einwilligung, kann diese jederzeit widerrufen werden, ohne dass die Rechtmäßigkeit der zuvor erfolgten Verarbeitung dadurch berührt wird.",
         ],
       },
       {
-        heading: "Sicherheit",
+        heading: "Mit wem teilen wir Ihre Daten?",
         paragraphs: [
-          "Wir wenden angemessene Maßnahmen zum Schutz der Daten an: beschränkter Zugriff, Dienste mit Authentifizierung und die Veröffentlichung ausschließlich aggregierter oder ausdrücklich genehmigter Daten auf der Website. Keine Maßnahme ist unfehlbar; wenn Sie ein Problem bemerken, teilen Sie es uns unter {email} mit.",
+          "Die Daten werden weder verkauft noch zu kommerziellen Zwecken an Dritte weitergegeben. Sie dürfen nur übermittelt werden, wenn dies für die Organisation der Aktivitäten erforderlich ist, eine gültige Rechtsgrundlage besteht oder es gesetzlich vorgeschrieben ist.",
+          "Werden externe Werkzeuge zur Verwaltung von Formularen, Kontaktlisten oder Mitteilungen eingesetzt, werden die entsprechenden Garantien und Schutzmaßnahmen getroffen.",
+        ],
+      },
+      {
+        heading: "Wie lange speichern wir Ihre Daten?",
+        paragraphs: [
+          "Die Daten werden so lange gespeichert, wie es für die Bearbeitung der Anfrage und die Mitwirkung im Ehrenamt erforderlich ist. Danach werden sie gegebenenfalls gelöscht oder gesperrt, sofern sie nicht aufgrund einer gesetzlichen Pflicht oder zur Klärung möglicher Haftungsfragen länger aufbewahrt werden müssen.",
+        ],
+      },
+      {
+        heading: "Welche Rechte haben Sie?",
+        paragraphs: [
+          "Sie können Ihre Rechte auf Auskunft, Berichtigung, Löschung, Widerspruch, Einschränkung der Verarbeitung und gegebenenfalls Datenübertragbarkeit ausüben.",
+          "Schreiben Sie dazu an plataformadoradaes@gmail.com und geben Sie an, welches Recht Sie ausüben möchten.",
+          "Sie können außerdem bei der spanischen Datenschutzbehörde (Agencia Española de Protección de Datos) Beschwerde einlegen, wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer Daten nicht den Vorschriften entspricht.",
+        ],
+      },
+      {
+        heading: "Sicherheit und Vertraulichkeit",
+        paragraphs: [
+          "Plataforma Dorada trifft geeignete technische und organisatorische Maßnahmen, um personenbezogene Daten vor unbefugtem Zugriff, Verlust, Veränderung oder unrechtmäßiger Offenlegung zu schützen.",
+          "Die Informationen der Ehrenamtlichen werden ausschließlich für die angegebenen Zwecke verwendet; Zugriff haben nur die Personen, die sie zur Erfüllung ihrer Aufgaben benötigen.",
+          "STAND: 13.10.2026",
         ],
       },
     ],

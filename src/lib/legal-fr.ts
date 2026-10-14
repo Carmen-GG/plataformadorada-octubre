@@ -77,77 +77,72 @@ export const LEGAL_FR: Record<LegalKey, LegalDoc> = {
     ],
   },
   privacidad: {
-    title: "Politique de confidentialité",
-    lead: "Texte provisoire, en attente de relecture juridique.",
+    title: "Politique de confidentialité du bénévolat",
+    lead: "Chez Plataforma Dorada, nous nous engageons à protéger la vie privée des personnes qui souhaitent collaborer à notre initiative. Nous traitons les données personnelles de manière responsable, transparente et conformément à la réglementation en vigueur en matière de protection des données.",
     sections: [
       {
-        heading: "Qui est le responsable du traitement",
-        paragraphs: [
-          "Plataforma Dorada est un mouvement citoyen sans personnalité juridique propre. Les données personnelles que nous recueillons sont traitées par les personnes qui animent le mouvement, qui agissent en tant que responsables : [RESPONSABLE].",
-          "Adresse : [DOMICILIO]. Courriel : {email}.",
-          "Lorsque le mouvement sera constitué en organisation, celle-ci deviendra le responsable du traitement et nous vous informerons de ce changement.",
-        ],
-      },
-      {
-        heading: "Quelles données nous traitons et pourquoi",
+        heading: "Responsable du traitement",
         items: [
-          "Adhésion : les données demandées dans le formulaire ([DATOS DEL FORMULARIO DE ADHESIÓN]). Nous les utilisons pour comptabiliser les soutiens au mouvement et afficher des chiffres agrégés. Base juridique : votre consentement.",
-          "Apparition publique (facultative) : uniquement si vous l'autorisez expressément dans le formulaire, nous affichons sur le site votre prénom, l'initiale de votre premier nom de famille et votre ville. Il s'agit d'un consentement distinct de celui de l'adhésion : si vous ne le donnez pas, vous n'apparaissez pas.",
-          "Bénévolat : les données du formulaire ([DATOS DEL FORMULARIO DE VOLUNTARIADO]), pour vous contacter et coordonner votre collaboration. Base juridique : votre consentement.",
-          "Témoignages : votre témoignage et vos coordonnées. Un témoignage peut révéler des données de santé ou de dépendance, qui bénéficient d'une protection spéciale : nous ne les traitons qu'avec votre consentement explicite. Il y a deux consentements distincts : l'un pour nous envoyer le témoignage et l'autre, facultatif, pour le publier.",
-          "Contact : le nom, l'adresse électronique et le message que vous nous envoyez, afin de vous répondre. Base juridique : votre consentement lors de l'envoi du formulaire.",
-          "Organisations adhérentes : les données de l'organisation, de sa personne de contact et son logo, afin de l'afficher comme organisation adhérente. Base juridique : le consentement.",
-        ],
-        paragraphs: [
-          "Nous ne vendons pas vos données, nous ne les utilisons pas à des fins publicitaires et nous ne prenons aucune décision automatisée à partir de celles-ci.",
+          "Responsable : Plataforma Dorada",
+          "Adresse électronique : plataformadoradaes@gmail.com.",
         ],
       },
       {
-        heading: "Témoignages mentionnant d'autres personnes",
+        heading: "Quelles données collectons-nous ?",
         paragraphs: [
-          "Si vous décrivez la situation d'une autre personne (par exemple un proche en situation de dépendance), faites-le sans détails permettant de l'identifier, ou assurez-vous d'avoir son autorisation. Nous pouvons masquer ou modifier un témoignage pour protéger la vie privée de tiers.",
-          "N'incluez pas d'informations de santé dans le formulaire de contact : le formulaire de témoignage existe à cet effet.",
+          "Nous pouvons collecter des données d'identification et de contact, telles que les nom et prénom, l'adresse électronique, le numéro de téléphone et la localité, ainsi que des informations sur les disponibilités, l'expérience, les connaissances et les centres d'intérêt en matière de collaboration.",
+          "Nous ne demanderons que les données nécessaires à l'organisation et à la coordination des activités bénévoles.",
         ],
       },
       {
-        heading: "Avec qui nous partageons les données",
-        paragraphs: [
-          "Nous ne cédons pas vos données à des tiers pour leurs propres finalités. Pour faire fonctionner le site, nous utilisons des services de Google (Forms, Sheets, Drive, Apps Script et Gmail), qui traitent les données pour notre compte et peuvent impliquer des transferts en dehors de l'Espace économique européen, avec les garanties prévues par le RGPD.",
-          "L'accès aux données est limité aux bénévoles que le mouvement autorise [CONFIRMAR ACCESO].",
-          "Ce que vous nous autorisez à publier (adhésion ou témoignage) est visible par toute personne sur Internet.",
+        heading: "À quoi servent vos données ?",
+        intro: [
+          "Les données seront utilisées pour :",
         ],
-      },
-      {
-        heading: "Combien de temps nous les conservons",
-        paragraphs: [
-          "Nous conservons vos données tant que le mouvement est actif ou jusqu'à ce que vous retiriez votre consentement ou demandiez leur suppression. Les messages de contact sont conservés [PLAZO]. Passé ce délai, nous les supprimons ou, si la loi nous oblige à les conserver, nous les bloquons.",
-        ],
-      },
-      {
-        heading: "Vos droits",
         items: [
-          "Accéder à vos données et en obtenir une copie.",
-          "Les faire rectifier si elles sont inexactes.",
-          "Demander leur suppression.",
-          "Vous opposer au traitement ou demander sa limitation.",
-          "Les recevoir dans un format réutilisable (portabilité).",
-          "Retirer votre consentement à tout moment, sans que cela affecte ce qui a déjà été fait.",
+          "Gérer les demandes d'intégration au bénévolat.",
+          "Contacter les personnes intéressées et coordonner leur participation.",
+          "Informer sur les campagnes, activités et tâches liées à leur collaboration.",
+          "Assurer l'organisation et le suivi des activités bénévoles.",
         ],
         paragraphs: [
-          "Écrivez à {email} en indiquant le droit que vous souhaitez exercer ; nous vous répondrons dans un délai maximal d'un mois. Si vous retirez votre autorisation d'apparaître publiquement ou de publier votre témoignage, nous le retirerons du site.",
-          "Si vous estimez que nous n'avons pas traité correctement vos données, vous pouvez déposer une réclamation auprès de l'Agence espagnole de protection des données (www.aepd.es).",
+          "Nous n'utiliserons pas les données à des fins incompatibles avec celles mentionnées ci-dessus et ne les intégrerons pas à des campagnes commerciales étrangères à l'activité de la plateforme.",
         ],
       },
       {
-        heading: "Mineurs",
+        heading: "Quelle est la base juridique du traitement ?",
         paragraphs: [
-          "Ce site ne s'adresse pas aux enfants de moins de 14 ans. Si vous avez moins de cet âge, vous avez besoin de l'autorisation de votre père, de votre mère ou de votre représentant légal pour nous communiquer vos données.",
+          "Le traitement reposera sur la gestion de la demande de participation et, le cas échéant, de la relation de bénévolat, ainsi que sur le consentement pour les usages qui l'exigent.",
+          "Lorsqu'un traitement repose sur le consentement, celui-ci peut être retiré à tout moment, sans que cela affecte la licéité du traitement effectué auparavant.",
         ],
       },
       {
-        heading: "Sécurité",
+        heading: "Avec qui partageons-nous vos données ?",
         paragraphs: [
-          "Nous appliquons des mesures raisonnables pour protéger les données : accès restreint, services avec authentification, et publication sur le site des seules données agrégées ou expressément autorisées. Aucune mesure n'est infaillible ; si vous constatez un problème, signalez-le-nous à {email}.",
+          "Les données ne seront ni vendues ni cédées à des tiers à des fins commerciales. Elles ne pourront être communiquées que lorsque cela est nécessaire à l'organisation des activités, lorsqu'il existe une base juridique valable ou lorsque la loi l'exige.",
+          "Si des outils externes sont utilisés pour gérer des formulaires, des listes de contacts ou des communications, les garanties et mesures de protection appropriées seront adoptées.",
+        ],
+      },
+      {
+        heading: "Combien de temps conservons-nous vos données ?",
+        paragraphs: [
+          "Les données seront conservées pendant la durée nécessaire à la gestion de la demande et de la participation au bénévolat. Elles seront ensuite supprimées ou bloquées le cas échéant, sauf si elles doivent être conservées plus longtemps en raison d'une obligation légale ou pour faire face à d'éventuelles responsabilités.",
+        ],
+      },
+      {
+        heading: "Quels sont vos droits ?",
+        paragraphs: [
+          "Vous pouvez exercer vos droits d'accès, de rectification, d'effacement, d'opposition, de limitation du traitement et, le cas échéant, de portabilité de vos données.",
+          "Pour ce faire, écrivez à plataformadoradaes@gmail.com en indiquant le droit que vous souhaitez exercer.",
+          "Vous pouvez également introduire une réclamation auprès de l'Agence espagnole de protection des données (Agencia Española de Protección de Datos) si vous estimez que le traitement de vos données n'est pas conforme à la réglementation.",
+        ],
+      },
+      {
+        heading: "Sécurité et confidentialité",
+        paragraphs: [
+          "Plataforma Dorada adoptera les mesures techniques et organisationnelles appropriées pour protéger les données personnelles contre tout accès non autorisé, perte, altération ou divulgation indue.",
+          "Les informations concernant les bénévoles seront utilisées uniquement aux fins indiquées, et l'accès en sera limité aux personnes qui en ont besoin pour exercer leurs fonctions.",
+          "DATE DE MISE À JOUR : 13/10/2026",
         ],
       },
     ],

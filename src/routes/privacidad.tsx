@@ -6,8 +6,8 @@ export const Route = createFileRoute("/privacidad")({
   head: () =>
     pageHead({
       path: "/privacidad",
-      title: "Política de privacidad",
-      description: "Cómo trata Plataforma Dorada tus datos personales y cómo ejercer tus derechos.",
+      title: "Política de privacidad del voluntariado",
+      description: "Cómo trata Plataforma Dorada los datos de las personas voluntarias y cómo ejercer tus derechos.",
     }),
   component: () => <LegalPage doc="privacidad" />,
 });

@@ -1257,24 +1257,38 @@ function translateHead(locale: Locale) {
   }
 }
 
+
 function readInitialLocale(): Locale {
-  if (typeof window === "undefined") return DEFAULT_LOCALE;
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored && (LOCALES as readonly string[]).includes(stored)
-      ? (stored as Locale)
-      : DEFAULT_LOCALE;
-  } catch {
-    return DEFAULT_LOCALE;
-  }
+  // El servidor y el primer render del navegador deben coincidir.
+  return DEFAULT_LOCALE;
 }
+
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   // Read the saved language before the first render. This avoids rendering Spanish,
   // translating React-owned text nodes, and then forcing React to reconcile them in English.
-  const [locale, setLocaleState] = useState<Locale>(readInitialLocale);
-  useEffect(() => {
-    document.documentElement.lang = HTML_LANG[locale];
+  
+const [locale, setLocaleState] = useState<Locale>(readInitialLocale);
+
+useEffect(() => {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+
+    if (
+      stored &&
+      (LOCALES as readonly string[]).includes(stored) &&
+      stored !== DEFAULT_LOCALE
+    ) {
+      setLocaleState(stored as Locale);
+    }
+  } catch {
+    // Si el almacenamiento no está disponible, se mantiene el castellano.
+  }
+}, []);
+
+useEffect(() => {
+  document.documentElement.lang = HTML_LANG[locale];
+
     translateDom(locale);
     const observer = new MutationObserver(() => translateDom(locale));
     observer.observe(document.body, { childList: true, subtree: true, characterData: true });

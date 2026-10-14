@@ -156,6 +156,17 @@ export function MunicipalMotionsMap() {
       });
       mapRef.current = map;
       map.addControl(new ml.NavigationControl(), "top-left");
+      
+      // Recalcular las dimensiones cuando cambia el contenedor.
+      const resizeObserver = new ResizeObserver(() => {
+        if (active && mapRef.current === map) {
+          map.resize();
+        }
+      });
+
+if (mapElement.current) {
+  resizeObserver.observe(mapElement.current);
+}
 
       map.on("load", () => {
         if (!active) return;
@@ -172,8 +183,20 @@ export function MunicipalMotionsMap() {
         } catch { /* La cartografía oficial del IGN sigue disponible sin la base OSM. */ }
 
         const info = findMunicipalityLayer(map);
+
         if (!info) {
-          setError("No se ha localizado la capa vectorial municipal del IGN.");
+          console.error(
+            "Plataforma Dorada: no se ha encontrado la capa municipal del IGN.",
+            map.getStyle().sources
+          );
+        
+          if (active) {
+            setError(
+              "No se ha localizado la capa vectorial municipal del IGN. " +
+              "Comprueba la disponibilidad del servicio cartográfico."
+            );
+          }
+        
           return;
         }
         // IGN puede devolver los nombres municipales con mayúsculas distintas a las del
@@ -236,8 +259,15 @@ export function MunicipalMotionsMap() {
 
     return () => {
       active = false;
-      if (map) map.remove();
-      mapRef.current = null;
+      resizeObserver.disconnect();
+    
+      if (map) {
+        map.remove();
+      }
+    
+      if (mapRef.current === map) {
+        mapRef.current = null;
+      }
     };
   }, [data]);
 

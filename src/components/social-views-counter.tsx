@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Eye, Instagram, Music2 } from "lucide-react";
 import { Panel } from "@/components/page-header";
-import { useI18n } from "@/lib/i18n";
+import { INTL_LOCALE, useI18n } from "@/lib/i18n";
 
 type SocialViews = {
   configured: boolean;
@@ -41,7 +41,7 @@ export function SocialViewsCounter() {
     };
   }, []);
 
-  const dateLabel = new Intl.DateTimeFormat(locale, {
+  const dateLabel = new Intl.DateTimeFormat(INTL_LOCALE[locale], {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -66,7 +66,7 @@ export function SocialViewsCounter() {
       {data?.configured && typeof data.total === "number" ? (
         <>
           <p className="mt-5 text-center font-display text-4xl font-semibold tracking-tight text-primary sm:text-5xl">
-            {formatViews(data.total, locale)}
+            {formatViews(data.total, INTL_LOCALE[locale])}
           </p>
           <p className="mt-1 text-center text-sm text-muted-foreground">
             {t("visualizaciones acumuladas")}
@@ -76,20 +76,20 @@ export function SocialViewsCounter() {
               <div className="flex items-center gap-2 text-sm font-medium">
                 <Instagram aria-hidden="true" className="size-4" /> Instagram
               </div>
-              <p className="mt-2 text-xl font-semibold">{formatViews(data.instagram ?? 0, locale)}</p>
+              <p className="mt-2 text-xl font-semibold">{formatViews(data.instagram ?? 0, INTL_LOCALE[locale])}</p>
               <p className="mt-1 text-xs text-muted-foreground">@assumptaserna · @plataformadorada</p>
             </div>
             <div className="rounded-2xl bg-muted/50 p-3">
               <div className="flex items-center gap-2 text-sm font-medium">
                 <Music2 aria-hidden="true" className="size-4" /> TikTok
               </div>
-              <p className="mt-2 text-xl font-semibold">{formatViews(data.tiktok ?? 0, locale)}</p>
+              <p className="mt-2 text-xl font-semibold">{formatViews(data.tiktok ?? 0, INTL_LOCALE[locale])}</p>
               <p className="mt-1 text-xs text-muted-foreground">@assumptaserna_fdc</p>
             </div>
           </div>
           {data.updatedAt ? (
             <p className="mt-3 text-right text-xs text-muted-foreground">
-              {t("Última actualización")}: {new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" }).format(new Date(data.updatedAt))}
+              {t("Última actualización")}: {new Intl.DateTimeFormat(INTL_LOCALE[locale], { dateStyle: "short", timeStyle: "short" }).format(new Date(data.updatedAt))}
             </p>
           ) : null}
         </>

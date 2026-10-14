@@ -1072,6 +1072,12 @@ mergePageTranslations({
       eu: "Mugimendua boluntarioek sostengatzen dute. Etxetik, udalerritik edo erakundetik lagun dezakezu, duzun denborarekin.",
       gl: "O movemento sostéñeno persoas voluntarias. Podes axudar desde a túa casa, o teu municipio ou a túa entidade, co tempo do que dispoñas.",
     },
+  "Condiciones de participación": {
+    ca: "Condicions de participació",
+    eu: "Parte hartzeko baldintzak",
+    gl: "Condicións de participación",
+    en: "Terms of participation",
+  },
   "Quiero ser voluntario/a": {
     ca: "Vull ser voluntari/ària",
     eu: "Boluntarioa izan nahi dut",

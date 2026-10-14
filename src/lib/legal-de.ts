@@ -50,6 +50,27 @@ export const LEGAL_DE: Record<LegalKey, LegalDoc> = {
         ],
       },
       {
+        id: "condiciones-voluntariado",
+        heading: "Rechtliche Hinweise und Teilnahmebedingungen",
+        intro: [
+          "Die ehrenamtliche Mitarbeit bei Plataforma Dorada ist frei und freiwillig. Sie dient dazu, das Recht auf Unterstützung bei Pflegebedürftigkeit und auf Pflege zu verteidigen und den Staatspakt für Pflegebedürftigkeit und Pflege voranzubringen.",
+          "Ehrenamtliche können sich je nach Verfügbarkeit und Fähigkeiten an der Verbreitung, Kommunikation und Sensibilisierung, an der Kontaktaufnahme mit Organisationen, an der Unterstützung von Kampagnen und an weiteren Aktivitäten beteiligen, die mit den Zielen der Plattform verbunden sind.",
+          "Die Anmeldung über das Formular bedeutet keine automatische Aufnahme in das Ehrenamt und begründet für sich allein kein verbindliches Verhältnis zu Plataforma Dorada.",
+          "Die Teilnehmenden verpflichten sich:",
+        ],
+        items: [
+          "Die Grundsätze, Ziele und Werte von Plataforma Dorada zu respektieren.",
+          "Die eigene Mitarbeit verantwortungsvoll, respektvoll und diskriminierungsfrei zu gestalten.",
+          "Personenbezogene oder sensible Informationen, zu denen sie während ihrer Mitarbeit Zugang erhalten, vertraulich zu behandeln.",
+          "Die zur Verfügung gestellten Materialien und Informationen ausschließlich für genehmigte Aktivitäten zu verwenden.",
+          "Die Privatsphäre und die Rechte der Personen zu respektieren, mit denen sie in Kontakt treten.",
+        ],
+        paragraphs: [
+          "Die Teilnahme ist freiwillig und kann jederzeit durch eine Mitteilung an die Koordinierungsgruppe der Plattform beendet werden.",
+          "Plataforma Dorada kann für jede Kampagne oder Aktivität besondere Anweisungen festlegen, um eine koordinierte, sichere und mit ihren Zielen im Einklang stehende Zusammenarbeit zu gewährleisten.",
+        ],
+      },
+      {
         heading: "Anwendbares Recht",
         paragraphs: ["Für diese Hinweise gilt spanisches Recht."],
       },

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/content";
@@ -45,6 +45,13 @@ function Voluntariado() {
             >
               Quiero ser voluntario/a
             </a>
+            <Link
+              to="/aviso-legal"
+              hash="condiciones-voluntariado"
+              className="text-sm text-muted-foreground underline underline-offset-4 hover:text-primary"
+            >
+              Condiciones de participación
+            </Link>
           </div>
         }
       />

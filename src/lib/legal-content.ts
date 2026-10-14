@@ -17,7 +17,8 @@ import type { Locale } from "./i18n";
 import { LEGAL_DE } from "./legal-de";
 import { LEGAL_FR } from "./legal-fr";
 
-export type LegalSection = { heading: string; paragraphs?: string[]; items?: string[] };
+/** intro: párrafos que van antes de la lista; paragraphs: después. id: ancla opcional (#id). */
+export type LegalSection = { id?: string; heading: string; intro?: string[]; paragraphs?: string[]; items?: string[] };
 export type LegalDoc = { title: string; lead: string; sections: LegalSection[] };
 export type LegalKey = "aviso" | "privacidad" | "cookies" | "accesibilidad";
 
@@ -67,6 +68,27 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
           heading: "Carácter informativo",
           paragraphs: [
             "La información de la web es divulgativa. No constituye asesoramiento jurídico, sanitario ni social individual. Procuramos que los datos y cifras indiquen su fuente y que la información sea correcta, pero no podemos garantizar que no haya errores o interrupciones del servicio.",
+          ],
+        },
+        {
+          id: "condiciones-voluntariado",
+          heading: "Aviso legal y condiciones de participación",
+          intro: [
+            "La participación en el voluntariado de Plataforma Dorada es libre y voluntaria, y tiene como finalidad colaborar en la defensa del derecho a la dependencia y a los cuidados, así como en la promoción del Pacto de Estado por la Dependencia y los Cuidados.",
+            "Las personas voluntarias podrán colaborar, según su disponibilidad y capacidades, en tareas de difusión, comunicación, sensibilización, contacto con entidades, apoyo a campañas y otras actividades vinculadas a los objetivos de la plataforma.",
+            "La inscripción en el formulario no implica la incorporación automática al voluntariado ni genera por sí misma una relación vinculante con Plataforma Dorada.",
+            "Las personas participantes se comprometen a:",
+          ],
+          items: [
+            "Respetar los principios, objetivos y valores de Plataforma Dorada.",
+            "Desarrollar su colaboración de forma responsable, respetuosa y no discriminatoria.",
+            "Mantener la confidencialidad de la información personal o sensible a la que puedan acceder durante su colaboración.",
+            "Utilizar los materiales y la información facilitados exclusivamente para las actividades autorizadas.",
+            "Respetar la privacidad y los derechos de las personas con las que contacten.",
+          ],
+          paragraphs: [
+            "La participación es voluntaria y puede finalizar en cualquier momento mediante comunicación al grupo motor de la plataforma.",
+            "Plataforma Dorada podrá establecer instrucciones específicas para cada campaña o actividad con el fin de garantizar una colaboración coordinada, segura y coherente con sus objetivos.",
           ],
         },
         {
@@ -280,6 +302,27 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
           ],
         },
         {
+          id: "condiciones-voluntariado",
+          heading: "Avís legal i condicions de participació",
+          intro: [
+            "La participació en el voluntariat de Plataforma Dorada és lliure i voluntària, i té com a finalitat col·laborar en la defensa del dret a la dependència i a les cures, així com en la promoció del Pacte d'Estat per la Dependència i les Cures.",
+            "Les persones voluntàries podran col·laborar, segons la seva disponibilitat i capacitats, en tasques de difusió, comunicació, sensibilització, contacte amb entitats, suport a campanyes i altres activitats vinculades als objectius de la plataforma.",
+            "La inscripció al formulari no implica la incorporació automàtica al voluntariat ni genera per si mateixa una relació vinculant amb Plataforma Dorada.",
+            "Les persones participants es comprometen a:",
+          ],
+          items: [
+            "Respectar els principis, objectius i valors de Plataforma Dorada.",
+            "Desenvolupar la seva col·laboració de manera responsable, respectuosa i no discriminatòria.",
+            "Mantenir la confidencialitat de la informació personal o sensible a la qual puguin accedir durant la seva col·laboració.",
+            "Utilitzar els materials i la informació facilitats exclusivament per a les activitats autoritzades.",
+            "Respectar la privacitat i els drets de les persones amb qui contactin.",
+          ],
+          paragraphs: [
+            "La participació és voluntària i pot finalitzar en qualsevol moment mitjançant una comunicació al grup motor de la plataforma.",
+            "Plataforma Dorada podrà establir instruccions específiques per a cada campanya o activitat amb la finalitat de garantir una col·laboració coordinada, segura i coherent amb els seus objectius.",
+          ],
+        },
+        {
           heading: "Legislació aplicable",
           paragraphs: ["Aquest avís es regeix per la legislació espanyola."],
         },
@@ -487,6 +530,27 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
           heading: "Izaera informatiboa",
           paragraphs: [
             "Webguneko informazioa dibulgatiboa da. Ez da aholkularitza juridiko, sanitario edo sozial indibiduala. Datuek eta zifrek iturria adieraztea eta informazioa zuzena izatea bilatzen dugu, baina ezin dugu bermatu akatsik edo zerbitzu-etenik ez dagoenik.",
+          ],
+        },
+        {
+          id: "condiciones-voluntariado",
+          heading: "Lege-oharra eta parte hartzeko baldintzak",
+          intro: [
+            "Plataforma Dorada mugimenduaren boluntariotzan parte hartzea librea eta borondatezkoa da, eta helburua da mendekotasunerako eta zaintzetarako eskubidearen defentsan laguntzea, bai eta Mendekotasunaren eta Zaintzen aldeko Estatu Ituna sustatzen laguntzea ere.",
+            "Boluntarioek, beren erabilgarritasunaren eta gaitasunen arabera, zabalkunde-, komunikazio- eta sentsibilizazio-lanetan, erakundeekin harremanetan jartzen, kanpainei laguntzen eta plataformaren helburuekin lotutako beste jarduera batzuetan lagundu ahal izango dute.",
+            "Inprimakian izena emateak ez dakar boluntariotzan automatikoki sartzea, eta berez ez du Plataforma Dorada mugimenduarekiko harreman loteslerik sortzen.",
+            "Parte-hartzaileek konpromiso hauek hartzen dituzte:",
+          ],
+          items: [
+            "Plataforma Dorada mugimenduaren printzipioak, helburuak eta balioak errespetatzea.",
+            "Beren lankidetza modu arduratsuan, errespetuzkoan eta diskriminaziorik gabe garatzea.",
+            "Lankidetzan zehar eskura ditzaketen informazio pertsonal edo sentikorraren konfidentzialtasuna gordetzea.",
+            "Emandako materialak eta informazioa baimendutako jardueretarako soilik erabiltzea.",
+            "Harremanetan jartzen diren pertsonen pribatutasuna eta eskubideak errespetatzea.",
+          ],
+          paragraphs: [
+            "Parte hartzea borondatezkoa da, eta edozein unetan amai daiteke, plataformaren talde eragileari jakinarazita.",
+            "Plataforma Dorada mugimenduak jarraibide zehatzak ezarri ahal izango ditu kanpaina edo jarduera bakoitzerako, lankidetza koordinatua, segurua eta bere helburuekin koherentea izan dadin.",
           ],
         },
         {
@@ -700,6 +764,27 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
           ],
         },
         {
+          id: "condiciones-voluntariado",
+          heading: "Aviso legal e condicións de participación",
+          intro: [
+            "A participación no voluntariado de Plataforma Dorada é libre e voluntaria, e ten como finalidade colaborar na defensa do dereito á dependencia e aos coidados, así como na promoción do Pacto de Estado pola Dependencia e os Coidados.",
+            "As persoas voluntarias poderán colaborar, segundo a súa dispoñibilidade e capacidades, en tarefas de difusión, comunicación, sensibilización, contacto con entidades, apoio a campañas e outras actividades vinculadas aos obxectivos da plataforma.",
+            "A inscrición no formulario non implica a incorporación automática ao voluntariado nin xera por si mesma unha relación vinculante con Plataforma Dorada.",
+            "As persoas participantes comprométense a:",
+          ],
+          items: [
+            "Respectar os principios, obxectivos e valores de Plataforma Dorada.",
+            "Desenvolver a súa colaboración de forma responsable, respectuosa e non discriminatoria.",
+            "Manter a confidencialidade da información persoal ou sensible á que poidan acceder durante a súa colaboración.",
+            "Utilizar os materiais e a información facilitados exclusivamente para as actividades autorizadas.",
+            "Respectar a privacidade e os dereitos das persoas coas que contacten.",
+          ],
+          paragraphs: [
+            "A participación é voluntaria e pode rematar en calquera momento mediante comunicación ao grupo motor da plataforma.",
+            "Plataforma Dorada poderá establecer instrucións específicas para cada campaña ou actividade co fin de garantir unha colaboración coordinada, segura e coherente cos seus obxectivos.",
+          ],
+        },
+        {
           heading: "Lexislación aplicable",
           paragraphs: ["Este aviso réxese pola lexislación española."],
         },
@@ -909,6 +994,27 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
           ],
         },
         {
+          id: "condiciones-voluntariado",
+          heading: "Legal notice and terms of participation",
+          intro: [
+            "Taking part in Plataforma Dorada's volunteer programme is free and voluntary. Its purpose is to help defend the right to care and support for people in situations of dependency, and to promote the State Pact on Dependency and Care.",
+            "Volunteers may help, according to their availability and skills, with outreach, communication, awareness-raising, contacting organisations, supporting campaigns and other activities linked to the platform's objectives.",
+            "Signing up through the form does not mean automatic admission to the volunteer programme, nor does it in itself create a binding relationship with Plataforma Dorada.",
+            "Participants undertake to:",
+          ],
+          items: [
+            "Respect the principles, objectives and values of Plataforma Dorada.",
+            "Carry out their collaboration in a responsible, respectful and non-discriminatory way.",
+            "Keep confidential any personal or sensitive information they may have access to during their collaboration.",
+            "Use the materials and information provided exclusively for authorised activities.",
+            "Respect the privacy and rights of the people they contact.",
+          ],
+          paragraphs: [
+            "Participation is voluntary and may end at any time by notifying the platform's coordinating group.",
+            "Plataforma Dorada may set specific instructions for each campaign or activity to ensure coordinated, safe collaboration that is consistent with its objectives.",
+          ],
+        },
+        {
           heading: "Applicable law",
           paragraphs: ["This notice is governed by Spanish law."],
         },
@@ -1076,7 +1182,7 @@ const LEGAL_BASE: Record<Exclude<Locale, "va" | "fr" | "de">, Record<LegalKey, L
 // (demostrativos, subjuntivos y algunas palabras). Debe revisarlo una persona valencianohablante.
 const VA_WORDS: Record<string, string> = {
   aquest: "este", aquesta: "esta", aquests: "estos", aquestes: "estes",
-  revisi: "revise", constitueixi: "constituïsca", sigui: "siga", retiris: "retires", pugui: "puga",
+  revisi: "revise", constitueixi: "constituïsca", sigui: "siga", retiris: "retires", pugui: "puga", puguin: "puguen", contactin: "contacten",
   permetin: "permeten", intentis: "intentes", indiquin: "indiquen", incloguis: "inclogues",
   hagi: "haja", estigui: "estiga", demanis: "demanes", autoritzi: "autoritze", afecti: "afecte",
   tingui: "tinga", cuidi: "cuide", disposis: "disposes", garanteixi: "garantisca", garanteixin: "garantisquen", introdueixin: "introduïsquen", necessitin: "necessiten", omplis: "òmpliga", resideixi: "residisca", transcendeixi: "transcendisca", vagi: "vaja", visquis: "visques", vulguis: "vulgues", propers: "pròxims", proper: "pròxim", vés: "ves",
@@ -1097,6 +1203,8 @@ function valencianDocs(source: Record<LegalKey, LegalDoc>): Record<LegalKey, Leg
       lead: toValencian(doc.lead),
       sections: doc.sections.map((section) => {
         const next: LegalSection = { heading: toValencian(section.heading) };
+        if (section.id) next.id = section.id;
+        if (section.intro) next.intro = section.intro.map(toValencian);
         if (section.paragraphs) next.paragraphs = section.paragraphs.map(toValencian);
         if (section.items) next.items = section.items.map(toValencian);
         return next;

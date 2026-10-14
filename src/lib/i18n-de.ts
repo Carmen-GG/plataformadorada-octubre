@@ -177,6 +177,7 @@ export const deTexts: Record<string, string> = {
   "Envía esta página a tu familia, tu barrio o tu asociación. El boca a boca es nuestra mejor herramienta.": "Schicken Sie diese Seite an Ihre Familie, Ihre Nachbarschaft oder Ihren Verein. Mundpropaganda ist unser bestes Werkzeug.",
   "El movimiento lo sostienen personas voluntarias. Puedes ayudar desde tu casa, tu municipio o tu entidad, con el tiempo del que dispongas.": "Die Bewegung wird von Ehrenamtlichen getragen. Sie können von zu Hause, aus Ihrer Gemeinde oder Ihrer Organisation helfen – mit der Zeit, die Sie haben.",
   "Quiero ser voluntario/a": "Ich möchte ehrenamtlich mitmachen",
+  "Condiciones de participación": "Teilnahmebedingungen",
   "Difundir el movimiento en tu entorno y en redes sociales.": "Die Bewegung in Ihrem Umfeld und in den sozialen Medien bekannt machen.",
   "Recoger y acompañar testimonios de familias.": "Erfahrungsberichte von Familien sammeln und begleiten.",
   "Ayudar a organizar encuentros y actos públicos.": "Bei der Organisation von Treffen und öffentlichen Veranstaltungen helfen.",

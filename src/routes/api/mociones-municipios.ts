@@ -41,61 +41,34 @@ export const Route = createFileRoute("/api/mociones-municipios")({
         try {
           const cms = await getCmsData();
           const motions = Array.isArray(cms.mocionesMunicipios) ? cms.mocionesMunicipios : [];
-          const byMunicipality = new Map<string, any>();
+          const byMunicipalityProvince = new Map<string, any>();
 
           for (const motion of motions) {
             const municipality = String(motion.municipio || "").trim();
             if (!municipality) continue;
 
-            const municipalityKey = norm(municipality);
             const province = String(motion.provincia || "").trim();
-            const provinceKey = norm(province);
+            // La unidad de recuento es la pareja municipio + provincia.
+            // Normalizamos para evitar diferencias de mayúsculas, tildes o espacios,
+            // pero nunca fusionamos provincias distintas ni una provincia vacía
+            // con otra informada.
+            const key = norm(municipality) + "|" + norm(province);
+            const current = byMunicipalityProvince.get(key);
             const count = Math.max(1, Number(motion.mociones || 1));
-
-            // Deduplicar por municipio. Si una fila no tiene provincia y otra sí,
-            // se consideran el mismo municipio y se conserva la provincia informada.
-            // Si ambas filas tienen provincias distintas, se mantienen separadas.
-            let key = provinceKey ? municipalityKey + "|" + provinceKey : "";
-            let current: any = key ? byMunicipality.get(key) : undefined;
-
-            if (provinceKey && !current) {
-              const blankKey = municipalityKey + "|";
-              const blankRecord = byMunicipality.get(blankKey);
-              if (blankRecord) {
-                byMunicipality.delete(blankKey);
-                key = municipalityKey + "|" + provinceKey;
-                current = { ...blankRecord, provincia: province };
-              }
-            }
-
-            if (!provinceKey && !current) {
-              const existingEntry = Array.from(byMunicipality.entries()).find(
-                ([existingKey]) => existingKey === municipalityKey + "|" || existingKey.startsWith(municipalityKey + "|"),
-              );
-              if (existingEntry) {
-                key = existingEntry[0];
-                current = existingEntry[1];
-              } else {
-                key = municipalityKey + "|";
-              }
-            }
-
-            if (!key) key = municipalityKey + "|" + provinceKey;
-
             const previousMotions = Number(current?.mociones) || 0;
-            byMunicipality.set(key, {
+
+            byMunicipalityProvince.set(key, {
               municipio: current?.municipio || municipality,
-              provincia: province || current?.provincia || "",
+              provincia: current?.provincia || province,
               estado: String(motion.estado || current?.estado || "Sin resolución registrada"),
               mociones: previousMotions + count,
               motionStatus: status(motion.estado || current?.estado),
             });
           }
-
-          const records = Array.from(byMunicipality.values());
+          const records = Array.from(byMunicipalityProvince.values());
           const out = {
             ok: true,
-            // Este endpoint cuenta municipios únicos, no mociones individuales del CMS.
+            // Este endpoint cuenta parejas únicas de municipio + provincia, no mociones individuales del CMS.
             total: records.length,
             records,
           };

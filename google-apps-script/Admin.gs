@@ -69,6 +69,10 @@ var PROPOSAL_HEADERS = ["id","tipo","titulo","artista","texto","proponente","pub
 var TIMELINE_HEADERS = ["id","fecha","titulo","descripcion","imagenNombre","imagenUrl","imagenId","orden","activa","creada"];
 var ROADMAP_HEADERS = ["id","fase","titulo","detalle","fecha","orden","activa","creada"];
 var LEMAS_HEADERS = ["id","texto","autor","orden","publicada","creada"];
+// Pestaña "GobiernosWeb": una fila por comunidad autónoma. Se escribe "Sí" en la columna
+// "apoya" cuando ese Gobierno ha dado su apoyo al Pacto; en la portada aparece con un check verde.
+var GOBIERNOS_HEADERS = ["comunidad","apoya","fecha","nota"];
+var GOBIERNOS_LISTA = ["Andalucía","Aragón","Asturias","Illes Balears","Canarias","Cantabria","Castilla-La Mancha","Castilla y León","Cataluña","Comunitat Valenciana","Extremadura","Galicia","La Rioja","Madrid","Murcia","Navarra","País Vasco","Ceuta","Melilla"];
 
 function checkBackofficePassword(password) {
   var expected = PropertiesService.getScriptProperties().getProperty("BACKOFFICE_PASSWORD");
@@ -317,15 +321,34 @@ function saveLema(data){
 }
 function deleteLema(data){assertAdmin_(data&&data.password);var s=cmsGetOrCreateSheet_("LemasWeb",LEMAS_HEADERS),row=findRowById_(s,data.id);if(row<0)throw new Error("Lema no encontrado.");s.deleteRow(row);return {ok:true};}
 
+// Gobiernos autonómicos que han dado su apoyo. La pestaña se crea sola con las 19 comunidades
+// y ciudades autónomas (apoya = "No"); basta con cambiar a "Sí" la celda de la columna B.
+function getGobiernosSheet_(){
+  var s=cmsGetOrCreateSheet_("GobiernosWeb",GOBIERNOS_HEADERS);
+  if(s.getLastRow()<2){
+    s.getRange(2,1,GOBIERNOS_LISTA.length,GOBIERNOS_HEADERS.length).setValues(GOBIERNOS_LISTA.map(function(n){return [n,"No","",""];}));
+    s.getRange(2,2,200,1).setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(["Sí","No"],true).setAllowInvalid(false).build());
+  }
+  return s;
+}
+function readGobiernos_(){
+  try{
+    var s=getGobiernosSheet_(), rows=rowValues_(s,GOBIERNOS_HEADERS.length);
+    return rows.filter(function(r){return String(r[0]||"").trim();}).map(function(r){
+      return {comunidad:cleanPublicText_(r[0],120),apoya:/^(s[ií]|si|true|1|x|✓|✔|ok)$/i.test(String(r[1]||"").trim()),fecha:String(r[2]||"")};
+    });
+  }catch(e){return [];}
+}
+
 function getPublicContent_(){
   var p=readProposals_();
-  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),videos:readVideos_(),videoCategories:readVideoCategories_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,lemas:readLemas_(),actualizado:new Date().toISOString()};
+  return {noticias:readNews_(),recursos:readResources_(),eventos:readEvents_(),videos:readVideos_(),videoCategories:readVideoCategories_(),trayectoria:readTimeline_(),hojaRuta:readRoadmap_(),canciones:p.canciones,frases:p.frases,lemas:readLemas_(),gobiernos:readGobiernos_(),actualizado:new Date().toISOString()};
 }
 function getPublicContent(){return getPublicContent_();}
 function obtenerContenidoPublico(){return getPublicContent_();}
 function getBackofficeContent(){var c=getPublicContent_();c.noticias=readNews_(true);c.propuestas=readProposals_().todas;c.lemas=readLemas_(true);return c;}
 
-function setupBackoffice(){cmsGetOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);cmsGetOrCreateSheet_("LemasWeb",LEMAS_HEADERS);getDriveFolder_();return "Backoffice preparado en la base CMS configurada";}
+function setupBackoffice(){cmsGetOrCreateSheet_("NoticiasWeb",NEWS_HEADERS);cmsGetOrCreateSheet_("RecursosWeb",RESOURCE_HEADERS);getEventsSheet_();cmsGetOrCreateSheet_("PropuestasWeb",PROPOSAL_HEADERS);cmsGetOrCreateSheet_("TrayectoriaWeb",TIMELINE_HEADERS);cmsGetOrCreateSheet_("HojaRutaWeb",ROADMAP_HEADERS);cmsGetOrCreateSheet_("LemasWeb",LEMAS_HEADERS);getGobiernosSheet_();getDriveFolder_();return "Backoffice preparado en la base CMS configurada";}
 
 // Nombre exclusivo para evitar conflictos con funciones antiguas de otros archivos del proyecto.
 function saveNewsToCmsSpreadsheet(data) {

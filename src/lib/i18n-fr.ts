@@ -788,7 +788,7 @@ export const frTexts: Record<string, string> = {
   "home.badge": "Mouvement citoyen · non partisan",
   "home.title": "Plataforma Dorada : Pour un Pacte d'État pour la dépendance et les soins",
   "home.lead": "La dépendance ne peut pas attendre. Des milliers de familles attendent des mois, voire des années, une évaluation, une aide ou une place. Nous demandons un engagement durable, non partisan et financé, envers celles et ceux qui soignent et celles et ceux qui sont soignés.",
-  "home.countersTitle": "Adhésions en direct",
+  "home.countersTitle": "Signatures pour le Pacte d'État",
   "home.months": "mois",
   "home.days": "jours",
   "carousel.testimony": "Témoignage",

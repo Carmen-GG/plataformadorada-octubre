@@ -780,7 +780,7 @@ export const vaTexts: Record<string, string> = {
   "home.badge": "Moviment ciutadà · no partidista",
   "home.title": "Plataforma Dorada: Per un Pacte d'Estat per la Dependència i les Cures",
   "home.lead": "La dependència no pot esperar. Milers de famílies esperen mesos o anys una valoració, una ajuda o una plaça. Demanem un compromís estable, apartidista i finançat amb qui cuida i amb qui és cuidat.",
-  "home.countersTitle": "Adhesions en directe",
+  "home.countersTitle": "Signatures pel Pacte d'Estat",
   "home.months": "mesos",
   "home.days": "dies",
   "carousel.testimony": "Testimoni",

@@ -1,9 +1,11 @@
 import { extraTranslations } from "./i18n-extra";
 import { deTexts } from "./i18n-de";
+import { gobiernosTexts } from "./i18n-gobiernos";
 import { frTexts } from "./i18n-fr";
 import { vaTexts } from "./i18n-va";
 import {
   createContext,
+  Fragment,
   useCallback,
   useContext,
   useEffect,
@@ -85,7 +87,7 @@ const es: Dictionary = {
   "home.title": "Plataforma Dorada: Por un Pacto de Estado por la Dependencia y los Cuidados",
   "home.lead":
     "La dependencia no puede esperar. Miles de familias esperan meses o años una valoración, una ayuda o una plaza. Pedimos un compromiso estable, apartidista y financiado con quien cuida y con quien es cuidado.",
-  "home.countersTitle": "Adhesiones en vivo",
+  "home.countersTitle": "Firmas por el Pacto de Estado",
   "home.months": "meses",
   "home.days": "días",
   "carousel.testimony": "Testimonio",
@@ -134,7 +136,7 @@ const ca: Dictionary = {
   "home.title": "Plataforma Dorada: Per un Pacte d'Estat per la Dependència i les Cures",
   "home.lead":
     "La dependència no pot esperar. Milers de famílies esperen mesos o anys una valoració, una ajuda o una plaça. Demanem un compromís estable, apartidista i finançat amb qui cuida i amb qui és cuidat.",
-  "home.countersTitle": "Adhesions en directe",
+  "home.countersTitle": "Signatures pel Pacte d'Estat",
   "home.months": "mesos",
   "home.days": "dies",
   "carousel.testimony": "Testimoni",
@@ -183,7 +185,7 @@ const eu: Dictionary = {
   "home.title": "Plataforma Dorada: Mendekotasunaren eta zaintzen aldeko Estatu-ituna",
   "home.lead":
     "Mendekotasunak ezin du itxaron. Milaka familiak hilabeteak edo urteak ematen dituzte balorazio, laguntza edo plaza baten zain. Konpromiso egonkorra, alderdikeriarik gabekoa eta finantzatua eskatzen dugu, zaintzen duenarekin eta zaindua denarekin.",
-  "home.countersTitle": "Atxikimenduak zuzenean",
+  "home.countersTitle": "Estatu Itunaren aldeko sinadurak",
   "home.months": "hilabete",
   "home.days": "egun",
   "carousel.testimony": "Testigantza",
@@ -231,7 +233,7 @@ const gl: Dictionary = {
   "home.title": "Plataforma Dorada: Por un Pacto de Estado pola dependencia e os coidados",
   "home.lead":
     "A dependencia non pode esperar. Miles de familias agardan meses ou anos por unha valoración, unha axuda ou unha praza. Pedimos un compromiso estable, apartidista e financiado con quen coida e con quen é coidado.",
-  "home.countersTitle": "Adhesións en directo",
+  "home.countersTitle": "Sinaturas polo Pacto de Estado",
   "home.months": "meses",
   "home.days": "días",
   "carousel.testimony": "Testemuño",
@@ -278,7 +280,7 @@ const en: Dictionary = {
   "home.badge": "Civic movement · non-partisan",
   "home.title": "Plataforma Dorada: For a State Pact on Dependency and Care",
   "home.lead": "Dependency care cannot wait. Thousands of families wait months or years for an assessment, support or a place in a care facility. We call for a stable, non-partisan and properly funded commitment to both people who provide care and those who receive it.",
-  "home.countersTitle": "Live pledges",
+  "home.countersTitle": "Signatures for the State Pact",
   "home.months": "months",
   "home.days": "days",
   "carousel.testimony": "Testimonial",
@@ -1125,6 +1127,7 @@ mergePageTranslations({
 });
 
 mergePageTranslations(extraTranslations);
+mergePageTranslations(gobiernosTexts);
 // Valenciano, francés y alemán traen todas sus claves en ficheros propios; se incorporan a la misma
 // tabla que usa la traducción del DOM.
 for (const [locale, texts] of [
@@ -1138,7 +1141,7 @@ for (const [locale, texts] of [
 const dictionariesWithPageText = dictionaries;
 for (const [source, variants] of Object.entries(pageTranslations)) {
   if (!(source in dictionariesWithPageText.es)) dictionariesWithPageText.es[source] = source;
-  for (const locale of ["ca", "eu", "gl", "en"] as Locale[])
+  for (const locale of ["ca", "va", "eu", "gl", "en", "fr", "de"] as Locale[])
     if (variants[locale]) dictionariesWithPageText[locale][source] = variants[locale]!;
 }
 // fr, de y va ya traen todas sus claves (textos de página y claves con punto).
@@ -1310,7 +1313,13 @@ useEffect(() => {
     [locale],
   );
   const value = useMemo(() => ({ locale, setLocale, t }), [locale, setLocale, t]);
-  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+  // key={locale}: al cambiar del castellano (render del servidor) al idioma guardado, el árbol se vuelve
+  // a montar desde cero. Sin esto, parte de los textos de la interfaz se quedaban en castellano.
+  return (
+    <I18nContext.Provider value={value}>
+      <Fragment key={locale}>{children}</Fragment>
+    </I18nContext.Provider>
+  );
 }
 
 export function useI18n(): I18nValue {

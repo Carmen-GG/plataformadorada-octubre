@@ -463,6 +463,9 @@ function Home() {
         <h2 id="testimonios" className="font-display text-3xl font-semibold">
           {t("Testimonios")}
         </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t("Los 8 testimonios más recientes compartidos por la comunidad.")}
+        </p>
         {voicesStatus ? (
           <p className="mt-6 text-muted-foreground" role="status">
             {voicesStatus}

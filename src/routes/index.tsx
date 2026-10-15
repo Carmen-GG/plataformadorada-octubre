@@ -203,8 +203,8 @@ function Home() {
         <h2 id="contadores" className="sr-only">
           {t("Cifras del movimiento")}
         </h2>
-        <div className="grid items-stretch gap-4 lg:grid-cols-12">
-          <div className="grid content-start gap-4 lg:col-span-7">
+        <div className="grid items-stretch gap-4 lg:grid-cols-[7fr_3fr]">
+          <div className="grid content-start gap-4">
             <dl className="grid grid-cols-2 gap-4">
               {counters.slice(0, 2).map((c) => (
                 <div key={c.key} className="glass-panel rounded-2xl p-5">

@@ -42,7 +42,7 @@ export function SocialViewsCounter() {
   const copy = COPY[locale];
 
   return (
-    <Panel as="section" className="border-primary/20 bg-primary/[0.035] shadow-sm">
+    <Panel as="section" >
       <div className="flex items-center gap-3">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Eye aria-hidden="true" className="size-5" />

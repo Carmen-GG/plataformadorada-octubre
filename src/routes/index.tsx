@@ -193,7 +193,19 @@ function Home() {
                         {supports ? "✓" : "✕"}
                       </span>
                       <span className="min-w-0 leading-snug">
-                        {g.labels[locale]}
+                        {g.key === "Navarra" ? (
+                          <a
+                            href="https://www.instagram.com/p/DeR_NK_iHNv/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline decoration-primary/40 underline-offset-2 hover:text-primary"
+                            aria-label={`${g.labels[locale]} — Instagram`}
+                          >
+                            {g.labels[locale]}
+                          </a>
+                        ) : (
+                          g.labels[locale]
+                        )}
                         <span className="sr-only">
                           {" — "}
                           {supports ? t("Apoya el Pacto") : t("Aún sin apoyo")}

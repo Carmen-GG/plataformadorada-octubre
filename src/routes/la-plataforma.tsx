@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
-import { milestones as fallbackMilestones, roadmap as fallbackRoadmap } from "@/lib/content";
+import { milestones as fallbackMilestones } from "@/lib/content";
 import { useCmsContent } from "@/lib/cms";
 
 export const Route = createFileRoute("/la-plataforma")({
@@ -12,7 +12,6 @@ export const Route = createFileRoute("/la-plataforma")({
 function Page() {
   const cms = useCmsContent();
   const milestones = cms?.trayectoria?.length ? cms.trayectoria : fallbackMilestones;
-  const roadmap = cms?.hojaRuta?.length ? cms.hojaRuta : fallbackRoadmap.map((r, i) => ({ id: String(i), phase: r.phase, title: r.title, detail: r.detail, date: "", active: true })) as any;
   const principlesResource = cms?.recursos?.find((resource) =>
     /principios de plataforma dorada/i.test(resource.title.trim()) ||
     (/principios/i.test(resource.title) && /plataforma dorada/i.test(resource.description))
@@ -117,9 +116,6 @@ function Page() {
         </div>
       </div>
     </section>
-    <section id="hoja-de-ruta" className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6">
-      <h2 className="font-display text-3xl">Hoja de ruta</h2>
-      <div className="mt-6 grid gap-5 md:grid-cols-3">{roadmap.filter((r:any)=>r.active!==false).map((r:any) => <Panel key={r.id ?? r.phase}><p className="text-xs font-semibold tracking-widest text-primary uppercase">{r.phase}{r.date ? ` · ${r.date}` : ""}</p><h3 className="mt-2 font-display text-lg font-semibold">{r.title}</h3><p className="mt-2 text-muted-foreground">{r.detail}</p></Panel>)}</div>
-    </section>
+
   </>;
 }

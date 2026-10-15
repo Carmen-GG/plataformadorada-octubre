@@ -195,15 +195,14 @@ function Home() {
         </div>
       </section>
 
-      {/* Contadores principales */}
+      {/* Situación actual + Instagram */}
       <section
-        aria-labelledby="contadores"
-        className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6"
+        aria-labelledby="situacion-actual"
+        className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6"
       >
-        <h2 id="contadores" className="sr-only">
-          {t("Cifras del movimiento")}
-        </h2>
-        <dl className="grid grid-cols-2 gap-4 lg:w-[70%]">
+        <div className="grid items-start gap-8 lg:grid-cols-[7fr_3fr]">
+          <div className="grid content-start gap-8">
+        <dl className="grid grid-cols-2 gap-4">
           {counters.map((c) => (
             <div key={c.key} className="glass-panel rounded-2xl p-5">
               <dd className="font-display text-2xl font-bold text-primary sm:text-3xl">
@@ -219,15 +218,7 @@ function Home() {
             </div>
           ))}
         </dl>
-      </section>
-
-      {/* Situación actual + Instagram */}
-      <section
-        aria-labelledby="situacion-actual"
-        className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6"
-      >
-        <div className="grid items-start gap-8 lg:grid-cols-[7fr_3fr]">
-          <div>
+            <div>
             <h2
               id="situacion-actual"
               className="font-display text-3xl font-semibold"
@@ -256,6 +247,7 @@ function Home() {
               <p>
                 {t("Plataforma Dorada une las voces de las personas dependientes, de sus familias, de los cuidadores principales y de los profesionales, y trabaja para conseguir que las personas, los cuidados y la dependencia estén en el centro de las políticas públicas.")}
               </p>
+            </div>
             </div>
           </div>
 

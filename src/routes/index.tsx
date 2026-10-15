@@ -126,9 +126,7 @@ function Home() {
                 {t("cta.collaborate")}
               </Link>
             </div>
-            <div className="mt-7 max-w-xl">
-              <SocialViewsCounter />
-            </div>
+
           </div>
 
           <div className="lg:col-span-5">
@@ -197,7 +195,7 @@ function Home() {
         </div>
       </section>
 
-      {/* Contadores */}
+      {/* Contadores principales + visualizaciones */}
       <section
         aria-labelledby="contadores"
         className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6"
@@ -205,22 +203,45 @@ function Home() {
         <h2 id="contadores" className="sr-only">
           {t("Cifras del movimiento")}
         </h2>
-        <dl className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {counters.map((c) => (
-            <div key={c.key} className="glass-panel rounded-2xl p-5">
-              <dd className="font-display text-2xl font-bold text-primary sm:text-3xl">
-                {COUNTER_KEY[c.key] ? (
-                  <LiveCount name={COUNTER_KEY[c.key]!} />
-                ) : (
-                  c.value
-                )}
-              </dd>
-              <dt className="mt-1 text-sm text-muted-foreground">
-                {t(c.label)}
-              </dt>
-            </div>
-          ))}
-        </dl>
+        <div className="grid items-stretch gap-4 lg:grid-cols-12">
+          <div className="grid content-start gap-4 lg:col-span-7">
+            <dl className="grid grid-cols-2 gap-4">
+              {counters.slice(0, 2).map((c) => (
+                <div key={c.key} className="glass-panel rounded-2xl p-5">
+                  <dd className="font-display text-2xl font-bold text-primary sm:text-3xl">
+                    {COUNTER_KEY[c.key] ? (
+                      <LiveCount name={COUNTER_KEY[c.key]!} />
+                    ) : (
+                      c.value
+                    )}
+                  </dd>
+                  <dt className="mt-1 text-sm text-muted-foreground">
+                    {t(c.label)}
+                  </dt>
+                </div>
+              ))}
+            </dl>
+            <dl className="grid grid-cols-2 gap-4">
+              {counters.slice(2).map((c) => (
+                <div key={c.key} className="glass-panel rounded-2xl p-5">
+                  <dd className="font-display text-2xl font-bold text-primary sm:text-3xl">
+                    {COUNTER_KEY[c.key] ? (
+                      <LiveCount name={COUNTER_KEY[c.key]!} />
+                    ) : (
+                      c.value
+                    )}
+                  </dd>
+                  <dt className="mt-1 text-sm text-muted-foreground">
+                    {t(c.label)}
+                  </dt>
+                </div>
+              ))}
+            </dl>
+          </div>
+          <div className="lg:col-span-5">
+            <SocialViewsCounter />
+          </div>
+        </div>
       </section>
 
       {/* Situación actual + Instagram */}

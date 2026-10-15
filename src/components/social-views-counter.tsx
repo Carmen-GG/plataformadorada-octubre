@@ -42,21 +42,21 @@ export function SocialViewsCounter() {
   const copy = COPY[locale];
 
   return (
-    <Panel as="section" className="mt-4">
+    <Panel as="section" className="border-primary/20 bg-primary/[0.035] shadow-sm">
       <div className="flex items-center gap-3">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Eye aria-hidden="true" className="size-5" />
         </span>
         <div>
-          <h2 className="font-display text-xl font-semibold">{copy.title}</h2>
+          <h2 className="font-display text-lg font-semibold">{copy.title}</h2>
           <p className="mt-1 text-xs text-muted-foreground">Instagram · TikTok</p>
         </div>
       </div>
 
-      <p className="mt-5 text-center font-display text-3xl font-semibold tracking-tight text-primary sm:text-4xl">
+      <p className="mt-4 text-left font-display text-4xl font-bold leading-none tracking-tight text-primary sm:text-5xl">
         14.085.893+
       </p>
-      <p className="mt-2 text-center text-sm leading-relaxed text-muted-foreground">
+      <p className="mt-3 text-left text-sm leading-relaxed text-muted-foreground">
         {copy.message}
       </p>
     </Panel>

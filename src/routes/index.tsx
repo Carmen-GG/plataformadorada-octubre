@@ -79,6 +79,17 @@ function Home() {
     "Todavía no hay testimonios publicados.",
   );
 
+  const motionsLabel: Record<typeof locale, string> = {
+    es: "Mociones presentadas a ayuntamientos",
+    ca: "Mocions presentades als ajuntaments",
+    va: "Mocions presentades als ajuntaments",
+    eu: "Udaletan aurkeztutako mozioak",
+    gl: "Mocións presentadas nos concellos",
+    en: "Motions submitted to local councils",
+    fr: "Motions présentées aux conseils municipaux",
+    de: "In Gemeinderäten eingereichte Anträge",
+  };
+
   const nextEvent = (cms?.eventos ?? [])
     .filter((event) => {
       if (!event.date) return false;
@@ -142,8 +153,13 @@ function Home() {
                   <dd className="font-display text-xl font-bold tabular-nums">
                     <LiveCount name="mocionesPresentadas" />
                   </dd>
-                  <dt className="mt-1 text-[11px] text-muted-foreground">
-                    {t("Mociones presentadas")}
+                  <dt className="mt-1 text-[11px]">
+                    <Link
+                      to="/mociones-ayuntamientos"
+                      className="text-muted-foreground underline decoration-primary/40 underline-offset-2 transition-colors hover:text-primary"
+                    >
+                      {motionsLabel[locale]}
+                    </Link>
                   </dt>
                 </div>
               </dl>

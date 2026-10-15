@@ -126,6 +126,9 @@ function Home() {
                 {t("cta.collaborate")}
               </Link>
             </div>
+            <div className="mt-7 max-w-xl">
+              <SocialViewsCounter />
+            </div>
           </div>
 
           <div className="lg:col-span-5">
@@ -269,7 +272,6 @@ function Home() {
               </p>
               <LatestInstagramVideo />
             </Panel>
-            <SocialViewsCounter />
           </div>
         </div>
 

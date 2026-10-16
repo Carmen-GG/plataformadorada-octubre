@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Panel } from "@/components/page-header";
 import { pageHead } from "@/lib/seo";
-import { SITE } from "@/lib/content";
 import { ShareButtons } from "@/components/share-buttons";
 import { listStatus, usePublicStats, LiveCount } from "@/lib/public-stats";
 import { useEffect, useState } from "react";
@@ -54,7 +53,7 @@ function Unete() {
               <p className="mt-1 font-display text-4xl font-bold text-primary"><LiveCount name="adhesiones" /></p>
             </div>
             <a
-              href={SITE.joinFormUrl}
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfNeWF10K-ZLXos-NbY9DN9HN5q8TKyHUjrOSrS8PdZQAVnXg/viewform"
               target="_blank"
               rel="noreferrer"
               className="inline-block rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground hover:bg-primary/90"

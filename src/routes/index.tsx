@@ -124,12 +124,14 @@ function Home() {
               <p>{t("Porque cuidar no debería ser una lucha constante. Debería ser un derecho que se cumple.")}</p>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                to="/unete"
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSfNeWF10K-ZLXos-NbY9DN9HN5q8TKyHUjrOSrS8PdZQAVnXg/viewform"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground hover:bg-primary/90"
               >
                 {t("cta.joinNow")}
-              </Link>
+              </a>
               <Link
                 to="/voluntariado"
                 className="glass-soft rounded-full px-7 py-3.5 text-base font-semibold text-primary"
